@@ -1,0 +1,55 @@
+{% extends 'mycartadmin/admin_base.html' %}
+{% load static %}
+
+{% block pagename %} Offer Management {% endblock %}
+{% block contents %}
+
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title">
+             <!-- <span class="icon"><i class="icon-th"></i></span>  -->
+            <h5>Offer Details</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table table-hover">
+              <thead>
+                <tr>
+                  <th>Email ID</th>
+                  <th>Username</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Mobile No</th>
+                  <th>Join Date</th>
+                  <th>Last Login</th>
+                  <th>Block/Activate</th>
+                  <th>Delete User</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="gradeX">
+                  <td>{{user.email}}</td>
+                  <td>{{user.username}}</td>
+                  <td>{{user.first_name}}</td>
+                  <td>{{user.last_name}}</td>
+                  <td>{{user.mobile_number}}</td>
+                  <td>{{user.join_date}}</td>
+                  <td>{{user.last_login}}</td>
+                  <td>block/activate</td>
+                  <td>delete</td>
+                  <!-- <td class="center">4</td> -->
+                </tr>
+             
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

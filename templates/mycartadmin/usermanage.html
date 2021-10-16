@@ -1,0 +1,96 @@
+{% extends 'mycartadmin/admin_base.html' %}
+{% load static %}
+
+{% block pagename %} User Management {% endblock %}
+{% block contents %}
+
+<section class="container">
+<div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <input class="form-control mr-sm-2 mb-3" type="search" id="searchInput" onkeyup="myFunction()" placeholder="Search for names..">
+        <div class="widget-box">
+          <div class="widget-title">
+             <!-- <span class="icon"><i class="icon-th"></i></span>  -->
+            <h5>User Details</h5>
+              
+          </div>
+     
+          <div class="widget-content nopadding">
+            
+            <table class="table table-bordered data-table table-hover" id="user_table">
+              <thead>
+                <tr>
+                  <th>Email ID</th>
+                  <th>Username</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Mobile No</th>
+                  <th>Join Date</th>
+                  <th>Last Login</th>
+                  <th>Block/Activate</th>
+                  <th>Edit User</th>
+                  <th>Delete User</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in users %}
+                {% if not user.is_superuser %}
+                <tr class="gradeX">
+                  <td>{{user.email}}</td>
+                  <td>{{user.username}}</td>
+                  <td>{{user.first_name}}</td>
+                  <td>{{user.last_name}}</td>
+                  <td>{{user.mobile_number}}</td>
+                  <td>{{user.date_joined}}</td>
+                  <td>{{user.last_login}}</td>
+                  {% if user.is_active %}
+                  <td><a class="confirm-block" href="admin_user_deactivate/{{user.id}}" 
+                    onclick="return confirm('Are you sure you want to BLOCK/DEACTIVATE this user?')">
+                    <button class="btn btn-warning"> <i class="icon-ban-circle"></i> Block User </button> </a></td>
+                  {% else %}
+                  <td><a class="confirm-activate" href="admin_user_activate/{{user.username}}" onclick="return confirm('Are you sure you want to ACTIVATE this user?')"><button class="btn btn-success"> <i class="icon-play"></i> Activate User</button></a></td>
+                  {% endif %}
+                  <td><a href="admin_user_edit/{{user.id}}" onclick="return confirm('Are you sure you want to EDIT this user?')"><button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td>
+                  <td><a  class="confirm-delete" onclick="return confirm('Are you sure you want to DELETE this user?')" href="admin_user_delete/{{user.id}}"><button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td>
+                  <!-- <td class="center">4</td> -->
+                </tr>
+                {% endif %}
+                {% endfor %}
+             
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+</section>
+<!-- javascript for search -->
+<script>
+  function myFunction() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("user_table");
+    tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+  </script>
+
+
+{% endblock %}

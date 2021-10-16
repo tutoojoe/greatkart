@@ -1,0 +1,61 @@
+{% extends 'mycartadmin/admin_base.html' %}
+{% load static %}
+
+{% block pagename %} Category Management {% endblock %}
+{% block contents %}
+
+<section class="container">
+
+<div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <input class="form-control mr-sm-2 mb-3" type="search" id="searchInput" onkeyup="myFunction()" placeholder="Search category">
+        <div class="widget-box">
+          <div class="widget-title">
+             <!-- <span class="icon"><i class="icon-th"></i></span>  -->
+            <h5>Category Details</h5>
+          </div>
+          <div class="widget-content nopadding
+          
+          ">
+            <table class="table table-bordered data-table table-hover ">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Slug Name</th>
+                  <th>Description</th>
+                  <!-- <th>Image</th> -->
+                  <th>Edit Category</th>
+                  <th>Delete User</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for category in categories %}
+                <tr class="gradeX">
+                  <td>{{category.category_name}}</td>
+                  <td>{{category.slug}}</td>
+                  <td>{{category.description}}</td>
+                  <!-- <td><img src="{{category.images.url}}"></td> -->
+                  <td><a href="admin_cat_edit/{{category.id}}" 
+                    onclick="return confirm('Are you sure you want to EDIT this category?')">
+                    <button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td>
+                  <td><a href="admin_cat_delete/{{category.id}}"
+                    onclick="return confirm('Are you sure you want to DELETE this category?')" >
+                    <button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td>
+                  <!-- <td class="center">4</td> -->
+                </tr>
+                {% endfor %}
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+</section>
+
+
+
+
+{% endblock %}
