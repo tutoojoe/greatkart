@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from category.models import Category
 from store.models import Product
-
+from orders.models import Order
 from accounts.models import Account
 import mycartadmin
 
@@ -67,20 +67,21 @@ def usermanage(request):
 
 @login_required
 def admin_category(request):
-    category = Category.objects.all()
+    category = Category.objects.all().order_by("id")
     print('Entering Category Manage page')
     return render(request,'mycartadmin/category.html',{'categories':category})
 
 @login_required
 def admin_product(request):
-    product = Product.objects.all()
+    product = Product.objects.all().order_by("id")
     print('Entering Product Manage page')
     return render(request,'mycartadmin/product.html',{'products':product})
 
 @login_required
 def admin_orders(request):
+    orders = Order.objects.all()
     print('Entering Order Manage page')
-    return render(request,'mycartadmin/orders.html')
+    return render(request,'mycartadmin/orders.html',{'orders':orders})
 
 @login_required
 def admin_offers(request):

@@ -1,6 +1,7 @@
 from enum import unique
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.deletion import CASCADE
 from django.db.models.fields import EmailField
 
 # Create your models here.
@@ -85,5 +86,12 @@ class Account(AbstractBaseUser):
     
     def has_module_perms(self,app_label):
         return True
-    
+
+
+class Otp(models.Model):
+    otp     = models.IntegerField(null=True,blank=True)
+    user    = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.user
 

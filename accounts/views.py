@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import RegistrationForm
-from accounts.models import Account
+from accounts.models import Account, Otp
 from carts.models import Cart,CartItem
 from carts.views import _cart_id
 from django.contrib import messages,auth
@@ -14,7 +14,9 @@ from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
-
+import requests
+from twilio.rest import Client
+import random
 
 # Create your views here.
 
@@ -64,6 +66,11 @@ def login(request):
 
         user =  auth.authenticate(email = email, password = password)
 
+        print("user details are:-", user)
+        request.session['user_email'] = email
+        user_email = request.session['user_email']
+        print('user email is', user_email)
+
         if user is not None:
             try:
                 cart    = Cart.objects.get(cart_id = _cart_id(request))
@@ -100,9 +107,8 @@ def login(request):
                         
             except:
                 pass
-            auth.login(request,user)
-            messages.success(request, "Login Successful")
-            return redirect('home')
+        
+            return redirect('verify_otp')
         else:
             messages.error(request,"Invalid Credentials")
             return redirect('login')
@@ -141,5 +147,48 @@ def dashboard(request):
     return render(request, 'accounts/dashboard.html')
 
 
+def verify_otp(request):
+    if request.method == "POST":
+        generated_otp = request.POST['generated_otp']
+        otp_input = request.POST['otp_input']
+        print(generated_otp,"|",otp_input)
+        if generated_otp == otp_input:
+            messages.success(request,"OTP verified successfully.")
+            user_email = request.session['user_email']
+            
+            print(user_email)
+            
+            user = Account.objects.get(email=user_email)
+            print(user)
+            
 
+            auth.login(request,user)
+            print('signing in')
+            return redirect('home')
+        else:
+            return redirect('login')
+    else:
+        print('request to generate OTP')
+        user_email = request.session['user_email']
+        
+        user = Account.objects.filter(email=user_email)
+        for i in user:
+            user_mobile = i.mobile_number
+        
+        print(user_mobile)
+
+        otp_number = random.randint(100000,999999)
+        auth_sid = "AC4a47f577c35cc44a86aab76e62e7d754"
+        auth_token = "44694e787e5181806dc94b84eafb6791"
+        otp_client = Client(auth_sid,auth_token)
+        otp_message = otp_client.messages.create(
+            body = "Your OTP number is "+str(otp_number),
+            from_ = "+13097221372",
+            to = "+91"+user_mobile
+        )
+        context = {
+            'otp_number':otp_number,
+            }
+        return render(request,'accounts/login_otp.html',context)
+       
 

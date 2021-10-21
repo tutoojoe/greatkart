@@ -18,31 +18,34 @@
             <table class="table table-bordered data-table table-hover">
               <thead>
                 <tr>
-                  <th>Email ID</th>
-                  <th>Username</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Mobile No</th>
-                  <th>Join Date</th>
-                  <th>Last Login</th>
+                  <th>Order No</th>
+                  <th>Customer Name</th>
+                  <th>Phone No</th>
+                  <th>Email</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Order Value</th>
+                  <th>Ordered?</th>
                   <th>Block/Activate</th>
                   <th>Delete User</th>
                 </tr>
               </thead>
               <tbody>
+                {% for order in orders %}
                 <tr class="gradeX">
-                  <td>{{user.email}}</td>
-                  <td>{{user.username}}</td>
-                  <td>{{user.first_name}}</td>
-                  <td>{{user.last_name}}</td>
-                  <td>{{user.mobile_number}}</td>
-                  <td>{{user.join_date}}</td>
-                  <td>{{user.last_login}}</td>
+                  <td>{{order.order_number}}</td>
+                  <td>{{order.full_name}}</td>
+                  <td>{{order.phone}}</td>
+                  <td>{{order.email}}</td>
+                  <td>{{order.city}}</td>
+                  <td>{{order.state}}</td>
+                  <td>{{order.order_total}}</td>
+                  <td>{{order.is_ordered}}</td>
                   <td>block/activate</td>
                   <td>delete</td>
                   <!-- <td class="center">4</td> -->
                 </tr>
-             
+                {% endfor %}
                 
               </tbody>
             </table>

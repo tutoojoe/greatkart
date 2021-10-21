@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'accounts',
     'carts',
     'orders',
+    'mycartadmin',
+    
 ]
 
 MIDDLEWARE = [
@@ -151,8 +153,11 @@ MESSAGE_TAGS = {
 }
 
 # SMTP / email host configuration
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = '*****'
-# EMAIL_HOST_PASSWORD = '*****'
-# EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+
+RAZOR_KEY_ID = config('RAZOR_KEY_ID')
+RAZOR_KEY_SECRET = config('RAZOR_KEY_SECRET')
