@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth.decorators import login_required
+from accounts.models import Address
 
 from store.models import Product,Variation
 from carts.models import Cart,CartItem
@@ -236,7 +237,8 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         grand_total = 0
         if request.user.is_authenticated:
             cart_items  = CartItem.objects.filter(user=request.user, is_active = True)
-            
+            address = Address.objects.filter(user = request.user.id).order_by('-id')[:3]
+            print(address)
             for cart_item in cart_items:
                 total   += (cart_item.product.price * cart_item.quantity)
                 quantity += cart_item.quantity
@@ -246,6 +248,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         pass
 
     context     = {
+        'address':address,
         'total': total, 
         'quantity': quantity, 
         'cart_items': cart_items,

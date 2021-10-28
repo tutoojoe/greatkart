@@ -14,32 +14,23 @@
         <h5 class="card-header">Billing Address</h5>
         <div class="card-body">
           <h6 class="card-title">{{order.first_name}} {{order.last_name}}</h6>
-          <p class="card-text">The billing address i am planning here.</p>
+          <p class="card-text">{{order.full_address}}</p>
         </div>
       </div> <!-- card.// -->
       <div class="card m-2">
         <h5 class="card-header">Payment Method</h5>
-        <div class="card-body payment_method">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="payment_method" id="payment_method_1" value="COD"
-              required>
-            <label class="form-check-label" for="payment_method_1">
-              Cash on Delivery
-            </label>
+        <div class="card-body ">
+          <div class="form-check payment_method">
+            <input class="form-check-input payment_method" type="radio" name="pay_method" checked id="payment_method_1" value="COD" required>
+              <label class="form-check-label" for="payment_method_1">Cash on Delivery</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="payment_method" id="payment_method_2" value="razorpay"
-              required>
-            <label class="form-check-label" for="payment_method_2">
-              RazorPay
-            </label>
+            <input class="form-check-input payment_method" type="radio" name="pay_method" id="payment_method_2" value="razorpay" required>
+             <label class="form-check-label" for="payment_method_2">RazorPay</label>                       
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="payment_method" id="payment_method_3" value="paypal"
-              required>
-            <label class="form-check-label" for="payment_method_3">
-              Paypal
-            </label>
+            <input class="form-check-input payment_method" type="radio" name="pay_method" id="payment_method_3" value="paypal" required>
+              <label class="form-check-label" for="payment_method_3">Paypal</label>         
           </div>
 
         </div>
@@ -128,9 +119,12 @@
           <p class="text-center mb-3">
             <img src="{% static './images/misc/payments.png' %}" height="26">
           </p>
-          <a href="#" class="btn btn-primary btn-block mb-2" id="make_payment_btn">Make
-            Payment</a>
-          <div id="paypal-button-container"></div>
+          <!-- <a href="#" class="btn btn-primary btn-block mb-2" id="make_payment_btn">Make
+            Payment</a> -->
+            
+            <a href="{% url 'cod_order_complete' order.order_number %}" selected class="btn btn-primary btn-block mb-2" id="COD_button">Cash on Delivery</a>
+            <a href="{% url 'proceed_payment' order.order_number %}"  class="btn btn-primary btn-block mb-2" hidden="true" id="rzp-button1">Pay with Razorpay</a>
+            <div hidden="true" id="paypal-button-container"></div>
           <a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
         </div> <!-- card-body.// -->
       </div> <!-- card.// -->
@@ -236,7 +230,52 @@
   }).render('#paypal-button-container');
 </script>
 <!-- ============================ COMPONENT 1 END .// ================================= -->
+<!-- ============================ Razorpay Payment.// ================================= -->
+<!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  function checking(order_id,amount){ 
+    //the end braces should be onbottom
+  var options = {
+    "key": "rzp_test_lNmw3SKtFttNHU", // Enter the Key ID generated from the Dashboard
+    "amount": "total", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "{{first_name}} {{last_name}}",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    "prefill": {
+        "name": "{{first_name}} {{last_name}}",
+        "email": "{{email}}",
+        "contact": "{{phone}}"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+}
 
-
+</script> -->
 
 {% endblock %}

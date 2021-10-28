@@ -1,6 +1,7 @@
 from django import forms
 from django.db import models
-from .models import Account
+from django.db.models import fields
+from .models import Account,Address, UserProfile
 
 
 class RegistrationForm(forms.ModelForm):
@@ -33,3 +34,57 @@ class RegistrationForm(forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs['class']='form-control'
     
+
+
+class AddAddressForm(forms.ModelForm):
+
+    class Meta:
+        model = Address
+        fields = ['first_name','last_name','mobile','email','address_line_1','address_line_2','city','district','state','country','pincode']
+       
+
+
+
+    def __init__(self,*args,**kwargs):
+        super(AddAddressForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['placeholder']='Enter Firstname'
+        self.fields['last_name'].widget.attrs['placeholder']='Enter last name'
+        self.fields['mobile'].widget.attrs['placeholder']='Enter Mobile number'
+        self.fields['email'].widget.attrs['placeholder']='Enter email address'
+        self.fields['address_line_1'].widget.attrs['placeholder']='Enter your address'
+        self.fields['address_line_2'].widget.attrs['placeholder']='Enter your address'
+        self.fields['city'].widget.attrs['placeholder']='Enter City Name'
+        self.fields['district'].widget.attrs['placeholder']='Enter your district'
+        self.fields['state'].widget.attrs['placeholder']='Enter State'
+        self.fields['country'].widget.attrs['placeholder']='Enter Country'
+        self.fields['pincode'].widget.attrs['placeholder']='Enter Pincode'
+
+        for field in self.fields:
+            self.fields[field].widget.attrs['class']='form-control'
+
+
+class Userform(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ('first_name', 'last_name', 'mobile_number')
+
+    def __init__(self,*args,**kwargs):
+        super(Userform, self).__init__(*args, **kwargs)
+        
+        for field in self.fields:
+            self.fields[field].widget.attrs['class']='form-control'
+
+
+
+
+class UserProfileForm(forms.ModelForm):
+    profile_picture = forms.ImageField(required=False, error_messages={'invalid':"Image Files Only"}, widget=forms.FileInput)
+    class Meta:
+        model = UserProfile
+        fields = ('address_line_1','address_line_2','city','state','country','profile_picture')
+
+    def __init__(self,*args,**kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        
+        for field in self.fields:
+            self.fields[field].widget.attrs['class']='form-control'

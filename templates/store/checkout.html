@@ -16,7 +16,18 @@
                         {% include 'includes/alerts.html' %}
                         <form action="{% url 'place_order' %}" method="POST">
                             {% csrf_token %}
-                            <div class="form-row">
+                            {% for add in address %}
+                            <div class="form-row mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="ship_address" value="{{add.id}}" id="">
+                                    <h5 class="form-check-label">{{add.full_name}}</h5>
+                                    <p class="">{{add.email}}, {{add.mobile}}, {{add.address_line_1}}, {{add.address_line_2}},
+                                        {{add.city}},{{add.district}},{{add.state}},{{add.country}},{{add.pincode}}
+                                    </p>
+                                </div>
+                            </div>
+                                {% endfor %}  
+                            <!-- <div class="form-row">
                                 <div class="col form-group">
                                     <label for="">First Name</label>
                                     <input type="text" name="first_name" class="form-control" required>
@@ -66,18 +77,17 @@
                                     <label for="">Country</label>
                                     <input type="text" name="country" class="form-control" required>
                                 </div>
-                            </div>
-                            <div>
+                            </div> -->
+                            <div class="form-row">
                                 <div class="col form-group">
                                     <label for="">Order Note</label>
                                     <textarea name="order_note" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
-
-                        
-
-                </div>
-            </div> <!-- card.// -->
+                            <label for="add_address_btn">Address not in the list?? Add new address here..</label>
+                            <a href="{% url 'add_address' %}" class="btn btn-primary m-2" id="add-address_btn"> Add Address</a>
+                        </div>
+                       
         </aside> 	<!-- col.// -->
         <aside class="col-lg-6">
             <div class="card">

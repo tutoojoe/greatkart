@@ -1,11 +1,13 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
-from .forms import RegistrationForm
-from accounts.models import Account, Otp
+from django.shortcuts import get_object_or_404, redirect, render
+from .forms import RegistrationForm,AddAddressForm,UserProfileForm, Userform
+from accounts.models import Account, Otp, Address, UserProfile
 from carts.models import Cart,CartItem
 from carts.views import _cart_id
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
+from orders.models import Order, OrderProduct
+from .private import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 
 #verificationemail
 from django.contrib.sites.shortcuts import get_current_site
@@ -19,7 +21,42 @@ from twilio.rest import Client
 import random
 
 # Create your views here.
+def add_address(request):
+    if request.user.is_authenticated:            
+        if request.method == "POST":
+            print("Got a POST request")
+            form = AddAddressForm(request.POST)
+            print("checking the form validation")
+            if form.is_valid():
+                print("Validation done collectiong, collecting data")
+                user = Account.objects.get(id = request.user.id)
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                address_line_1 = form.cleaned_data['address_line_1']
+                address_line_2 = form.cleaned_data['address_line_2']
+                mobile = form.cleaned_data['mobile']
+                email = form.cleaned_data['email']
+                city = form.cleaned_data['city']
+                district = form.cleaned_data['district']
+                state = form.cleaned_data['state']
+                country = form.cleaned_data['country']
+                pincode = form.cleaned_data['pincode']
+                
+                address = Address.objects.create(user=user,first_name=first_name,last_name=last_name,address_line_1=address_line_1,address_line_2=address_line_2, email=email, mobile=mobile, city=city, state=state, district=district, country=country, pincode=pincode)
+                print("going to save address")
+                address.save()
+                print("address saved")       
 
+                messages.success(request,"Your address has been registered. ")
+                return redirect ('checkout')
+        else:
+            form = AddAddressForm()    
+            context = {
+                    'form':form
+            }
+            return render(request, 'accounts/add_address.html', context)
+    else:
+        return redirect('login')
 
 def register(request):
     if request.method == "POST":
@@ -34,6 +71,13 @@ def register(request):
 
             user = Account.objects.create_user(first_name=first_name,last_name=last_name,email=email, mobile_number=mobile_number, username = username, password=password)
             user.save()
+
+            # create user_profile
+            profile = UserProfile()
+            profile.user_id = user.id
+            profile.profile_picture = 'default/default-user.png'
+            profile.save()
+
 
             #user activation
             # current_site = get_current_site(request)
@@ -50,7 +94,7 @@ def register(request):
             # return redirect ('accounts/login/?command=verification&mail='+email)
 
             messages.success(request,"Thank you for registering with us. ")
-            return redirect ('register')
+            return redirect ('login')
     else:
         form = RegistrationForm()    
     context = {
@@ -107,8 +151,9 @@ def login(request):
                         
             except:
                 pass
-        
-            return redirect('verify_otp')
+            auth.login(request,user)
+            # return redirect('verify_otp')
+            return render(request, 'accounts/my_orders.html')
         else:
             messages.error(request,"Invalid Credentials")
             return redirect('login')
@@ -141,10 +186,17 @@ def activate(request,uidb64,token ):
 @login_required(login_url = 'login')
 def dashboard(request):
 
+    orders = Order.objects.order_by('-created_at').filter(user_id = request.user.id, is_ordered = True)
+    orders_count = orders.count()
+
+    userprofile = UserProfile.objects.get(user_id = request.user.id)
+    context = {
+        'orders_count':orders_count,
+        'userprofile':userprofile,
+    }
 
 
-
-    return render(request, 'accounts/dashboard.html')
+    return render(request, 'accounts/dashboard.html',context)
 
 
 def verify_otp(request):
@@ -170,6 +222,7 @@ def verify_otp(request):
     else:
         print('request to generate OTP')
         user_email = request.session['user_email']
+        print(user_email)
         
         user = Account.objects.filter(email=user_email)
         for i in user:
@@ -178,8 +231,8 @@ def verify_otp(request):
         print(user_mobile)
 
         otp_number = random.randint(100000,999999)
-        auth_sid = "AC4a47f577c35cc44a86aab76e62e7d754"
-        auth_token = "44694e787e5181806dc94b84eafb6791"
+        auth_sid = TWILIO_ACCOUNT_SID
+        auth_token = TWILIO_AUTH_TOKEN
         otp_client = Client(auth_sid,auth_token)
         otp_message = otp_client.messages.create(
             body = "Your OTP number is "+str(otp_number),
@@ -191,4 +244,78 @@ def verify_otp(request):
             }
         return render(request,'accounts/login_otp.html',context)
        
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user = request.user,is_ordered=True).order_by('-created_at')
+    context = {
+        'orders': orders
 
+    }
+    return render(request, 'accounts/my_orders.html', context)
+
+
+@login_required(login_url='login')
+def edit_profile(request):
+    userprofile = get_object_or_404(UserProfile,user = request.user)
+
+    if request.method == "POST":
+        user_form           = Userform(request.POST, instance=request.user)
+        profile_form   = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request,'Your profile has been updated')
+            return redirect('edit_profile')
+    else:
+        user_form = Userform(instance=request.user)
+        profile_form = UserProfileForm(instance=userprofile)
+    context = {
+        'user_form'     : user_form,
+        'profile_form'  : profile_form,
+        'userprofile'   :userprofile
+    }
+
+    return render(request, 'accounts/edit_profile.html',context)
+
+@login_required(login_url='login')
+def change_password(request):
+
+    if request.method == "POST":
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+
+        user = Account.objects.get(username__exact = request.user.username)
+
+        if new_password == confirm_password:
+            success = user.check_password(current_password)
+            if success:
+                user.set_password(new_password)
+                user.save()
+                # auth.logout(request) django will log out by default
+                messages.success(request,'Password Updated Sucessfully')
+                return redirect('change_password')
+            else:
+                messages.error(request, 'You have entered the wrong password')
+                return redirect('change_password')
+        else:
+            messages.error(request, 'Passwords do not match')
+            return redirect('change_password')
+
+    return render (request, 'accounts/change_password.html')
+
+@login_required(login_url='login')
+def order_detail(request,order_id):
+    print('order detail req recvd')
+    order_detail = OrderProduct.objects.filter(order__order_number = order_id)
+    order = Order.objects.get(order_number = order_id)
+    print('both details fetced')
+    sub_total = 0
+    for i in order_detail:
+        sub_total += i.product_price * i.quantity
+    context = {
+        'order_detail':order_detail,
+        'order':order,
+        'sub_total': sub_total,
+    }
+    return render (request, 'accounts/order_detail.html',context)

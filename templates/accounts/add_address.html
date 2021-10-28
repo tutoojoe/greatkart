@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contents %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+
+    <!-- ============================ COMPONENT REGISTER   ================================= -->
+        <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+          <article class="card-body">
+            {% include 'includes/alerts.html' %}
+            <header class="mb-4"><h4 class="card-title">Add Address</h4></header>
+            <form action="{% url 'add_address' %}" method="POST">
+                {% csrf_token %}
+
+                {{form.as_p}}
+                
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary btn-block"> Add Address </button>
+                    </div> <!-- form-group// -->      
+                        <p style="color: red;">{{form.email.errors}}</p>
+                        <p style="color: red;">{{form.non_field_errors}}</p>
+                        <!-- {% if field.help_text %}
+                            <small style="color:gray">{{field.help_text}}</small>
+                        {% endif %}
+
+                        {% for error in field_errors %}
+                            <p style="color:red">{{field.help_text}}</p>
+                        {% endfor %}
+                        {% for error in non_field_errors %}
+                            <p style="color:red">{{field.help_text}}</p>
+                        {% endfor %} -->
+                </form>
+            </article><!-- card-body.// -->
+        </div> <!-- card .// -->
+        <!-- <p class="text-center mt-4">Have an account? <a href="{% url 'login' %}">Log In</a></p> -->
+        <br><br>
+    <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
+    
+    
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+
+{% endblock %}

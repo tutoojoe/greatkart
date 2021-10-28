@@ -12,38 +12,34 @@
 <link href="{% static 'images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
 
 <!-- jQuery -->
-<script src="{% static 'js/jquery-2.0.0.min.js' %}" type="text/javascript"></script>
+<!-- <script src="{% static 'js/jquery-2.0.0.min.js' %}" type="text/javascript"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 <!-- Bootstrap4 files-->
 <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css"/>
+
+
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+
 
 <!-- Font awesome 5 -->
 <link href="{% static 'fonts/fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet">
 
 <!-- custom style -->
 <link href="{% static 'css/ui.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'css/zoom.css' %}" rel="stylesheet" type="text/css"/>
+
 <link href="{% static 'css/responsive.css' %}" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!-- custom javascript -->
 <script src="{% static 'js/script.js' %}" type="text/javascript"></script>
 <!-- Paypal Script -->
 <script src="https://www.paypal.com/sdk/js?client-id=AVckvJbIjgfoUjW_dsX4swSf6sVXClRyBBD_pylqrycUo9q6-sEdaQ26dyYMfxiJblyqcnmQRi2GVcNC&currency=USD"></script> 
 
-
-<script type="text/javascript">
-/// some script
-
-// jquery ready start
-$(document).ready(function() {
-	// jQuery code
-
-}); 
-// jquery end
-</script>
-
-</head>
-<body>
 
 
 {% include 'includes/navbar.html' %}
@@ -52,5 +48,33 @@ $(document).ready(function() {
 {% endblock %}
 {% include 'includes/footer.html' %}
 
+
+<script>
+    $('.payment_method').click(function() {
+        var pay_method = $('input[name="pay_method"]:checked').val();
+        console.log(pay_method)
+        if (pay_method == 'razorpay') {
+            $('#rzp-button1').removeAttr('hidden')
+            $('#COD_button').attr('hidden', true)
+            $('#paypal-button-container').attr('hidden', true)
+        } else if (pay_method == 'COD') {
+            $('#COD_button').removeAttr('hidden')
+            $('#paypal-button-container').attr('hidden', true)
+            $('#rzp-button1').attr('hidden', true)
+        } else {
+            $('#paypal-button-container').removeAttr('hidden')
+            $('#rzp-button1').attr('hidden', true)
+            $('#COD_button').attr('hidden', true)
+        }
+    })
+</script>
+
+>
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+<script src="{% static 'js/zoom.js' %}" type="text/javascript"></script>
 </body>
 </html>

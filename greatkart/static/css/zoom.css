@@ -1,0 +1,183 @@
+/* @media only screen and (min-width: 600px) {
+* {box-sizing: border-box;}
+.img-zoom-container {
+  position: relative;
+}
+.img-zoom-lens {
+  position: absolute;
+  border: 1px solid #bf1f1f; */
+  /*set the size of the lens:*/
+  /* width: 75px;
+  height: 75px;
+}
+.img-zoom-result {
+  border: 1px solid #d4d4d4; */
+  /*set the size of the result div:*/
+  /* width: 300px;
+  height: 300px;
+}
+
+
+
+#myhide {
+    display: none;
+}
+.img-zoom-container:hover #myhide {
+    display:block;
+}
+} */
+
+/* @media only screen and (max-width: 600px) {
+    .img-zoom-container:hover #myhide {
+    display:none;
+}
+  .img-zoom-container {
+  position: relative;
+  width: 480px;
+  height: 320px;
+  overflow: hidden;
+}
+
+.imgid {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.imgid img {
+  -webkit-transition: 0.6s ease;
+  transition: 0.6s ease;
+}
+
+.img-zoom-container:hover .imgid img {
+  -webkit-transform: scale(1.9);
+  transform: scale(1.9);
+  overflow:show;
+}
+  
+} */
+
+
+/* new css */
+
+
+
+
+body{
+	padding-top: 0px;
+}
+
+#content-wrapper{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.column{
+	width: 600px;
+	padding: 10px;
+
+}
+
+#featured{
+	max-width: 500px;
+	max-height: 600px;
+
+	cursor: pointer;
+	border: 2px solid black;
+
+}
+
+.thumbnail{
+	object-fit: cover;
+	max-width: 180px;
+	max-height: 100px;
+	cursor: pointer;
+	opacity: 0.5;
+	margin: 5px;
+	border: 2px solid black;
+
+}
+
+.thumbnail:hover{
+	opacity:1;
+}
+
+.active{
+	opacity: 1;
+}
+
+#slide-wrapper{
+	margin-top: 30px;
+	max-width: 500px;
+	display: flex;
+	min-height: 100px;
+	align-items: center;
+}
+
+#slider{
+	width: 440px;
+	display: flex;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+
+}
+
+#slider::-webkit-scrollbar {
+		width: 8px;
+
+}
+
+#slider::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+
+}
+ 
+#slider::-webkit-scrollbar-thumb {
+  background-color: #dede2e;
+  outline: 1px solid slategrey;
+   border-radius: 100px;
+
+}
+
+#slider::-webkit-scrollbar-thumb:hover{
+    background-color: #18b5ce;
+}
+
+.arrow{
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	transition: .3s;
+}
+
+.arrow:hover{
+	opacity: .5;
+	width: 35px;
+	height: 35px;
+}
+
+#img-container{
+	z-index: 1;
+	max-width: 500px;
+	position: relative;
+}
+
+#lens{
+	z-index: 2;
+	position: absolute;
+
+	height: 175px;
+	width: 175px;
+	border:2px solid rgb(111, 111, 111);
+	background-repeat: no-repeat;
+	cursor: none;
+
+}
+
+/* IMAGE ZOOM CSS Start */
+
+
+
+/* IMAGE ZOOM CSS END */

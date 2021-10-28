@@ -4,12 +4,144 @@
 {% block contents %}
 
 <!-- ========================= SECTION MAIN ========================= -->
-<section class="section-intro padding-y-sm">
+
+<section class="section-intro mt-3 padding-y-sm">
   <div class="container">
       {% include 'includes/alerts.html' %}
-  <div class="intro-banner-wrap">
-      <img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded">
-  </div>
+      <div class="row">
+        <aside class="col-md-3">
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="box">
+    <!-- itemside // -->
+    
+    <div class="itemside mb-3">
+        <canvas id="myChart" width="100" height="100"></canvas> 
+    </div><!-- itemside // -->
+<!--     
+    <div class="itemside mb-3">
+        <div class="aside"><img src="../images/items/2.jpg" class="img-xs"></div>
+        <div class="info">
+            <p>Another name of item <br> second line text </p>	
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside">
+        <div class="aside"><img src="../images/items/3.jpg" class="img-xs"></div>
+        <div class="info">
+            <p>Some name of item  goes here  </p> 
+        </div>
+    </div><!-- itemside // -->
+     
+    
+    </div> <!-- box.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+        </aside>
+            <aside class="col-md-3">
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="box">
+    <!-- itemside // -->
+    
+    <div class="itemside mb-3">
+        <div class="aside"><img src="../images/items/4.jpg" class="img-xs"></div>
+        <div class="info">
+            <p>Great product name <br> and second line </p>
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside mb-3">
+        <div class="aside"><img src="../images/items/5.jpg" class="img-xs"></div>
+        <div class="info">
+            <p>Another name of item <br> second line text </p>	
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside">
+        <div class="aside"><img src="../images/items/6.jpg" class="img-xs"></div>
+        <div class="info">
+            <p>Some name of item goes here</p> 
+        </div>
+    </div><!-- itemside // -->
+    
+    
+    </div> <!-- box.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+        </aside>
+        <aside class="col-md-3">
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="box">
+    <!-- itemside // -->
+    
+    <div class="itemside  mb-3">
+        <div class="aside">
+            <i class="icon-xs bg-secondary rounded-circle fa fa-check white"></i>
+        </div>
+        <div class="info">
+            <small class="text-muted">Some heading</small>
+            <p>Just any text here</p>
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside mb-3">
+        <div class="aside">
+            <i class="icon-xs bg-success rounded-circle fa fa-user white"></i>
+        </div>
+        <div class="info">
+            <small class="text-muted">Some heading</small>
+            <p>Just any text here</p>
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside">
+        <div class="aside">
+            <i class="icon-xs bg-danger rounded-circle fa fa-file white"></i>
+        </div>
+        <div class="info">
+            <small class="text-muted">Some heading</small>
+            <p>Just any text here</p>
+        </div>
+    </div><!-- itemside // -->
+    </div> <!-- box.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+        </aside>
+        <aside class="col-md-3">
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="box">
+    <!-- itemside // -->
+    
+    <div class="itemside  mb-3">
+        <div class="aside">
+            <img class="icon-xs rounded-circle border" src="../images/avatars/avatar3.jpg">
+        </div>
+        <div class="info">
+            <p class="font-weight-bold text-dark">Tomas Jackson</p>
+            <small>SEO of company</small>
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside mb-3">
+        <div class="aside">
+            <img class="icon-xs rounded-circle border" src="../images/avatars/avatar2.jpg">
+        </div>
+        <div class="info">
+            <p class="font-weight-bold text-dark">Jackie Paul</p>
+            <small>Product manager</small>
+        </div>
+    </div><!-- itemside // -->
+    
+    <div class="itemside">
+        <div class="aside">
+            <img class="icon-xs rounded-circle border" src="../images/avatars/avatar1.jpg">
+        </div>
+        <div class="info">
+            <p class="font-weight-bold text-dark">Justin Walter</p>
+            <small>Designer at  company</small>
+        </div>
+    </div><!-- itemside // -->
+    </div> <!-- box.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+        </aside>
+    
+    </div> <!-- row.// -->
   
   </div> <!-- container //  -->
   </section>
@@ -18,6 +150,9 @@
   <!-- ========================= SECTION  ========================= -->
   <section class="section-name padding-y-sm">
   <div class="container">
+      <div>
+        <canvas id="myChart" width="100" height="100"></canvas> 
+      </div>
   
   <header class="section-heading">
       <a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
@@ -40,7 +175,48 @@
   </div><!-- container // -->
   </section>
   <!-- ========================= SECTION  END// ========================= -->
-  
-  
+  {%block scripts%}
+<script>
+// jquery function
+$(document).ready(function(){
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [{%for data in qs%}'{{data.editor_name}}',{%endfor%}] //loop through queryset, 
+                datasets: [{
+                    label: '# of users',
+                    data: [{%for data in qs%}{{data.num_users}},{%endfor%}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', 
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+});
+    });
+</script>
+{%endblock scripts%}
+
   
 {% endblock %}

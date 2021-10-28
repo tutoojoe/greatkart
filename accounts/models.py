@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db.models.deletion import CASCADE
 from django.db.models.fields import EmailField
+from django.db.models.fields.related import OneToOneField
 
 # Create your models here.
 
@@ -78,6 +79,9 @@ class Account(AbstractBaseUser):
     # Eg: firstname
     def __str__(self):
         return self.first_name + ' | ' + self.email
+    
+    def  full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
 
     # Setting up permissions to user
@@ -95,3 +99,46 @@ class Otp(models.Model):
     def __unicode__(self):
         return self.user
 
+
+
+class Address(models.Model):
+
+    user            = models.ForeignKey(Account,on_delete=models.SET_NULL,null=True)
+    first_name      = models.CharField(max_length=50)
+    last_name       = models.CharField(max_length=50)
+    mobile          = models.CharField(max_length=15, blank=True, null=True)
+    email           = models.EmailField(max_length=50, blank=True, null=True)    
+    address_line_1  = models.CharField(max_length=100,  blank=True, null=True)
+    address_line_2  = models.CharField(max_length=100, blank=True)
+    city            = models.CharField(max_length=50)
+    district        = models.CharField(max_length=50)
+    state           = models.CharField(max_length=50)
+    country         = models.CharField(max_length=50, blank=True, null=True)
+    pincode         = models.CharField(max_length=10,blank=True, null=True) 
+
+    created_at      = models.DateTimeField(auto_now_add=True)
+    updated_at      = models.DateTimeField(auto_now=True)
+    
+    def  full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+
+
+class UserProfile(models.Model):
+    user            = models.OneToOneField(Account, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(blank = True,upload_to = 'userprofile')
+    address_line_1  = models.CharField(max_length = 100, blank=True, null=True)
+    address_line_2  = models.CharField(max_length = 100, blank=True, null=True)
+    city            = models.CharField(max_length = 20, blank=True, null=True)
+    state           = models.CharField(max_length = 20, blank=True, null=True)
+    country         = models.CharField(max_length = 20, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.first_name
+
+    def full_address(self):
+        return f'{self.address_line_1} {self.address_line_2}'
+    
+
+
+    

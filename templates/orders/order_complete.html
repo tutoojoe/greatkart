@@ -5,14 +5,15 @@
 {% block contents %}
 
 
-<div class="container" style="margin-top: 50px;">
-    <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
-    <h2 class="text-center">Payment Successful</h2>
-	<br>
-	<div class="text-center">
-		<a href="{% url 'store' %}" class="btn btn-success">Shop more</a>
-	</div>
-</div>
+    <div class="container" style="margin-top: 50px;">
+        <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
+        <h2 class="text-center">Payment Successful</h2>
+        <br>
+        <div class="text-center">
+            <a href="{% url 'store' %}" class="btn btn-success">Shop more</a>
+        </div>
+    </div>
+
 
 <div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
     <div class="row invoice row-printable">
@@ -35,7 +36,6 @@
                                     <li><strong>Invoiced To</strong></li>
                                     <li>{{order.full_name}}</li>
                                     <li>{{order.full_address}}</li>
-                                    <li>{{order.city}},{{order.state}}</li>
                                     <li>{{order.phone}}</li>  
                                     <li>{{order.email}}</li>
                                 </ul>

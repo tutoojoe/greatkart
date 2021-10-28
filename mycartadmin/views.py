@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from category.models import Category
+from orders.forms import OrderForm, OrderStatusForm
 from store.models import Product
 from orders.models import Order
 from accounts.models import Account
@@ -24,7 +25,7 @@ def admin_login(request):
 def admin_page_view(request):
     if request.method == 'POST':
         print('received a POST request')
-        username        = request.POST['username']
+        username        = request.POST['email']
         password        = request.POST['password']
         print('got username and password')
         admin_user      = authenticate(username=username, password=password)
@@ -79,9 +80,14 @@ def admin_product(request):
 
 @login_required
 def admin_orders(request):
-    orders = Order.objects.all()
+    orders = Order.objects.all().order_by('-order_number')
+    form = OrderStatusForm()
+    context = {
+        'orders':orders,
+        'form':form,
+    }
     print('Entering Order Manage page')
-    return render(request,'mycartadmin/orders.html',{'orders':orders})
+    return render(request,'mycartadmin/orders.html',context)
 
 @login_required
 def admin_offers(request):
@@ -116,3 +122,17 @@ def admin_user_delete(request,id):
     user = Account.objects.get(id=id)
     user.delete()
     return redirect(usermanage)
+
+
+def update_order_status(request,order_no):
+    order = Order.objects.get(order_number = order_no)
+    
+    form = OrderStatusForm(request.POST)
+    if form.is_valid():
+        status = request.POST['status']
+        order.status = status
+        order.save()
+    print(status)
+    print(order)
+    
+    return redirect ('admin_orders')

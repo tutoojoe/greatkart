@@ -14,5 +14,6 @@ urlpatterns = [
     path('admin_user_activate/<slug:username>',views.admin_user_activate, name = 'admin_user_activate'),
     path('admin_user_edit/<int:id>',views.admin_user_edit, name = 'admin_user_edit'),
     path('admin_user_delete/<int:id>',views.admin_user_delete, name = 'admin_user_delete'),
+    path('update_order_status/<int:order_no>',views.update_order_status, name='update_order_status'),
 
 ]
