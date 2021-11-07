@@ -4,218 +4,186 @@
 {% block contents %}
 
 <!-- ========================= SECTION MAIN ========================= -->
+{% include 'includes/alerts.html' %}
 
-<section class="section-intro mt-3 padding-y-sm">
-  <div class="container">
-      {% include 'includes/alerts.html' %}
-      <div class="row">
-        <aside class="col-md-3">
-    <!-- ============================ COMPONENT 1 ================================= -->
-    <div class="box">
-    <!-- itemside // -->
-    
-    <div class="itemside mb-3">
-        <canvas id="myChart" width="100" height="100"></canvas> 
-    </div><!-- itemside // -->
-<!--     
-    <div class="itemside mb-3">
-        <div class="aside"><img src="../images/items/2.jpg" class="img-xs"></div>
-        <div class="info">
-            <p>Another name of item <br> second line text </p>	
+<h1 class="mt-4">Dashboard</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Dashboard</li>
+</ol>
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">Total Users</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>{{total_user_no}}</strong></h4><br>
+                <a class="small text-white stretched-link" href="{% url 'usermanage' %}">View User Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside">
-        <div class="aside"><img src="../images/items/3.jpg" class="img-xs"></div>
-        <div class="info">
-            <p>Some name of item  goes here  </p> 
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">Total Orders </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>{{total_ord_no}} Orders</strong></h4><br>
+                <a class="small text-white stretched-link" href="{% url 'admin_orders' %}">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-    </div><!-- itemside // -->
-     
-    
-    </div> <!-- box.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
-        </aside>
-            <aside class="col-md-3">
-    <!-- ============================ COMPONENT 1 ================================= -->
-    <div class="box">
-    <!-- itemside // -->
-    
-    <div class="itemside mb-3">
-        <div class="aside"><img src="../images/items/4.jpg" class="img-xs"></div>
-        <div class="info">
-            <p>Great product name <br> and second line </p>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">Total Sales Value</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>Rs. {{total_order_value}}</strong></h4><br>
+                <!-- <a class="small text-white stretched-link" href="#">View Details</a> -->
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside mb-3">
-        <div class="aside"><img src="../images/items/5.jpg" class="img-xs"></div>
-        <div class="info">
-            <p>Another name of item <br> second line text </p>	
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-danger text-white mb-4">
+            <div class="card-body">Average value per order</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>Rs. {{avg_ord_value}}</strong></h4><br>
+                <!-- <a class="small text-white stretched-link" href="#">View Details</a> -->
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside">
-        <div class="aside"><img src="../images/items/6.jpg" class="img-xs"></div>
-        <div class="info">
-            <p>Some name of item goes here</p> 
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-area me-1"></i>
+                Orders per day
+            </div>
+            <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
         </div>
-    </div><!-- itemside // -->
-    
-    
-    </div> <!-- box.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
-        </aside>
-        <aside class="col-md-3">
-    <!-- ============================ COMPONENT 1 ================================= -->
-    <div class="box">
-    <!-- itemside // -->
-    
-    <div class="itemside  mb-3">
-        <div class="aside">
-            <i class="icon-xs bg-secondary rounded-circle fa fa-check white"></i>
+    </div>
+    <div class="col-xl-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-bar me-1"></i>
+                Order Value per day
+                    </div>
+                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">Total Users</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>{{total_user_no}}</strong></h4><br>
+                <a class="small text-white stretched-link" href="{% url 'usermanage' %}">View User Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-        <div class="info">
-            <small class="text-muted">Some heading</small>
-            <p>Just any text here</p>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">Total Orders </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>{{total_ord_no}} Orders</strong></h4><br>
+                <a class="small text-white stretched-link" href="{% url 'admin_orders' %}">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside mb-3">
-        <div class="aside">
-            <i class="icon-xs bg-success rounded-circle fa fa-user white"></i>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">Total Sales Value</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>Rs. {{total_order_value}}</strong></h4><br>
+                <!-- <a class="small text-white stretched-link" href="#">View Details</a> -->
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-        <div class="info">
-            <small class="text-muted">Some heading</small>
-            <p>Just any text here</p>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-danger text-white mb-4">
+            <div class="card-body">Average value per order</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <h4 class="text-center"><strong>Rs. {{avg_ord_value}}</strong></h4><br>
+                <!-- <a class="small text-white stretched-link" href="#">View Details</a> -->
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
         </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside">
-        <div class="aside">
-            <i class="icon-xs bg-danger rounded-circle fa fa-file white"></i>
-        </div>
-        <div class="info">
-            <small class="text-muted">Some heading</small>
-            <p>Just any text here</p>
-        </div>
-    </div><!-- itemside // -->
-    </div> <!-- box.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
-        </aside>
-        <aside class="col-md-3">
-    <!-- ============================ COMPONENT 1 ================================= -->
-    <div class="box">
-    <!-- itemside // -->
-    
-    <div class="itemside  mb-3">
-        <div class="aside">
-            <img class="icon-xs rounded-circle border" src="../images/avatars/avatar3.jpg">
-        </div>
-        <div class="info">
-            <p class="font-weight-bold text-dark">Tomas Jackson</p>
-            <small>SEO of company</small>
-        </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside mb-3">
-        <div class="aside">
-            <img class="icon-xs rounded-circle border" src="../images/avatars/avatar2.jpg">
-        </div>
-        <div class="info">
-            <p class="font-weight-bold text-dark">Jackie Paul</p>
-            <small>Product manager</small>
-        </div>
-    </div><!-- itemside // -->
-    
-    <div class="itemside">
-        <div class="aside">
-            <img class="icon-xs rounded-circle border" src="../images/avatars/avatar1.jpg">
-        </div>
-        <div class="info">
-            <p class="font-weight-bold text-dark">Justin Walter</p>
-            <small>Designer at  company</small>
-        </div>
-    </div><!-- itemside // -->
-    </div> <!-- box.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
-        </aside>
-    
-    </div> <!-- row.// -->
-  
-  </div> <!-- container //  -->
-  </section>
-  <!-- ========================= SECTION MAIN END// ========================= -->
-  
-  <!-- ========================= SECTION  ========================= -->
-  <section class="section-name padding-y-sm">
-  <div class="container">
-      <div>
-        <canvas id="myChart" width="100" height="100"></canvas> 
-      </div>
-  
-  <header class="section-heading">
-      <a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
-      <h3 class="section-title">Popular products</h3>
-  </header><!-- sect-heading -->
-  
-      
-  <div class="row">
-      {% for product in products %}
-      <div class="col-md-3">
-          <div class="card card-product-grid">
-              <a href="{{product.get_url}}" class="img-wrap"> <img src="{{product.images.url}}"> </a>
-              <figcaption class="info-wrap">
-                  <a href="{{product.get_url}}"  class="title">{{product.product_name}}</a>
-                  <div class="price mt-1">$ {{product.price}}</div> <!-- price-wrap.// -->
-              </figcaption>
-          </div>
-      </div> <!-- col.// -->
-      {% endfor %}
-  </div><!-- container // -->
-  </section>
-  <!-- ========================= SECTION  END// ========================= -->
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   {%block scripts%}
-<script>
-// jquery function
-$(document).ready(function(){
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: [{%for data in qs%}'{{data.editor_name}}',{%endfor%}] //loop through queryset, 
-                datasets: [{
-                    label: '# of users',
-                    data: [{%for data in qs%}{{data.num_users}},{%endfor%}],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)', 
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+  <script>
+    // jquery function
+    new Chart(document.getElementById("myAreaChart"), {
+        type: 'line',
+        data: {
+          labels: {{labels | safe }},
+          datasets: [
+            {
+              label: "Orders in a day",
+              backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+              <!-- fill:false, -->
+              data: {{ data | safe }}
             }
-});
+          ]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            
+            text: 'Orders generated in the last 7 days'
+          }
+        }
     });
-</script>
+
+
+    new Chart(document.getElementById("myBarChart"), {
+        type: 'bar',
+        data: {
+          labels: {{labels | safe }},
+          datasets: [
+            {
+              label: "Order value generated per day",
+              backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+              data:{{val_data | safe}},
+              
+            }
+          ]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Order value generated for the last 7 days'
+          }
+        }
+    });
+    </script>
 {%endblock scripts%}
 
   

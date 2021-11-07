@@ -1,5 +1,9 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models.deletion import SET_NULL
 from accounts.models import Account
+from carts.models import Cart
+from coupon_offers.models import Coupon
 from store.models import Product, Variation
 
 
@@ -31,6 +35,7 @@ class Order(models.Model):
     ]
 
     user            = models.ForeignKey(Account,on_delete=models.CASCADE,null=True)
+
     payment         = models.ForeignKey(Payment, on_delete=models.CASCADE, blank=True,null=True)
     order_number    = models.CharField(max_length=20)
     first_name      = models.CharField(max_length=50)
@@ -50,6 +55,11 @@ class Order(models.Model):
     is_ordered      = models.BooleanField(default=False)
     created_at      = models.DateTimeField(auto_now_add=True)
     updated_at      = models.DateTimeField(auto_now=True)
+    coupon          = models.ForeignKey(Coupon,null=True,on_delete=SET_NULL, blank=True)
+    coupon_use_status     = models.BooleanField(default=False)
+    discount_amount = models.FloatField(null=True,blank=True)
+    nett_paid       = models.FloatField(null=True,blank=True)
+    discount        = models.IntegerField(default=0,validators=[MinValueValidator(0),MaxValueValidator(100)])
 
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
@@ -59,6 +69,9 @@ class Order(models.Model):
 
     def __str__(self):
         return self.first_name
+    
+    # def get_discount_cost(self):
+    #     return order_total - order_total * (self.discount/Decimal('100'))
 
 
 

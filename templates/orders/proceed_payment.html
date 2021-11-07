@@ -21,13 +21,13 @@ var options = {
     "handler": function (response){
         alert(response)
         console.log(response);
-        alert(response.razorpay_payment_id);
+        /* alert(response.razorpay_payment_id);
         alert(response.razorpay_order_id);
-        alert(response.razorpay_signature);
+        alert(response.razorpay_signature); */
         window.location.href = redirect_url + '?order_number='+ {{order_number}} +'&payment_id='+response.razorpay_payment_id; 
         
     },
-    "prefill": {    
+    "prefill" : {    
         "name": "{{first_name}} {{last_name}}",
         "email": "{{email}}",
         "contact": "{{phone}}"

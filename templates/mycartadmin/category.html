@@ -15,28 +15,27 @@
              <!-- <span class="icon"><i class="icon-th"></i></span>  -->
             <h5>Category Details</h5>
           </div>
-          <div class="widget-content nopadding
-          
-          ">
-            <table class="table table-bordered data-table table-hover ">
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table table-hover" id="table">
               <thead>
+                <div class="text-right mb-3 col6"><hr><a href="{% url 'add_category' %}" class="btn btn-primary"> Add Category </a></div>
                 <tr>
-                  <th>Category</th>
-                  <th>Slug Name</th>
-                  <th>Description</th>
+                  <th scope="col"> Category</th>
+                  <th scope="col">Slug Name</th>
+                  <th scope="col">Description</th>
                   <!-- <th>Image</th> -->
-                  <th>Edit Category</th>
-                  <th>Delete User</th>
+                  <th scope="col">Edit Category</th>
+                  <th scope="col">Delete Category</th>
                 </tr>
               </thead>
               <tbody>
                 {% for category in categories %}
                 <tr class="gradeX">
                   <td>{{category.category_name}}</td>
-                  <td>{{category.slug}}</td>
+                  <td><img src="{{category.category_image.url}}" class="img-fluid" style="width: 4em;"></td>
                   <td>{{category.description}}</td>
                   <!-- <td><img src="{{category.images.url}}"></td> -->
-                  <td><a href="admin_cat_edit/{{category.id}}" 
+                  <td><a href="{% url 'edit_category' category.id %}" 
                     onclick="return confirm('Are you sure you want to EDIT this category?')">
                     <button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td>
                   <td><a href="admin_cat_delete/{{category.id}}"
@@ -53,8 +52,8 @@
     </div>
 </div>
 </div>
-</section>
 
+</section>
 
 
 

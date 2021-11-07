@@ -13,9 +13,11 @@ urlpatterns = [
 
     path('activate/<uidb64>/<token>',views.activate, name='activate'),
     path('my_orders/',views.my_orders,name='my_orders'),
+    path('my_addresses/',views.my_addresses,name='my_addresses'),
     path('edit_profile/',views.edit_profile,name='edit_profile'),
     path('change_password/',views.change_password,name='change_password'),
     path('order_detail/<order_id>/',views.order_detail,name='order_detail'),
+    path('delete_address/<int:add_id>/',views.delete_address,name='delete_address'),
 
 
 ]

@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'bootstrap_modal_forms',
+    'crispy_forms',
+   
     'store',
     'category',
     'accounts',
@@ -47,7 +51,7 @@ INSTALLED_APPS = [
     'mycartadmin',
     'easy_thumbnails',
     'image_cropping',
-    
+    'coupon_offers',
     
 ]
 
@@ -83,7 +87,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'category.context_processors.menu_links',
-                'carts.context_processors.counter'
+                'carts.context_processors.counter',
+                'carts.context_processors.wish_list',
+
             ],
         },
     },

@@ -13,6 +13,9 @@ from store.models import Product, ProductGallery, ReviewRating
 from django.core.paginator import EmptyPage, Page, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.contrib import messages
+from django.views.decorators.cache import cache_control
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -46,9 +49,12 @@ def store(request,category_slug=None,):
 
 
 def product_detail(request, category_slug, product_slug):
+   
     try:
+
         single_product  = Product.objects.get(category__slug = category_slug, slug = product_slug,)
         in_cart         = CartItem.objects.filter(cart__cart_id = _cart_id(request), product = single_product).exists()
+     
 
     except Exception as e:
         raise e
@@ -56,7 +62,7 @@ def product_detail(request, category_slug, product_slug):
     try:
         orderproduct = OrderProduct.objects.filter(user = request.user, product_id = single_product.id).exists()
     
-    except OrderProduct.DoesNotExist:
+    except:
         orderproduct = None
 
     reviews = ReviewRating.objects.filter(product_id = single_product.id, status = True)
@@ -92,7 +98,7 @@ def search(request):
     return render(request,'store/store.html', context)
 
 
-
+login_required(login_url='login')
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER')
     if request.method == "POST":

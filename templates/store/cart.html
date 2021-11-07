@@ -5,6 +5,7 @@
 {% block contents %}
 
 <!-- ============================ COMPONENT 1 ================================= -->
+<div>
 <section class="container p-3">
 {% if not cart_items %}
 	<h2 class="text-center p-3"> Your cart is Empty.</h2><br>
@@ -22,7 +23,7 @@
 <tr class="small text-uppercase">
   <th scope="col">Product</th>
   <th scope="col" width="120">Quantity</th>
-  <th scope="col" width="120">Price</th>
+  <th scope="col" width="120">Sub-Total</th>
   <th scope="col" class="text-right" width="200"> </th>
 </tr>
 </thead>
@@ -38,6 +39,7 @@
 				<a href="{{ cart_item.product.get_url }}">  <img src="{{cart_item.product.images.url}}" class="img-sm"></a></div>
 			<figcaption class="info">
 				<a href="{{ cart_item.product.get_url }}" class="title text-dark">{{cart_item.product.product_name}}</a>
+				<small class="text-muted">Price: ₹ {{cart_item.product.price}}</small> 
 				<p class="text-muted small">
 					{% if cart_item.variations.all %}
 						{% for item in cart_item.variations.all %}
@@ -60,8 +62,14 @@
 									{% endfor %}
 									<button class="btn btn-light" type="submit" id="button-minus"> <i class="fa fa-minus"></i>  </button>
 								</form> -->
+
+							{% if cart_item.quantity == 1 %}	
+							<a onclick="deleteCartItem('{{cart_item.product_id}}','{{cart_item.id}}')" class="btn btn-light"  id="minusBtDel"> <i class="fa fa-minus"></i> </a>
+							{% else %}
 							<a href="{% url 'remove_cart' cart_item.product_id cart_item.id %}"  a class="btn btn-light"  id="button-minus"> <i class="fa fa-minus"></i> </a>
-							</div>
+							{% endif %}
+						
+						</div>
 							<input type="text" class="form-control"  value="{{cart_item.quantity}}">
 							<div class="input-group-append">
 								<form action="{% url 'add_cart' cart_item.product_id %}" method="POST"> 
@@ -77,12 +85,12 @@
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price">$ {{cart_item.sub_total}}</var> 
-			<small class="text-muted"> $ {{cart_item.product.price}} each </small> 
+			<var class="price">₹ {{cart_item.sub_total}}</var> 
+			
 		</div> <!-- price-wrap .// -->
 	</td>
 	<td class="text-right"> 
-	<a href="{% url 'remove_cart_item' cart_item.product_id cart_item.id %}" onclick="return confirm('Are you sure to delete this item?')" class="btn btn-danger"> Remove</a>
+	<a  id="removeItem" onclick="deleteCartItem('{{cart_item.product_id}}','{{cart_item.id}}')" class="btn btn-danger"> Remove</a>
 	</td>
 </tr>
 
@@ -100,15 +108,15 @@
 		<div class="card-body">
 			<dl class="dlist-align">
 			  <dt>Total price:</dt>
-			  <dd class="text-right">$ {{total}}</dd>
+			  <dd class="text-right">₹ {{total}}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Tax:</dt>
-			  <dd class="text-right"> $ {{tax}}</dd>
+			  <dd class="text-right"> ₹ {{tax}}</dd>
 			</dl>
 			<dl class="dlist-align">
 			  <dt>Total:</dt>
-			  <dd class="text-right text-dark b"><strong>$ {{grand_total}} </strong></dd>
+			  <dd class="text-right text-dark b"><strong>₹ {{grand_total}} </strong></dd>
 			</dl>
 			<hr>
 			<p class="text-center mb-3">
@@ -125,6 +133,52 @@
 </div> <!-- row.// -->
 </section>
 {% endif %}
+</div>
 <!-- ============================ COMPONENT 1 END .// ================================= -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+
+
+  function deleteCartItem(prod_id,cartitem){
+	
+	var proId = prod_id
+	var cartId = cartitem
+	
+	Swal.fire({
+	  title: 'Remove Item?',
+	  text: "Are you sure want to remove this? You will not be able to revert this..",
+	  icon: 'warning',
+	  showCancelButton: true,
+	  confirmButtonColor: '#3085d6',
+	  cancelButtonColor: '#d33',
+	  confirmButtonText: 'Remove Item'
+	}).then((result) => {
+	  if (result.isConfirmed) {
+		$.ajax({		
+		  method: "GET",
+		  url: "{% url 'remove_cart_item' %}",
+		  data : { prod_id : prod_id, cartitem: cartitem },
+		  success:function(response){
+			
+		   
+			Swal.fire(
+			  'Item removed',
+			  'Item has been successfully removed from cart.',
+			  'success'
+			)
+		  location.reload();
+  
+		  }
+		})
+	   
+	  }
+	})
+  }
+  </script>
+
+
+
 
 {% endblock %}

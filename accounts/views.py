@@ -8,6 +8,7 @@ from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 from orders.models import Order, OrderProduct
 from .private import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+from django.core.paginator import Paginator
 
 #verificationemail
 from django.contrib.sites.shortcuts import get_current_site
@@ -152,8 +153,8 @@ def login(request):
             except:
                 pass
             auth.login(request,user)
-            # return redirect('verify_otp')
-            return render(request, 'accounts/my_orders.html')
+            return redirect('verify_otp')
+            # return redirect('home')
         else:
             messages.error(request,"Invalid Credentials")
             return redirect('login')
@@ -247,10 +248,17 @@ def verify_otp(request):
 @login_required(login_url='login')
 def my_orders(request):
     orders = Order.objects.filter(user = request.user,is_ordered=True).order_by('-created_at')
-    context = {
-        'orders': orders
 
-    }
+    paginator = Paginator(orders, 5) # Show 25 contacts per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    print(paginator.count)
+    print(paginator.num_pages)
+    context = {
+        'orders': page_obj,
+        }
+ 
     return render(request, 'accounts/my_orders.html', context)
 
 
@@ -319,3 +327,26 @@ def order_detail(request,order_id):
         'sub_total': sub_total,
     }
     return render (request, 'accounts/order_detail.html',context)
+
+
+def my_addresses(request):
+
+    addresses = Address.objects.filter(user = request.user.id).order_by('-id')
+    context = {
+        "addresses":addresses,
+    }
+
+    return render(request,'accounts/my_addresses.html',context)
+
+def delete_address(request,add_id):
+    print(add_id)
+    
+    del_add = Address.objects.filter(user = request.user.id, id= add_id)
+
+    del_add.delete()
+
+    addresses = Address.objects.filter(user = request.user.id).order_by('-id')
+    context = {
+        "addresses":addresses,
+    }
+    return render(request,'accounts/my_addresses.html', context)

@@ -1,6 +1,7 @@
 
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block contents %}
 
@@ -32,6 +33,8 @@
                                 <th scope="col">Phone</th>
                                 <th scope="col">Order Total</th>
                                 <th scope="col">Date</th>
+                                <th scope="col">Order Status</th>
+                                <th scope="col">Cancel/Return</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -40,18 +43,67 @@
                                 <th scope="row"><a href="{% url 'order_detail' order.order_number %}">{{order.order_number}}</a> </th>
                                 <td>{{order.full_name}}</td>
                                 <td>{{order.phone}}</td>
-                                <td>{{order.order_total}}</td>
-                                <td>{{order.created_at}}</td>
+
+                                {% if order.discount_amount is None %}
+                                <td class="text-right">$ {{order.order_total}}</td>
+                                {% else %}
+                                <td class="text-right">$ {{order.nett_paid}}</td>
+                                {% endif %}
+                                <td>{{order.created_at | naturaltime}}</td>
+                                <td>{{order.status}}</td>
+                                <!-- <td><a href="{% url 'user_order_cancel' order.order_number %}" class="btn btn-danger m-2" name="order_cancel" id="orderCancelBtn">Cancel Order</a></td> -->
+                                {% if order.status == "Cancelled" %}
+                                <td>Order Cancelled</td>
+                                {% elif order.status == "Order Delivered" %}
+                                <td> <form action="{% url 'user_order_return' order.order_number %}" method="POST">{% csrf_token %}
+                                  <input name="user_order_return" type="text" value="Return" hidden>
+                                  <button type="submit" class="btn btn-warning" >Return Order</button>
+                                </form></td>
+                                {% elif order.status == "Return" %}
+                                <td>Order Returned</td>
+                                {% else %}
+                                <td> <form action="{% url 'user_order_cancel' order.order_number %}" method="POST">{% csrf_token %}
+                                  <input name="user_order_cancel" type="text" value="Cancelled" hidden>
+                                  <button type="submit" class="btn btn-danger" >Cancel order</button>
+                                </form></td>
+                                {% endif %}
+
+
                               </tr>
                               {% endfor %}
                      
                             </tbody>
+                            
                           </table>
+                          <nav class="mt-4" aria-label="Page navigation sample">
+                            {% if orders.has_other_pages %}
+                              <ul class="pagination">
+                            {% if orders.has_previous %}
+                              <li class="page-item"><a class="page-link" href="?page={{orders.previous_page_number}}">Previous</a></li>
+                            {% else %}
+                              <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            {% endif %}
+                            {% for i in orders.paginator.page_range %}
+                              {% if orders.number == i %}
+                                <li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+                              {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                              {% endif %}
+                            {% endfor %}
+                            {% if orders.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{orders.next_page_number}}">Next</a></li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                            {% endif %}
+                            </ul>
+                            {% endif %}
+                          </nav>
                     </div>
 
 
                 </div> <!-- row.// -->
             </div> <!-- card-body .// -->
+            
 
             </article> <!-- order-group.// --> 
         </main>

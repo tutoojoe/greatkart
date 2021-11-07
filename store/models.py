@@ -1,4 +1,5 @@
 from enum import unique
+from re import T
 from django.db import models
 from django.db.models.aggregates import Count
 from django.db.models.deletion import CASCADE
@@ -8,6 +9,7 @@ from django.urls import reverse
 from category.models import Category
 from accounts.models import Account
 from django.db.models import Avg
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -20,6 +22,9 @@ class Product(models.Model):
     stock               = models.IntegerField()
     is_available        = models.BooleanField(default=True)
     category            = models.ForeignKey(Category,on_delete=models.CASCADE)
+    discount_type       = models.CharField(max_length=50, null=True,blank=True)
+    discount_percentage = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)], null=True,blank=True)
+    mrp_price           = models.DecimalField(max_digits=10, decimal_places=2)
     created_date        = models.DateTimeField(auto_now_add=True)
     modiified_date      = models.DateTimeField(auto_now=True)
 

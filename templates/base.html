@@ -13,19 +13,31 @@
 
 <!-- jQuery -->
 <!-- <script src="{% static 'js/jquery-2.0.0.min.js' %}" type="text/javascript"></script> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
 <!-- Bootstrap4 files-->
-<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
-<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css"/>
+<!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script> -->
+<!-- <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css"/> -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+
+
+
+<!-- modal css  -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/css/bootstrap-modal-bs3patch.min.css" integrity="sha512-pZqJY6O1CmsoNXFQzpxc+DqTjVjZksnizgykkLSjj2FeM/KzZyVpy4E1FtX90FoU2Ka8X/nlo/7ebheSThd4Qg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
 
 
 <!-- Font awesome 5 -->
 <link href="{% static 'fonts/fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet">
+<!-- cropper files -->
+
+
+
 
 <!-- custom style -->
 <link href="{% static 'css/ui.css' %}" rel="stylesheet" type="text/css"/>
@@ -41,12 +53,15 @@
 <script src="https://www.paypal.com/sdk/js?client-id=AVckvJbIjgfoUjW_dsX4swSf6sVXClRyBBD_pylqrycUo9q6-sEdaQ26dyYMfxiJblyqcnmQRi2GVcNC&currency=USD"></script> 
 
 
-
+</head>
 {% include 'includes/navbar.html' %}
+
 {% block contents %}
+
 
 {% endblock %}
 {% include 'includes/footer.html' %}
+
 
 
 <script>
@@ -69,12 +84,64 @@
     })
 </script>
 
->
+
+    
+ <script>
+
+    function wishList(id){
+        alert('got the click')
+        var data  = {'id': id,  "csrf_token": '{{csrf_token}}'} 
+        $.ajax({
+            url : "{% url 'add_wishlist'  %}",
+            method: "POST",
+            data : data,
+            success : function(data){
+                alert('good wish. successfully updated.')
+                let msg = data.success
+                let quantity = data.wish_items
+                let errorMsg = data.error
+                if(msg && quantity ){
+                    document.getElementById('wishCount').innerText = quantity   
+                    Toastify({    
+                        text: "Item added to wishlist",
+                        duration: 3000,
+                        style: {
+                            background: "linear-gradient(to right, #696969 , #ffa500)",
+                          }
+                        }).showToast(); 
+                }else{
+                    swal({
+                        position :'top-end',
+                        icon: "error",
+                        text: "you must be logged in to add products to whishlist",
+                        timer:3000
+                      });
+                }
+                
+            }
+        })
+    }
+
+</script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js" integrity="sha512-/HL24m2nmyI2+ccX+dSHphAHqLw60Oj5sK8jf59VWtFWZi9vx7jzoxbZmcBeeTeCUc7z1mTs3LfyXGuBU32t+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 
 
 <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script> -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
-<script src="{% static 'js/zoom.js' %}" type="text/javascript"></script>
+<!-- <script src="{% static 'js/zoom.js' %}" type="text/javascript"></script> -->
 </body>
 </html>

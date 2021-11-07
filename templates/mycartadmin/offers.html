@@ -1,47 +1,48 @@
 {% extends 'mycartadmin/admin_base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block pagename %} Offer Management {% endblock %}
 {% block contents %}
 
 
-
+<section class="container">
 <div class="container-fluid">
     <div class="row-fluid">
       <div class="span12">
         <div class="widget-box">
           <div class="widget-title">
              <!-- <span class="icon"><i class="icon-th"></i></span>  -->
-            <h5>Offer Details</h5>
+            <h5>Coupon Offer Details</h5>
           </div>
           <div class="widget-content nopadding">
             <table class="table table-bordered data-table table-hover">
               <thead>
                 <tr>
-                  <th>Email ID</th>
-                  <th>Username</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Mobile No</th>
-                  <th>Join Date</th>
-                  <th>Last Login</th>
-                  <th>Block/Activate</th>
-                  <th>Delete User</th>
+                  <th>Coupon Code</th>
+                  <th>Valid From</th>
+                  <th>Valid To</th>
+                  <th>Discount</th>
+                  <!-- <th>Offer Active</th> -->
+                  
                 </tr>
               </thead>
               <tbody>
+                {% for offer in coupon_offers %}
                 <tr class="gradeX">
-                  <td>{{user.email}}</td>
-                  <td>{{user.username}}</td>
-                  <td>{{user.first_name}}</td>
-                  <td>{{user.last_name}}</td>
-                  <td>{{user.mobile_number}}</td>
-                  <td>{{user.join_date}}</td>
+                  
+                  <td>{{offer.code}}</td>
+                  <td>{{offer.valid_from | naturaltime}}</td>
+                  <td>{{offer.valid_to | naturaltime}}</td>
+                  <td>{{offer.discount}}</td>
+                  <!-- <td>{{offer.active}}</td> -->
+                  <!-- <td>{{user.join_date}}</td>
                   <td>{{user.last_login}}</td>
                   <td>block/activate</td>
-                  <td>delete</td>
+                  <td>delete</td> -->
                   <!-- <td class="center">4</td> -->
+                  
                 </tr>
+                {% endfor %}
              
                 
               </tbody>
@@ -50,6 +51,132 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="widget-box">
+      <div class="widget-title">
+         <!-- <span class="icon"><i class="icon-th"></i></span>  -->
+        <h5>Category Offer Details</h5>
+      </div>
+      <div class="widget-content nopadding">
+        <table class="table table-bordered data-table table-hover">
+          <thead>
+            <tr>
+              <th>Coupon Code</th>
+              <th>Category</th>
+              <th>Valid From</th>
+              <th>Valid To</th>
+              <th>Discount</th>
+              <!-- <th>Offer Active</th> -->
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for offer in cat_offers %}
+            <tr class="gradeX">
+              
+              <td>{{offer.code}}</td>
+              <td>{{offer.category_id.category_name}}</td>
+              <td>{{offer.valid_from | naturaltime}}</td>
+              <td>{{offer.valid_to | naturaltime}}</td>
+              <td>{{offer.discount}}</td>
+              <!-- <td>{{offer.active}}</td> -->
+              <!-- <td>{{user.join_date}}</td>
+              <td>{{user.last_login}}</td>
+              <td>block/activate</td>
+              <td>delete</td> -->
+              <!-- <td class="center">4</td> -->
+              
+            </tr>
+            {% endfor %}
+         
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
 </div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <div class="widget-box">
+      <div class="widget-title">
+         <!-- <span class="icon"><i class="icon-th"></i></span>  -->
+        <h5>Product Offer Details</h5>
+      </div>
+      <div class="widget-content nopadding">
+        <table class="table table-bordered data-table table-hover">
+          <thead>
+            <tr>
+              <th>Coupon Code</th>
+              <th>Product</th>
+
+              <th>Valid From</th>
+              <th>Valid To</th>
+              <th>Discount</th>
+              <!-- <th>Offer Active</th> -->
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for offer in prod_offers %}
+            <tr class="gradeX">
+              
+              <td>{{offer.code}}</td>
+              <td>{{offer.product_id.product_name}}</td>
+
+              <td>{{offer.valid_from | naturaltime}}</td>
+              <td>{{offer.valid_to | naturaltime}}</td>
+              <td>{{offer.discount}}</td>
+              <!-- <td>{{offer.active}}</td> -->
+              <!-- <td>{{user.join_date}}</td>
+              <td>{{user.last_login}}</td>
+              <td>block/activate</td>
+              <td>delete</td> -->
+              <!-- <td class="center">4</td> -->
+              
+            </tr>
+            {% endfor %}
+         
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
+</div>
+
+
+</div>
+<nav class="mt-4" aria-label="Page navigation sample">
+	{% if coupon_offers.has_other_pages %}
+  	<ul class="pagination">
+	{% if coupon_offers.has_previous %}
+		<li class="page-item"><a class="page-link" href="?page={{coupon_offers.previous_page_number}}">Previous</a></li>
+	{% else %}
+		<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	{% endif %}
+	{% for i in coupon_offers.paginator.page_range %}
+		{% if coupon_offers.number == i %}
+			<li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+		{% else %}
+			<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+		{% endif %}
+	{% endfor %}
+	{% if coupon_offers.has_next %}
+	<li class="page-item"><a class="page-link" href="?page={{coupon_offers.next_page_number}}">Next</a></li>
+	{% else %}
+	<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+	{% endif %}
+	</ul>
+	{% endif %}
+</nav>
+
+
+</section>
 
 {% endblock %}

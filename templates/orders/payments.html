@@ -106,6 +106,7 @@
           <dl class="dlist-align">
             <dt>Total price:</dt>
             <dd class="text-right">$ {{total}}</dd>
+            
           </dl>
           <dl class="dlist-align">
             <dt>Tax:</dt>
@@ -113,15 +114,30 @@
           </dl>
           <dl class="dlist-align">
             <dt>Total:</dt>
-            <dd class="text-right text-dark b"><strong>$ {{grand_total}} </strong></dd>
+            <dd class="text-right text-dark b" id="grandTotal"><strong>$ {{grand_total}} </strong></dd>
           </dl>
+            <span id="discountsID" hidden>
+              <dl class="dlist-align">
+                <dt>Discount amount:</dt>
+                  <dd class="text-right" id="discAmount"> </dd>
+                </dl>
+              <dl class="dlist-align">
+                <dt>Nett Payable:</dt>
+                  <dd class="text-right text-dark b" id="discGrandTotal" style="color: darkgreen;"><strong>amount </strong></dd>
+            </dl>
+            </span>
+          
           <hr>
           <p class="text-center mb-3">
             <img src="{% static './images/misc/payments.png' %}" height="26">
           </p>
           <!-- <a href="#" class="btn btn-primary btn-block mb-2" id="make_payment_btn">Make
             Payment</a> -->
-            
+            <input type="text" id="couponInp" class="form-control mb-2" >
+            <span id="couponAlert" style="color:orange;" class="text-center"></span>
+            <span id="couponSuccessAlert" style="color:green;" class="text-center"></span>
+            <button onclick="claimCoupon()" class="btn btn-primary btn-block mb-2 mt-2" id="claimButton">Claim Coupons</button>
+            <!-- {% for i in form %}{{i}}{% endfor %} -->
             <a href="{% url 'cod_order_complete' order.order_number %}" selected class="btn btn-primary btn-block mb-2" id="COD_button">Cash on Delivery</a>
             <a href="{% url 'proceed_payment' order.order_number %}"  class="btn btn-primary btn-block mb-2" hidden="true" id="rzp-button1">Pay with Razorpay</a>
             <div hidden="true" id="paypal-button-container"></div>
@@ -277,5 +293,47 @@ document.getElementById('rzp-button1').onclick = function(e){
 }
 
 </script> -->
+
+<script>
+
+
+  function claimCoupon(){
+    console.log("I am here")
+    /* alert("coupon claim button clicked") */
+    var code = document.getElementById('couponInp').value
+     /* alert(code) */
+    var data = {
+      'code' : code, 
+      'csrf_token':'{{csrf_token}}'
+    }
+    console.log(code)
+    $.ajax({
+      url: "{% url 'verify_coupon' %}",
+      method:"POST",
+      data:data,
+   
+      success:function(response){
+        var coupon = response.success
+        if (coupon == "valid"){
+          console.log("Coupon Verified Successfully")
+          document.getElementById('couponSuccessAlert').innerText = "Coupon successfully applied."
+          document.getElementById('couponInp').hidden = true
+          document.getElementById('claimButton').disabled = true  
+          document.getElementById('discountsID').hidden = false
+          document.getElementById('discGrandTotal').innerText = response.total_after_coupon
+          document.getElementById('discAmount').innerText = response.discount_amount
+          
+
+        }else{
+          document.getElementById('couponAlert').innerText = "Invalid Coupon..!!"
+          
+          console.log("not a valid coupon")
+      }
+      }
+    }) 
+  }
+
+
+</script>
 
 {% endblock %}

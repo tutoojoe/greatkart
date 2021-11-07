@@ -1,10 +1,18 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib.auth.decorators import login_required
-from accounts.models import Address
+from accounts.models import Account, Address
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+
 
 from store.models import Product,Variation
-from carts.models import Cart,CartItem
+from carts.models import Cart,CartItem, WishCart, Wishlist
+
+from django.views.decorators.cache import cache_control
+
+from json import loads as jsonloads
 
 # Create your views here.
 
@@ -16,7 +24,15 @@ def _cart_id(request):
         cart    = request.session.create()
     return cart
 
+def _wishcart_id(request):
+    wishcart        = request.session.session_key
+    if not wishcart:
+        wishcart    = request.session.create()
+    return wishcart
+
+
 def add_cart(request,product_id):
+
     current_user = request.user
     product     = Product.objects.get(id = product_id)
     # if the user is authenticated
@@ -163,14 +179,83 @@ def add_cart(request,product_id):
         
         return redirect('cart')
 
+def wishlist(request):
+    wishlist_items = Wishlist.objects.filter(user = request.user)
+    context = {
+        'wishlist_items': wishlist_items,
+    }
+    return render (request, 'store/wishlist.html',context)
 
+@csrf_exempt
+def add_wishlist(request):
+    print('request received ')
+    if request.user.is_authenticated:
+        wish_list = Wishlist.objects.filter(user = request.user.id)
+        if request.method == 'POST':
+            if request.user.is_authenticated:
+                
+                product_id = request.POST['id']
+                user = Account.objects.get(id = request.user.id)
+                product = Product.objects.get(id = product_id)
+                
+                
+                wishlist = Wishlist()
+                wishlist.product = product
+                wishlist.user = user
+                
 
+                wish_item = Wishlist.objects.filter(product = product, user = request.user).first()
+               
+                if wish_item:
+                    pass                    
+                else:                    
+                    wishlist.save()
+                    
 
+                wish_item_count = Wishlist.objects.filter(user = request.user).count()
+            
+                success = 'product added to wishlist!!!'
+                return JsonResponse({'success': success,'wish_items':wish_item_count})
+            else:
+                error = "error"
+                return JsonResponse({'error':error })
+    else:
+        messages.error(request,"please login!!")
+        return redirect('login')
+
+    wishlist_items = Wishlist.objects.filter(user = request.user)
+    print(wishlist_items)
+    context = {
+        'wishlist_items': wishlist_items,
+    }
+    return render (request, 'store/wishlist.html',context)
 
  
  # Adding function to remove cart
-def remove_cart(request,product_id, cart_item_id):
+
+def remove_cart_ajax(request):
+    product_id =request.GET['prod_id']
+    cart_item_id = request.GET['cartitem']
     
+    product     = get_object_or_404(Product, id=product_id)
+    try:
+        if request.user.is_authenticated:
+            cart_item   = CartItem.objects.get(product = product, user=request.user, id=cart_item_id)
+        else:
+            cart        = Cart.objects.get(cart_id=_cart_id(request))
+            cart_item   = CartItem.objects.get(product = product, cart = cart, id=cart_item_id)
+        
+        if cart_item.quantity >1:
+            cart_item.quantity -=1
+            cart_item.save()
+        else:
+            cart_item.delete()
+    except:
+        pass    
+    return JsonResponse({'success':'Item successfully Removed'})
+
+def remove_cart(request,product_id, cart_item_id):
+        
     product     = get_object_or_404(Product, id=product_id)
     try:
         if request.user.is_authenticated:
@@ -190,7 +275,15 @@ def remove_cart(request,product_id, cart_item_id):
 
 # Function to delete the cart item directly with 'Remove' button
 
-def remove_cart_item(request, product_id, cart_item_id):
+def remove_cart_item(request):
+    print('hi')
+    product_id =request.GET['prod_id']
+    cart_item_id = request.GET['cartitem']
+
+    print(product_id,' - product_id and ',cart_item_id,'cart item id')
+    # print(data2)
+    # cart_item_id = request.GET['cartitem']
+    # print(product_id,cart_item_id)
     
     product     = get_object_or_404(Product, id=product_id)
     if request.user.is_authenticated:
@@ -199,9 +292,11 @@ def remove_cart_item(request, product_id, cart_item_id):
         cart        = Cart.objects.get(cart_id=_cart_id(request))
         cart_item   = CartItem.objects.get(product = product, cart = cart, id=cart_item_id)
     cart_item.delete()
-    return redirect('cart')
+    return JsonResponse({'success':'Item successfully Removed'})
 
 # Function to get cart items, total and quantity
+
+login_required(login_url='login')
 def cart(request, total=0, quantity=0, cart_items=None):
     try:
         tax = 0
