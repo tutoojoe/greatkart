@@ -170,7 +170,7 @@ def login(request):
                         
             except:
                 pass
-            auth.login(request,user)
+            
             return redirect('verify_otp')
             # return redirect('home')
         else:
