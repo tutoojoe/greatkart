@@ -31,6 +31,7 @@
                                 <th scope="col">Mobile No & Email</th>
                                 <th scope="col">Address</th>
                                 <th scope="col">City & State</th>
+                                <th scope="col">Edit</th>
                                 <th scope="col">Delete</th>
                               </tr>
                             </thead>
@@ -41,6 +42,9 @@
                                 <td>{{address.mobile}}<br>{{address.email}} </td>
                                 <td>{{address.full_address}}</td>
                                 <td>{{address.city}}, {{address.state}}</td>
+                                     <td><a href="{% url 'edit_address' address.id %}" 
+                                        onclick="return confirm('Are you sure you want to EDIT this address?')">
+                                        <button class="btn btn-primary m-2"> <i class="icon-edit"></i> Edit</button></a></td>
                                 <td><a href="{% url 'delete_address' address.id %}" class="btn btn-danger m-2" id="delAddressBtn" > Delete</a></td>
                                 
                               </tr>

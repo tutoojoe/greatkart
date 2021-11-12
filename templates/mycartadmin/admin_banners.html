@@ -1,0 +1,59 @@
+{% extends 'mycartadmin/admin_base.html' %}
+{% load static %}
+{% load humanize %}
+{% block pagename %} Offer Management {% endblock %}
+{% block contents %}
+
+
+
+      {% comment %} here i inserted {% endcomment %}
+       <div class="card mb-4 mt-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Banners
+              
+
+            </div>
+            <div class="text-right mb-3 mr-3"><hr><a href="{% url 'add_banner' %}" class="btn btn-primary"> Add Banner </a></div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                    
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Banner</th>
+                            <th>Banner Name</th>
+                            <th>Valid From</th>
+                            <th>Valid To</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Banner</th>
+                            <th>Banner Name</th>
+                            <th>Valid From</th>
+                            <th>Valid To</th>
+                            <th>Active</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    {% for banner in banners %}
+                        <tr>
+                            <td>{{forloop.counter}})</td>
+                            <td> <img src="{{banner.banner_image.url}}" width="100" alt="Banner Image"></td>
+                            <td>{{banner.banner_name}}</td>
+                            <td>{{banner.valid_from | naturaltime }}</td>
+                            <td>{{banner.valid_to | naturaltime }}</td>
+                            <td>{{banner.is_active}}</td>
+                        </tr>
+                        {% endfor %}
+             
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+{% endblock %}

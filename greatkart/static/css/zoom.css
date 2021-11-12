@@ -97,7 +97,7 @@ body{
 	cursor: pointer;
 	opacity: 0.5;
 	margin: 5px;
-	border: 2px solid black;
+	border: 1px solid black;
 
 }
 
@@ -169,8 +169,8 @@ body{
 	z-index: 2;
 	position: absolute;
 
-	height: 130px;
-	width: 130px;
+	height: 125px;
+	width: 125px;
 	/* border:2px solid rgb(111, 111, 111); */
 	background-repeat: no-repeat;
 	cursor: none;

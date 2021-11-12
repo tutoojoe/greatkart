@@ -1,0 +1,147 @@
+{% extends 'mycartadmin/admin_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block contents %}
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y" style="min-height:84vh">
+
+    <!-- ============================ COMPONENT LOGIN   ================================= -->
+       
+ 
+    <div class="card mx-auto" style=" margin-top:10px; ">
+            
+                
+              <div class="row mt-3">
+                <div class="col-md-6" style="height: 50%; margin: auto;">
+                    <form action="{% url 'add_banner' %}" method="POST" enctype="multipart/form-data" id="post-form" style="margin-bottom: 20px; border: 2px solid grey; padding: 30px 20px;">
+                      {% csrf_token %}
+                      <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Add Product Photos</legend>
+                        {% include 'includes/alerts.html' %}
+                        {{ form | crispy }}
+                      </fieldset>
+            
+                      <div class="form-group">
+                        <div id="image-box" class="image-container"></div>
+                        <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
+                        <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Banner</button>            
+                      </div>
+                        </form>
+            
+            
+                </div>
+            </div>
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+function fileValidation() {
+var fileInput = document.getElementById('file');
+  
+var filePath = fileInput.value;
+
+// Allowing file type
+var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+  
+if (!allowedExtensions.exec(filePath)) {
+    alert('Invalid file type');
+    fileInput.value = '';
+    return false;
+} 
+else 
+{
+  
+    // Image preview
+    if (fileInput.files && fileInput.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById(
+                'imagePreview').innerHTML = 
+                '<img src="' + e.target.result
+                + '"/>';
+        };
+          
+        reader.readAsDataURL(fileInput.files[0]);
+    }
+}
+}
+</script>
+
+<script>
+
+// image-box is the id of the div element that will store our cropping image preview
+const imagebox = document.getElementById('image-box')
+      // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+const crop_btn = document.getElementById('crop-btn')
+// id_image is the id of the input tag where we will upload the image
+const input = document.getElementById('id_banner_image')
+
+var filePath = input.value;
+var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+const postForm = document.getElementById('post-form')
+  console.log(postForm)
+
+// When user uploads the image this event will get triggered
+input.addEventListener('change', (e)=>{
+  console.log(input.value)
+  const img_data = input.files[0]
+  value=img_data.type
+  
+  if (value == "image/jpeg" || value == "image/jpg" || value == "image/png") {
+   
+  const url = URL.createObjectURL(img_data)
+  imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%;">`
+  const image = document.getElementById('image')
+  document.getElementById('image-box').style.display = 'block'
+  document.getElementById('crop-btn').style.display = 'block'
+  document.getElementById('confirm-btn').style.display = 'none'
+  const cropper = new Cropper(image, {
+  aspectRatio: 10 / 3,
+  autoCropArea: 1,
+  viewMode: 1,  
+  scalable: false,
+  zoomable: false,
+  movable: false,
+  minCropBoxWidth: 200,
+  minCropBoxHeight: 200,
+  })
+  crop_btn.addEventListener('click', ()=>{
+    cropper.getCroppedCanvas().toBlob((blob)=>{
+      let fileInputElement = document.getElementById('id_banner_image');
+      let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
+      let container = new DataTransfer();
+      container.items.add(file);
+      fileInputElement.files = container.files;
+      document.getElementById('image-box').style.display = 'none'
+      document.getElementById('crop-btn').style.display = 'none'
+      document.getElementById('confirm-btn').style.display = 'block'
+
+      });
+    });
+
+}else{
+  Swal.fire({
+  icon: 'error',
+  title: 'Not Image',
+  text: 'The file is not an image..!! Please upload image',
+  })
+  
+  input.value = '';
+  return false;
+}
+
+  });
+
+</script>
+            
+            
+{% endblock %}

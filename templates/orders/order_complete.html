@@ -3,8 +3,7 @@
 
 
 {% block contents %}
-
-
+<div class="printPage">
     <div class="container" style="margin-top: 50px;">
         <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
         <h2 class="text-center">Payment Successful</h2>
@@ -75,6 +74,7 @@
                                                             {% for i in item.variations.all %}
                                                             {{i.variation_category | capfirst }} : {{i.variation_value | capfirst}}<br>
                                                             {% endfor %}
+                                                            MRP Price: ₹ {{item.product.mrp_price}}
                                                         {% endif %}
                                                     </p>
                                                 </td>
@@ -86,26 +86,26 @@
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">${{subtotal}}</th>
+                                                <th class="text-center">₹ {{subtotal}}</th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">$ {{order.tax}}</th>
+                                                <th class="text-center">₹ {{order.tax}}</th>
                                             </tr>
                                             
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">$ {{order.order_total}} </th>
+                                                <th class="text-center">₹ {{order.order_total}} </th>
                                             </tr>
                                             {% if order.discount_amount is None %}
                                             {% else %}
                                             <tr>
                                                 <th colspan="2" class="text-right">Discount:</th>
-                                                <th class="text-center">$ {{order.discount_amount}} </th>
+                                                <th class="text-center">₹ {{order.discount_amount}} </th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Nett Amount:</th>
-                                                <th class="text-center">$ {{order.nett_paid}} </th>
+                                                <th class="text-center">₹ {{order.nett_paid}} </th>
                                             </tr>
                                             {% endif %}
                                         </tfoot>
@@ -126,7 +126,13 @@
         <!-- col-lg-12 end here -->
     </div>
     </div>
+</div>
 
-
+<script>
+    $('#printInvoice').click(function(){
+               window.print();
+               return false;
+    });
+    </script>
 
 {% endblock %}

@@ -16,7 +16,7 @@ import razorpay
 from store.models import Product
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, request
 from orders.models import Order, Payment, OrderProduct
 import json
 from django.core.mail import EmailMessage
@@ -24,6 +24,8 @@ from django.template.loader import render_to_string
 from coupon_offers.models import Coupon
 from coupon_offers.forms import CouponApplyForm
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 # Create your views here.
@@ -48,8 +50,8 @@ def place_order(request, total=0, quantity=0):
         for cart_item in cart_items:
             total   += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
-        tax = (5 * total)/100
-        grand_total = total + tax
+        tax = round((5 * total)/100,2)
+        grand_total = round(total + tax,2)
 
         print('found one order and rendering')
 
@@ -77,8 +79,8 @@ def place_order(request, total=0, quantity=0):
         for cart_item in cart_items:
             total   += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
-        tax = (5 * total)/100
-        grand_total = total + tax
+        tax = round((5 * total)/100,2)
+        grand_total = round(total + tax,2)
         print('going to check the post request')
         if request.method == "POST":
             # form = OrderForm(request.POST)
@@ -217,8 +219,12 @@ def payments(request):
     return JsonResponse(data)
 
 razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+@csrf_exempt
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
-def proceed_payment(request,order_id):
+def proceed_payment(request):
+   
+    order_id = request.POST['ord_no']
+    print(order_id)
     now = datetime.now()
     order = Order.objects.get(user = request.user, is_ordered = False, order_number = order_id)
     code = order.coupon
@@ -243,8 +249,8 @@ def proceed_payment(request,order_id):
             for cart_item in cart_items:
                 total   += (cart_item.product.price * cart_item.quantity)
                 quantity += cart_item.quantity
-            tax = (5 * total)/100
-            grand_total = total + tax
+            tax = round((5 * total)/100,2)
+            grand_total = round(total + tax,2)
         
             discount_amount = grand_total * discount/100
             print(discount_amount,'discount amount')
@@ -255,11 +261,8 @@ def proceed_payment(request,order_id):
             order.nett_paid = total_after_coupon
             
             order.save()
-        
-        
-        
-        
-        
+            
+            
             first_name = order.first_name
             last_name = order.last_name
             phone = order.phone
@@ -291,8 +294,9 @@ def proceed_payment(request,order_id):
                 "order_number":order_number,
                 
             }
-
-            return render(request,'orders/proceed_payment.html',context)
+            
+            # return render(request,'orders/proceed_payment.html',context)
+            return JsonResponse({'payment':payment})
     except:
         # here is the else case
         order = Order.objects.get(user = request.user, is_ordered = False, order_number = order_id)
@@ -327,8 +331,16 @@ def proceed_payment(request,order_id):
             "order_number":order_number,
             
         }
+        print("***********",context)
+        return JsonResponse({'payment':payment})
 
-        return render(request,'orders/proceed_payment.html',context)
+        # return render(request,'orders/proceed_payment.html',context)
+    
+    
+    
+    
+    
+    
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 def order_complete(request):
@@ -472,8 +484,7 @@ def cod_order_complete(request,order_number):
             print('coupon available',coupon)
             discount = coupon.discount
             print(discount)
-            order_no = order.order_number
-            
+            order_no = order.order_number            
             print(order_no)
             print('got order')
             current_user = request.user
@@ -485,10 +496,10 @@ def cod_order_complete(request,order_number):
             for cart_item in cart_items:
                 total   += (cart_item.product.price * cart_item.quantity)
                 quantity += cart_item.quantity
-            tax = (5 * total)/100
-            grand_total = total + tax
+            tax = round((5 * total)/100,2)
+            grand_total = round(total + tax,2)
         
-            discount_amount = grand_total * discount/100
+            discount_amount = round(grand_total * discount/100,2)
             print(discount_amount,'discount amount')
             total_after_coupon = round(float(grand_total - discount_amount),2)
             print(grand_total,'total')

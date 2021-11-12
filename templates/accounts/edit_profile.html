@@ -22,7 +22,7 @@
                 
             </header>
             <div class="card-body">
-                <div class="text-right">
+                <div class="text-center">
                     <img src="{{userprofile.profile_picture.url}}" width="100" style="border-radius: 50%;" alt="Profile Picture">
                 </div>
                 <div class="row">   
@@ -77,7 +77,11 @@
                                 </div>
                             </div>
                             <div>
-                                <input type="submit" value="Save" class="btn btn-primary" name="" id="">
+                             <div class="form-group">
+            <div id="image-box" class="image-container"></div>
+            <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
+            <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Save</button>            
+          </div>
                             </div>
 
 
@@ -99,6 +103,77 @@
     
     </section>
     <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+// image-box is the id of the div element that will store our cropping image preview
+const imagebox = document.getElementById('image-box')
+      // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+const crop_btn = document.getElementById('crop-btn')
+// id_image is the id of the input tag where we will upload the image
+const input = document.getElementById('id_profile_picture')
+
+var filePath = input.value;
+var allowedExtensions =  /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+const postForm = document.getElementById('post-form')
+  console.log(postForm)
+
+// When user uploads the image this event will get triggered
+input.addEventListener('change', (e)=>{
+  console.log(input.value)
+  const img_data = input.files[0]
+  value=img_data.type
+  
+  if (value == "image/jpeg" || value == "image/jpg" || value == "image/png") {
+   
+  const url = URL.createObjectURL(img_data)
+  imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%;">`
+  const image = document.getElementById('image')
+  document.getElementById('image-box').style.display = 'block'
+  document.getElementById('crop-btn').style.display = 'block'
+  document.getElementById('confirm-btn').style.display = 'none'
+  const cropper = new Cropper(image, {
+  aspectRatio: 1 / 1,
+  autoCropArea: 1,
+  viewMode: 1,  
+  scalable: false,
+  zoomable: false,
+  movable: false,
+  minCropBoxWidth: 200,
+  minCropBoxHeight: 200,
+  })
+  crop_btn.addEventListener('click', ()=>{
+    cropper.getCroppedCanvas().toBlob((blob)=>{
+      let fileInputElement = document.getElementById('id_profile_picture');
+      let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
+      let container = new DataTransfer();
+      container.items.add(file);
+      fileInputElement.files = container.files;
+      document.getElementById('image-box').style.display = 'none'
+      document.getElementById('crop-btn').style.display = 'none'
+      document.getElementById('confirm-btn').style.display = 'block'
+
+      });
+    });
+
+}else{
+  Swal.fire({
+  icon: 'error',
+  title: 'Not Image',
+  text: 'The file is not an image..!! Please upload image',
+  })
+  
+  input.value = '';
+  return false;
+}
+
+  });
+
+</script>
+            
     
 
 

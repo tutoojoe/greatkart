@@ -38,7 +38,7 @@
                   <td><a href="{% url 'edit_category' category.id %}" 
                     onclick="return confirm('Are you sure you want to EDIT this category?')">
                     <button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td>
-                  <td><a href="admin_cat_delete/{{category.id}}"
+                  <td><a href="{% url 'delete_category' category.id %}"
                     onclick="return confirm('Are you sure you want to DELETE this category?')" >
                     <button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td>
                   <!-- <td class="center">4</td> -->

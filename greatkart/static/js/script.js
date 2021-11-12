@@ -52,6 +52,14 @@ $(document).ready(function() {
 	} // end if
 
 
+setTimeout(function(){
+
+$('#message').fadeout('slow')
+},4000)
+
+
+
+
 /*
 
     document.getElementById('img-container').addEventListener('mouseover', function(){

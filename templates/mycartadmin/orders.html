@@ -4,95 +4,80 @@
 {% block pagename %} Order Management {% endblock %}
 {% block contents %}
 
-<section class="container ">
-<div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span12">
-        <input class="form-control mt-5 mr-sm-2 mb-3" type="search" id="searchInput" onkeyup="myFunction()" placeholder="Search order">
-        <div class="widget-box">
-          <div class="widget-title">
-             <!-- <span class="icon"><i class="icon-th"></i></span>  -->
-            <h5>Order Details</h5>
-            
-          </div>
-          <div class="widget-content nopadding">
-            <table class="table table-bordered data-table table-hover" id="table">
-              <form method="POST" action="{% url 'filter_orders' %}">
-                {% csrf_token %}
-              <hr > <label for="from_date" style="float: left; "> From </label> 
-              <input id= "from_date" type="date" name="from_date" placeholder="From Date" class="form-control col-2 m-2" style="float:left"> 
-              <label for="to_date" style="float: left;"> To </label> 
-              <input type="date" id="to_date" name="to_date" class="form-control col-2 m-2" placeholder="To Date" style="float:left"> 
-              <button type="submit" class="btn btn-primary m-2">Generate Report</button> 
-              <!-- <a href="{% url 'order_report' %}" class="btn btn-info mr-2 ml-2">Generate Report </a> --></form>
-              <thead  >
-                <tr >
-                  <th>Customer Name</th>
-                  <th>Order No</th>
-                  
-                  <th>Phone No</th>
-                  <!-- <th>Email</th> -->
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Order Value</th>
-                  <th>Status</th>
-                  <th>Update Status</th>
-                  <th></th>
+<link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+<div class="card mb-4 mt-4">
+  <div class="card-header">
+      <i class="fas fa-table me-1"></i>
+      Orders
+      {% include 'includes/alerts.html' %}
+    
+  </div>
+  <div class="card-body">
+    <table id="datatablesSimple" class="display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                      <th>Customer Name</th>
+                      <th>Order No</th>
+                      <th>Order Value</th>
+                      {% comment %} <th>Phone No</th> {% endcomment %}
+                      <!-- <th>Email</th> -->
+                      <th>City</th>
+                      <th>State</th>
+                      <th>Order Value</th>
+                      <th>Status</th>
+                      <th></th>
+                      {% comment %} <th></th> {% endcomment %}
+                     
                 </tr>
-              </thead>
-              <tbody>
-                {% for order in orders %}
-                <form action="{% url 'update_order_status' order.order_number %}" method="POST">
-                  {% csrf_token %}
-                <tr class="gradeX">
-                  <td>{{order.full_name}}</td>
-                  <td>{{order.order_number}}</td>
+            </thead>
+            <tbody>
+                  {% for order in orders %}
+                    <form action="{% url 'update_order_status' order.order_number %}" method="POST">
+                      {% csrf_token %}
+                    <tr class="gradeX">
+                      <td>{{order.full_name}}</td>
+                      <td>{{order.order_number}}</td>
+                      <td>{{order.created_at}}</td>
+                      {% comment %} <td>{{order.phone}}</td> {% endcomment %}
+                      <!-- <td>{{order.email}}</td> -->
+                      <td>{{order.city}}</td>
+                      <td>{{order.state}}</td>
+                      <td>{{order.order_total}}</td>
+                      <td>{{order.status}}</td>
+                       {% if order.status == "Cancelled" %}
+                      <td>Order Cancelled</td>
+                      {% elif order.status == "Order Delivered" %}
+                      <td>Order Delivered</td>
+                      {% else %}
+                      <td><a href="{% url 'update_order_status' order.order_number %}" 
+                              onclick="return confirm('Are you sure you want to UPDATE this product?')">
+                              <button class="btn btn-primary "> <i class="icon-edit"></i>UPDATE</button></a></td>             
+                      {% comment %} <td><input type="submit" onclick="updateStatus()" value="Update"></td> {% endcomment %}
+                      <!-- <td class="center">4</td> -->
+                      {% endif %}
+                      </form>
+                    </tr>
                   
-                  <td>{{order.phone}}</td>
-                  <!-- <td>{{order.email}}</td> -->
-                  <td>{{order.city}}</td>
-                  <td>{{order.state}}</td>
-                  <td>{{order.order_total}}</td>
-                  <td>{{order.status}}</td>
-                  <td>{% for i in form %} {{i}} {% endfor %}</td>             
-                  <td><input type="submit" value="Update"></td>
-                  <!-- <td class="center">4</td> -->
-                  </form>
+                    {% endfor %}
+
+            </tbody>
+            <tfoot>
+                <tr>
+                      <th>Customer Name</th>
+                      <th>Order No</th>
+                      {% comment %} <th>Phone No</th> {% endcomment %}
+                      <!-- <th>Email</th> -->
+                      <th>City</th>
+                      <th>State</th>
+                      <th>Order Value</th>
+                      <th>Status</th>
+                      <th>Update Status</th>
+                      {% comment %} <th></th> {% endcomment %}
                 </tr>
-              
-                {% endfor %}
-                
-              </tbody>
-            </table>
-          </div>
-        </div>
+            </tfoot>
+        </table>
     </div>
 </div>
-<!-- <a href="{% url 'order_report' %}" class="btn btn-info">Generate Report </a> -->
-</div>
-
-<nav class="mt-4" aria-label="Page navigation sample">
-	{% if orders.has_other_pages %}
-  	<ul class="pagination">
-	{% if orders.has_previous %}
-		<li class="page-item"><a class="page-link" href="?page={{orders.previous_page_number}}">Previous</a></li>
-	{% else %}
-		<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-	{% endif %}
-	{% for i in orders.paginator.page_range %}
-		{% if orders.number == i %}
-			<li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
-		{% else %}
-			<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
-		{% endif %}
-	{% endfor %}
-	{% if orders.has_next %}
-	<li class="page-item"><a class="page-link" href="?page={{orders.next_page_number}}">Next</a></li>
-	{% else %}
-	<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-	{% endif %}
-	</ul>
-	{% endif %}
-</nav>
-</section>
 {% endblock %}

@@ -4,211 +4,203 @@
 
 {% block contents %}
 
+
 <section class="section-content padding-y bg">
-<div class="container">
-
-<!-- ============================ COMPONENT 1 ================================= -->
-<div class="card img-zoom-container" onmousenter="showme(this)">
-	<div class="row no-gutters">
-		<aside class="col-md-6">
-			<article class="gallery-wrap"> 
-				<div class="img-big-wrap mainImage " id="img-container">
-					<div id="lens"></div>
-					<center><img id="featured"  src="{{single_product.images.url}}"></center>
-				</div> <!-- img-big-wrap.// -->
-				<div class="col-md-6"></div>
-			</article> <!-- gallery-wrap .end// -->
-	<ul class="thumb">
-		<li>
-			<a href="{{single_product.images.url}}" target="mainImage"> <img src="{{single_product.images.url}}" alt="Product Image"> </a>
-			{% for i in product_gallery %}
-			<a href="{{i.image.url}}" target="mainImage"> <img src="{{i.image.url}}" alt="Product Image"> </a>
-			{% endfor %}
-		</li>
-	</ul>
-        </aside>
-		<span id="myhide" style=
-			"float: right;
-			position: absolute;
-			top: -100px;
-			left: 300px;
-			width: auto;
-			height: 100%;">
-			<div id="myresult" class="img-zoom-result"  onmouseleave="hideme(this)" ></div>
-		</span>
-		<main class="col-md-6 border-left detail">
-
-
-			<form action="{% url 'add_cart' single_product.id %}" method="POST">
-				{% csrf_token %}
-			<article class="content-body">
-				
-
-			<h2 class="title">{{single_product.product_name}}</h2>
-			<div class="rating-star">
-			<span>
-				<i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<span> {{single_product.countReview}} reviews </span>
+	<div class="container">
+	
+	<!-- ============================ COMPONENT 1 ================================= -->
+	<div class="card">
+		<div class="row no-gutters">
+			<aside class="col-md-6">
+				<article class="gallery-wrap"> 
+					<div class="img-big-wrap" id="img-container">
+						<div id="lens"></div>
+						<center><img id="featured"  src="{{single_product.images.url}}"></center>
+					</div> <!-- img-big-wrap.// -->
+					<div class="col-md-6"></div>
+				</article> <!-- gallery-wrap .end// -->
+		<ul class="thumb">
+			<li>
+				<a href="{{single_product.images.url}}" target="mainImage"> <img src="{{single_product.images.url}}" alt="Product Image"> </a>
+				{% for i in product_gallery %}
+				<a href="{{i.image.url}}" target="mainImage"> <img src="{{i.image.url}}" alt="Product Image"> </a>
+				{% endfor %}
+			</li>
+		</ul>
+			</aside>
+			<span id="myhide" style=
+				"float: right;
+				position: absolute;
+				top: -100px;
+				left: 300px;
+				width: auto;
+				height: 100%;">
+				<div id="myresult" class="img-zoom-result"  onmouseleave="hideme(this)" ></div>
 			</span>
-			</div>
-
-			<div class="mb-3"> 
-				<var class="price h4">₹ {{single_product.price}}</var> 
-			</div> 
-
-			<p>{{single_product.description}}</p>
-
-
-			<hr>
-				<div class="row">
-					<div class="item-option-select">
-						<h6>Choose Color</h6>
-						<select name="color" id="" class="form-control" required>
-							<option value="" disabled selected>Select</option>
-							{% for i in single_product.variation_set.colors %}
-								<option value="{{ i.variation_value  | lower  }}">{{ i.variation_value | capfirst }}</option>
-							{% endfor %}
-						</select>
-					</div>
-				</div> <!-- row.// -->
-				<div class="row">
-					<div class="item-option-select">
-						<h6>Select Size</h6>
-						<select name="size" id="" class="form-control" required>
-							<option value="" disabled selected>Select</option>
-							{% for i in single_product.variation_set.sizes %}
-								<option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
-							{% endfor %}
-						</select>
-					</div>
-				</div> <!-- row.// -->
-				<hr>
-				{% if single_product.stock <= 0 %}
-				<h5 class="text-danger">Out of Stock</h5>
-				{% else %}
-				<button type="submit"  class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </button>
-				<!-- {% if in_cart %}
-				<a href="#" class="btn  btn-success"> <span class="text">Added to cart</span> <i class="fas fa-check"></i>  </a>
-				<a href="{% url 'cart' %}" class="btn  btn-outline-primary"> <span class="text">View cart</span> <i class="fas fa-eye"></i>  </a>
-				{% else %} -->
-				<!-- add to cart removed from here -->
-				<!-- {% endif %} -->
-				{% endif %}
-			</article> <!-- product-info-aside .// -->
-</form>
-
-		</main> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-<!-- ============================ COMPONENT 1 END .// ================================= -->
-
-<br>
-<!-- Review part -->
-<div class="row">
-			<div class="col-md-9">
-
+			<main class="col-md-6 border-left detail">
 	
-	<form action="{% url 'submit_review' single_product.id %}" method="POST">
-		{% csrf_token %}
-			
-		<h5>Write your review</h5>
-		<div>
-		
-			<!-- Rating star here  -->
-			<label>How do you rate this product?</label>
-			<br>
-			<div class="rate">
-				<input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
-				<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" class="half" title="4.5"></label>
-				<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
-				<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" class="half" title="3.5"></label>
-				<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
-				<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" class="half" title="2.5"></label>
-				<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
-				<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" class="half" title="1.5"></label>
-				<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
-				<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" class="half" title="0.5"></label>
-			</div>
-			<br>
-			Review Title 
-			<input type="text" class="form-control" name="subject"><br>
-			Review
-			<textarea name="review" rows="4" class="form-control"></textarea>
-			<br>
-			{% if user.is_authenticated %}
-				{% if orderproduct %}
-				<button type="submit" class="btn btn-primary" value="Submit Review" name="" id="">Submit Review</button>
-				{% else %}
-				<p> You must purchase this product to post the review. </p>
-				{% endif %}
-			{% else %}
-			<p> You must be logged in to submit a review. <span> <a href="{% url 'login' %}">Login now</a></span></p>
-			{% endif %}
-			<br>
-		</div>
-		{% include 'includes/alerts.html' %}
-	</form>
-	<br>
-	<header class="section-heading">
-		<h3>Customer Reviews </h3> 
-		<span> 
-			<div class="rating-star">
-				<i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-				<span> {{single_product.countReview}} reviews </span>
-			</div>
-		</span>
-		
-	</header>
-	{% for review in reviews %}
-	<article class="box mb-3">
-		
-		<div class="icontext w-100">
-			
-			<!-- <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle"> -->
-			<div class="text">
-				<span class="date text-muted float-md-right">{{review.updated_at}} </span> 
-
-				<h6 class="mb-1">{{review.user.full_name}} </h6>
-				{{review.rating}}
+	
+				<form action="{% url 'add_cart' single_product.id %}" method="POST">
+					{% csrf_token %}
+				<article class="content-body">
+					
+	
+				<h2 class="title">{{single_product.product_name}}</h2>
 				<div class="rating-star">
-					<i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
-					<i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
-					<i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
-					<i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
-					<i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
-
-
+				<span>
+					<i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<span> {{single_product.countReview}} reviews </span>
+				</span>
 				</div>
-				
-				
-			</div>
-		</div> <!-- icontext.// -->
-		<div class="mt-3">
-			<h6 class="mb-1">{{review.subject}} </h6>
-			<p>
-				{{review.review}}
-			</p>	
-		</div>
-		
-	</article>
-	{% endfor %}
-
+	
+				<div class="mb-3"> 
+					<var class="price h4">₹ {{single_product.price}}</var> 
+				</div> 
+	
+				<p>{{single_product.description}}</p>
+	
+	
+				<hr>
+					<div class="row">
+						<div class="item-option-select">
+							<h6>Choose Color</h6>
+							<select name="color" id="" class="form-control" required>
+								<option value="" disabled selected>Select</option>
+								{% for i in single_product.variation_set.colors %}
+									<option value="{{ i.variation_value  | lower  }}">{{ i.variation_value | capfirst }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div> <!-- row.// -->
+					<div class="row">
+						<div class="item-option-select">
+							<h6>Select Size</h6>
+							<select name="size" id="" class="form-control" required>
+								<option value="" disabled selected>Select</option>
+								{% for i in single_product.variation_set.sizes %}
+									<option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div> <!-- row.// -->
+					<hr>
+					{% if single_product.stock <= 0 %}
+					<h5 class="text-danger">Out of Stock</h5>
+					{% else %}
+					<button type="submit"  class="btn  btn-primary"> Add to cart  <i class="fas fa-shopping-cart"></i>  </button>
+					<!-- {% if in_cart %}
+					<a href="#" class="btn  btn-success"> <span class="text">Added to cart</span> <i class="fas fa-check"></i>  </a>
+					<a href="{% url 'cart' %}" class="btn  btn-outline-primary"> <span class="text">View cart</span> <i class="fas fa-eye"></i>  </a>
+					{% else %} -->
+					<!-- add to cart removed from here -->
+					<!-- {% endif %} -->
+					{% endif %}
+				</article> <!-- product-info-aside .// -->
+	</form>
+	
+			</main> <!-- col.// -->
+		</div> <!-- row.// -->
+	</div> <!-- card.// -->
+	<!-- ============================ COMPONENT 1 END .// ================================= -->
 	
 
-	</div> <!-- col.// -->
-</div> <!-- row.// -->
+	
+	<br>
+	<!-- Review part -->
+	<div class="row">
+				<div class="col-md-9">
+	
+		
+		<form action="{% url 'submit_review' single_product.id %}" method="POST">
+			{% csrf_token %}
+				
+			<h5>Write your review</h5>
+			<div>
+			
+				<!-- Rating star here  -->
+				<label>How do you rate this product?</label>
+				<br>
+				<div class="rate">
+					<input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+					<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" class="half" title="4.5"></label>
+					<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+					<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" class="half" title="3.5"></label>
+					<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+					<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" class="half" title="2.5"></label>
+					<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+					<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" class="half" title="1.5"></label>
+					<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+					<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" class="half" title="0.5"></label>
+				</div>
+				<br>
+				Review Title 
+				<input type="text" class="form-control" name="subject"><br>
+				Review
+				<textarea name="review" rows="4" class="form-control"></textarea>
+				<br>
+				{% if user.is_authenticated %}
+					{% if orderproduct %}
+					<button type="submit" class="btn btn-primary" value="Submit Review" name="" id="">Submit Review</button>
+					{% else %}
+					<p> You must purchase this product to post the review. </p>
+					{% endif %}
+				{% else %}
+				<p> You must be logged in to submit a review. <span> <a href="{% url 'login' %}">Login now</a></span></p>
+				{% endif %}
+				<br>
+			</div>
+			{% include 'includes/alerts.html' %}
+		</form>
+		<br>
+		<header class="section-heading">
+			<h3>Customer Reviews </h3> 
+			<span> 
+				<div class="rating-star">
+					<i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<span> {{single_product.countReview}} reviews </span>
+				</div>
+			</span>
+			
+		</header>
 
 
+		{% for review in reviews %}
+		<article class="box mb-3">			
+			<div class="icontext w-100">				
+				<!-- <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle"> -->
+				<div class="text">
+					<span class="date text-muted float-md-right">{{review.updated_at}} </span> 	
+					<h6 class="mb-1">{{review.user.full_name}} </h6>
+					{{review.rating}}
+					<div class="rating-star">
+						<i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+						<i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>	
+					</div>		
+				</div>
+			</div> <!-- icontext.// -->
+			<div class="mt-3">
+				<h6 class="mb-1">{{review.subject}} </h6>
+				<p>
+					{{review.review}}
+				</p>	
+			</div>			
+		</article>
+		{% endfor %}
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
 </div> <!-- container .//  -->
-</section>
+	</section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 <!-- <script src="{% static 'js/jquery-picZoomer.js' %}" type="text/javascript"></script> -->
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
@@ -252,65 +244,64 @@
       
               //1
           let pos = getCursor()
-          //console.log('pos:', pos)
-      
-          //2
-          let positionLeft = pos.x - (lens.offsetWidth / 2)
-          let positionTop = pos.y - (lens.offsetHeight / 2)
-      
-          //5
-          if(positionLeft < 0 ){
-            positionLeft = 0
-          }
-      
-          if(positionTop < 0 ){
-            positionTop = 0
-          }
-      
-          if(positionLeft > img.width - lens.offsetWidth /3 ){
-            positionLeft = img.width - lens.offsetWidth /3
-          }
-      
-          if(positionTop > img.height - lens.offsetHeight /3 ){
-            positionTop = img.height - lens.offsetHeight /3
-          }
-      
-      
-          //3
-          lens.style.left = positionLeft + 'px';
-          lens.style.top = positionTop + 'px';
-      
-          //4
-          lens.style.backgroundPosition = "-" + (pos.x * ratio) + 'px -' +  (pos.y * ratio) + 'px'
-        }
-      
-        function getCursor(){
-          /* Function gets position of mouse in dom and bounds
-              of image to know where mouse is over image when moved
-              
-              1 - set "e" to window events
-              2 - Get bounds of image
-              3 - set x to position of mouse on image using pageX/pageY - bounds.left/bounds.top
-              4- Return x and y coordinates for mouse position on image
-              
-              */
-      
-              let e = window.event
-              let bounds = img.getBoundingClientRect()
-      
-              //console.log('e:', e)
-              //console.log('bounds:', bounds)
-              let x = e.pageX - bounds.left
-              let y = e.pageY - bounds.top
-              x = x - window.pageXOffset;
-              y = y - window.pageYOffset;
-          
-          return {'x':x, 'y':y}
-        }
-      
-        }
-      
-      imageZoom('featured')
+		//console.log('pos:', pos)
+
+		//2
+		let positionLeft = pos.x - (lens.offsetWidth / 2)
+		let positionTop = pos.y - (lens.offsetHeight / 2)
+
+		//5
+		if(positionLeft < 0 ){
+			positionLeft = 0
+		}
+
+		if(positionTop < 0 ){
+			positionTop = 0
+		}
+
+		if(positionLeft > img.width - lens.offsetWidth /3 ){
+			positionLeft = img.width - lens.offsetWidth /3
+		}
+
+		if(positionTop > img.height - lens.offsetHeight /3 ){
+			positionTop = img.height - lens.offsetHeight /3
+		}
+
+
+		//3
+		lens.style.left = positionLeft + 'px';
+		lens.style.top = positionTop + 'px';
+
+		//4
+		lens.style.backgroundPosition = "-" + (pos.x * ratio) + 'px -' +  (pos.y * ratio) + 'px'
+	}
+function getCursor(){
+		/* Function gets position of mouse in dom and bounds
+         of image to know where mouse is over image when moved
+        
+        1 - set "e" to window events
+        2 - Get bounds of image
+        3 - set x to position of mouse on image using pageX/pageY - bounds.left/bounds.top
+        4- Return x and y coordinates for mouse position on image
+        
+         */
+
+        let e = window.event
+        let bounds = img.getBoundingClientRect()
+
+        //console.log('e:', e)
+        //console.log('bounds:', bounds)
+        let x = e.pageX - bounds.left
+		let y = e.pageY - bounds.top
+		x = x - window.pageXOffset;
+		y = y - window.pageYOffset;
+		
+		return {'x':x, 'y':y}
+	}
+
+}
+
+imageZoom('featured')
 
 
     

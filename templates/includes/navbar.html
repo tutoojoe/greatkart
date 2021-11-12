@@ -75,21 +75,22 @@
                         <div class="widget-header">
                             <small class="title text-muted">Welcome Guest !</small>
                             <div> 
-                                <a href="{% url 'login' %}">Sign in</a> <span class="dark-transp"> | </span>
-                                <a href="{% url 'register' %}"> Register</a>
+                                <a style="color:white" href="{% url 'login' %}">Sign in</a> <span class="dark-transp"> | </span>
+                                <a style="color:white" href="{% url 'register' %}"> Register</a>
                             </div>
                         </div>
-
-
+                        
                         {% endif %}
+                        <div id="navWishCart">
                         <a href="{% url 'add_wishlist' %}" class="widget-header pl-1 ml-1">
                             <div class="icon icon-sm rounded-circle border"><i class="fa fa-heart"></i></div>
                             <span id="wishCount" class="badge badge-pill badge-danger notify">{{wish_items}}</span>
                         </a>
                         <a href="{% url 'cart' %}" class="widget-header pl-1 ml-1">
                             <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-                            <span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
+                            <span id="cartCount" class="notify">{{cart_count}}</span>
                         </a>
+                        </div>
                     </div> <!-- widgets-wrap.// -->
                 </div> <!-- col.// -->
     </div> <!-- row.// -->

@@ -1,0 +1,296 @@
+<script>
+
+    function rzpPayment(ord_no){
+        alert('got the click')
+        alert(ord_no)
+        var data  = {'ord_no': ord_no,  "csrf_token": '{{csrf_token}}'} 
+        $.ajax({
+            url : "{% url 'proceed_payment'  %}",
+            method: "POST",
+            data : data,
+            success : function(response){
+              console.log("arrived here ", response)
+              var order_id = response.payment.id
+              var amount = response.payment.amount      
+              alert(order_id)
+               alert(amount)
+
+
+              makeRazorPayment(order_id, amount, ord_no);      
+                
+            }
+        })
+    }
+
+
+function makeRazorPayment(order_id, amount, ord_no){
+    var redirect_url = "{% url 'rzp_order_complete' %}"
+    var options = {
+        "key": "rzp_test_lNmw3SKtFttNHU", // Enter the Key ID generated from the Dashboard
+        "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "FirstKart Payment",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+        "handler": function (response){
+          
+            console.log(response);
+            /* alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature); */
+            window.location.href = redirect_url + '?order_number='+ ord_no +'&payment_id='+response.razorpay_payment_id; 
+            
+        },
+        "prefill" : {    
+            "name": "{{first_name}} {{last_name}}",
+            "email": "{{email}}",
+            "contact": "{{phone}}"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+
+  rzp1.open();
+   
+}
+
+document.getElementById('rzp-button1').onclick = function(e){
+var ord_no = e.target.value
+console.log(ord_no,"sdds")
+rzpPayment(ord_no);
+
+}
+
+</script>
+
+<script>
+var disAmount
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+ 
+
+  var amount = "{{ grand_total }}"
+  var url = "{% url 'payments' %}"
+  var csrftoken = getCookie('csrftoken')
+  var orderID = "{{order.order_number}}"
+  var payment_method = 'Paypal'
+  var redirect_url = "{% url 'order_complete' %}"
+  // Render the PayPal button into #paypal-button-container
+  paypal.Buttons({
+    style: {
+      color:  'blue',
+      shape:  'rect',
+      label:  'pay',
+      height: 40
+    },
+    // Set up the transaction
+    createOrder: function (data, actions) {
+
+     console.log("data *******************")
+     console.log(data)
+     console.log(actions)
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amount
+          }
+        }]
+      });
+    },
+
+    // Finalize the transaction
+    onApprove: function (data, actions) {
+      return actions.order.capture().then(function (orderData) {
+        // Successful capture! For demo purposes:
+        console.log('orderData');
+        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+        var transaction = orderData.purchase_units[0].payments.captures[0];
+        // alert('Transaction ' + transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+        sendData();
+        function sendData(){
+          fetch(url, {
+            method : "POST",
+            headers : {
+              "Content-type": "application/json",
+              "X-CSRFToken" :csrftoken,
+            },
+            body: JSON.stringify({
+              orderID:orderID,
+              transID:orderData.id,
+              payment_method:payment_method,
+              status: orderData.status
+
+
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID; 
+            });
+        }
+
+        // Replace the above to show a success message within this page, e.g.
+        // const element = document.getElementById('paypal-button-container');
+        // element.innerHTML = '';
+        // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+        // Or go to another URL:  actions.redirect('thank_you.html');
+      });
+    }
+
+
+  }).render('#paypal-button-container');
+
+
+
+  function claimCoupon(){
+    console.log("I am here")
+    /* alert("coupon claim button clicked") */
+    var code = document.getElementById('couponInp').value
+     /* alert(code) */
+    var data = {
+      'code' : code, 
+      'csrf_token':'{{csrf_token}}'
+    }
+    console.log(code)
+    $.ajax({
+      url: "{% url 'verify_coupon' %}",
+      method:"POST",
+      data:data,
+   
+      success:function(response){
+        var coupon = response.success
+        if (coupon == "valid"){
+          console.log("Coupon Verified Successfully")
+          document.getElementById('couponSuccessAlert').innerText = "Coupon successfully applied."
+          document.getElementById('couponInp').hidden = true
+          document.getElementById('claimButton').disabled = true  
+          document.getElementById('discountsID').hidden = false
+           disAmount = document.getElementById('discGrandTotal').innerText = response.total_after_coupon
+          document.getElementById('discAmount').innerText = response.discount_amount
+       
+
+        }else{
+          document.getElementById('couponAlert').innerText = "Invalid Coupon..!!"
+          
+          console.log("not a valid coupon")
+      }
+      }
+    }) 
+  }
+
+
+</script>
+
+
+
+{% comment %} Razorpay {% endcomment %}
+
+
+ <script>
+
+    function rzpPayment(ord_no){
+        alert('got the click')
+        alert(ord_no)
+        var data  = {'ord_no': ord_no,  "csrf_token": '{{csrf_token}}'} 
+        $.ajax({
+            url : "{% url 'proceed_payment'  %}",
+            method: "POST",
+            data : data,
+            success : function(response){
+              console.log("arrived here ", response)
+              var order_id = response.payment.id
+              var amount = response.payment.amount      
+              alert(order_id)
+               alert(amount)
+
+
+              makeRazorPayment(order_id, amount, ord_no);      
+                
+            }
+        })
+    }
+
+
+
+
+  function makeRazorPayment(order_id, amount, ord_no){
+    var redirect_url = "{% url 'rzp_order_complete' %}"
+    var options = {
+        "key": "rzp_test_lNmw3SKtFttNHU", // Enter the Key ID generated from the Dashboard
+        "amount": amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "FirstKart Payment",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+        "handler": function (response){
+          
+            console.log(response);
+            /* alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature); */
+            window.location.href = redirect_url + '?order_number='+ ord_no +'&payment_id='+response.razorpay_payment_id; 
+            
+        },
+        "prefill" : {    
+            "name": "{{first_name}} {{last_name}}",
+            "email": "{{email}}",
+            "contact": "{{phone}}"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+
+  rzp1.open();
+   
+}
+document.getElementById('rzp-button1').onclick = function(e){
+var ord_no = e.target.value
+console.log(ord_no,"sdds")
+rzpPayment(ord_no);
+
+}
+
+</script>

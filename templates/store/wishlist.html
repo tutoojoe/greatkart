@@ -15,14 +15,14 @@
 	</div>
 
 {% else %}
-<div class="row">
-<div class="card">
-<table class="table table-borderless table-shopping-cart">
+<div class="row text-center">
+<div class="col-md-12">
+<div class="card ">
+<table class="table table-borderless">
 <thead class="text-muted">
 <tr class="small text-uppercase">
-  <th scope="col">Product</th>
-  <th scope="col" width="120">Add to Cart</th>
- 
+  <th >Product</th>
+  <th >Add to Cart/ Remove from list</th> 
 </tr>
 </thead>
 <tbody>
@@ -31,7 +31,7 @@
 
 
 <tr>
-	<td>
+	<td	>
 		<figure class="itemside align-items-center">
 			<div class="aside">
 				<a href="{{ wishlist.product.get_url }}">  <img src="{{wishlist.product.images.url}}" class="img-sm"></a></div>
@@ -49,12 +49,18 @@
 		</figure>
 	</td>
 	<td> 
+                    <a href="{{wishlist.product.get_url}}" class="btn btn-primary btn-sm m-1" > <i class="fa fa-shopping-cart"></i> Add to cart</a>
+					<a onclick="removeWishItem('{{wishlist.product.id}}')" class="btn btn-warning btn-sm m-1" > <i class="fa fa-trash"></i> Remove</a></td>
+					</td> 
+</tr>
+
 		
 {% endfor %}
 </tbody>
 </table>
 
 </div> <!-- card.// -->
+</div>
 
 	
 
@@ -105,9 +111,42 @@
 	  }
 	})
   }
+ 
+
+  
+
+  function removeWishItem(prod_id){
+	var data = { 'prodId' : prod_id }	
+	Swal.fire({
+	  title: 'Remove Item?',
+	  text: "Are you sure want to remove this? You will not be able to revert this..",
+	  icon: 'warning',
+	  showCancelButton: true,
+	  confirmButtonColor: '#3085d6',
+	  cancelButtonColor: '#d33',
+	  confirmButtonText: 'Remove Item'
+	}).then((result) => {
+	  if (result.isConfirmed) {
+		$.ajax({		
+		  method: "GET",
+		  url: "{% url 'remove_wish_item' %}",
+		  data : data,
+		  success:function(response){
+  
+			Swal.fire(
+			  'Item removed',
+			  'Item has been successfully removed from cart.',
+			  'success'
+			)
+		  location.reload();
+  
+		  }
+		})
+	   
+	  }
+	})
+  }
   </script>
-
-
 
 
 {% endblock %}

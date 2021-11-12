@@ -4,88 +4,62 @@
 {% block pagename %} Product Management {% endblock %}
 {% block contents %} 
 
-<section class="container">
-
-<div class="container-fluid">
-    <div class="row-fluid">
-      <div class="">
-        <input class="form-control mr-sm-2 mb-3" type="search" id="searchInput" onkeyup="myFunction()" placeholder="Search product">
-        <div class="widget-box">
-          <div class="row">
-          <div class="widget-title col-6" >
-             <!-- <span class="icon"><i class="icon-th"></i></span>  -->
-            <h4>Product Details</h4>
-        </div>
-          <div class="widget-content nopadding">
-            <table class="table table-bordered data-table table-hover" id="table">      
-              <thead >
+<div class="card mb-4 mt-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Products
+            </div>
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
                 <div class="text-right mb-3 col6"><hr><a href="{% url 'add_product' %}" class="btn btn-primary"> Add Product </a></div>
-                
-                <tr>
-                  <!-- <th>Product ID</th> -->
-                  <th>Product Name</th>
-                  <th>Product Image</th>
-                  <th>Category</th>
-                  <!-- <th>Sub-Category</th> -->
-                  <th>Price</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                  <!-- <th>Offer</th> -->
-                </tr>
-              </thead>
-              <tbody>
-                {% for product in products %}
-                <tr class="gradeX">
-                  <!-- <td>{{product.pk}}</td> -->
-                  <td>{{product.product_name}}</td>
-                  <td><img src="{{product.images.url}}" class="img-fluid" style="width: 4em;"></td>
-                  <td>{{product.category}}</td>
-                  <!-- <td>{{prod.sub_category}}</td> -->
-                  <td>{{product.price}}</td>
-                  <td><a href="{% url 'edit_product' product.id %}" 
-                    onclick="return confirm('Are you sure you want to EDIT this product?')">
-                    <button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td>
-                  <td><a href="admin_prod_delete/{{product.id}}"
-                    onclick="return confirm('Are you sure you want to DELETE this product?')" >
-                    <button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td>
-                  <!-- <td>{{prod.offer}}</td> -->
-                  <!-- <td class="center">4</td> -->
-                </tr>
-                {% endfor %}
-                
-              </tbody>
-            </table>
-          </div>
+
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Product Name</th>
+                            <th>Product Image</th>
+                            <th>Category</th>
+                            <!-- <th>Sub-Category</th> -->
+                            <th>Price</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                          
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Product Name</th>
+                            <th>Product Image</th>
+                            <th>Category</th>
+                            <!-- <th>Sub-Category</th> -->
+                            <th>Price</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{forloop.counter}})</td>
+                            <td>{{product.product_name}}</td>
+                            <td><img src="{{product.images.url}}" class="img-fluid" style="width: 4em;"></td>
+                            <td>{{product.category}}</td>
+                            <!-- <td>{{prod.sub_category}}</td> -->
+                            <td>{{product.price}}</td>
+                            <td><a href="{% url 'edit_product' product.id %}" 
+                              onclick="return confirm('Are you sure you want to EDIT this product?')">
+                              <button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td>
+                            <td><a href="admin_prod_delete/{{product.id}}"
+                              onclick="return confirm('Are you sure you want to DELETE this product?')" >
+                              <button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td>
+                        </tr>
+                        {% endfor %}
+             
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-</div>
-</div>
-<script>
- // function prodFilter() {
-    // Declare variables
-    //var input, filter, table, tr, td, i, txtValue;
-    //input = document.getElementById("searchInput");
-    //filter = input.value.toUpperCase();
-    //table = document.getElementById("ptable");
-    //tr = table.getElementsByTagName("tr");
-  
-    // Loop through all table rows, and hide those who don't match the search query
-    //for (i = 0; i < tr.length; i++) {
-      //td = tr[i].getElementsByTagName("td")[0];
-      //console.log(td)
-      //if (td) {
-      //  txtValue = td.textContent || td.innerText;
-      //  if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      //    tr[i].style.display = "";
-      //  } else {
-      //    tr[i].style.display = "none";
-    //    }
-   // //  }
-  //  }
- // }
-  </script>
 
-
-</section>
 
 {% endblock %}

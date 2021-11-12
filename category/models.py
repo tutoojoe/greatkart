@@ -7,7 +7,7 @@ class Category(models.Model):
     category_name       = models.CharField(max_length=200, unique=True)
     slug                = models.SlugField(max_length=200, unique=True)
     description         = models.TextField(null=True, blank=True)
-    category_image      = models.ImageField(upload_to ='photos/categories', null=True, blank=True)
+    category_image      = models.ImageField(upload_to ='photos/categories',default='no_image.png')
 
 
 

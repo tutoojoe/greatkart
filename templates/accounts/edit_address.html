@@ -1,0 +1,37 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+{% block contents %}
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+
+    <!-- ============================ COMPONENT REGISTER   ================================= -->
+        <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+          <article class="card-body">
+            {% include 'includes/alerts.html' %}
+            <header class="mb-4"><h4 class="card-title">Edit Address</h4></header>
+            <form action="" method="POST">
+                {% csrf_token %}
+
+                {{form | crispy }}
+                
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary btn-block"> Edit Address </button>
+                    </div> 
+                </form>
+            </article><!-- card-body.// -->
+        </div> <!-- card .// -->
+        <!-- <p class="text-center mt-4">Have an account? <a href="{% url 'login' %}">Log In</a></p> -->
+        <br><br>
+    <!-- ============================ COMPONENT REGISTER  END.// ================================= -->
+    
+    
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+    
+
+{% endblock %}

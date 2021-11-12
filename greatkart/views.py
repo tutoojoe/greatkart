@@ -3,6 +3,7 @@ from django.http.response import JsonResponse
 from django.urls import path
 from django.shortcuts import render,redirect
 from coupon_offers.models import CategoryOffer, ProductOffer
+from mycartadmin.models import BannerUpdate
 from store.forms import ProductForm
 from store.models import Product,ReviewRating
 from datetime import timezone
@@ -28,7 +29,7 @@ def home(request):
     #     print(p_offer.product_id.id, 'prod id')
     #     print(p_offer.discount, 'prod discount')
 
-    
+    banners = BannerUpdate.objects.filter(valid_from__lte=now, valid_to__gte=now, is_active = True)
 
     products    = Product.objects.all().filter(is_available=True).order_by('created_date')
     
@@ -53,7 +54,7 @@ def home(request):
 
         if p_offer > c_offer:
             disc_price = product.mrp_price - (product.mrp_price * p_offer)/100
-            product.price = disc_price
+            product.price = round(disc_price, 2)
             product.save()
             print(disc_price, 'product - ',product, ' this will be the new price based on product offer. Old price was - ',product.mrp_price)
             # print(product,' - ', p_offer.discount,'product offer is more')
@@ -75,8 +76,9 @@ def home(request):
     reviews = ReviewRating.objects.filter(product_id = product_id, status = True)
 
     context     = {
-        'products':products,
+        'products': products,
         'reviews' : reviews,
+        'banners': banners,
     }
 
     return render(request, 'home.html',context)

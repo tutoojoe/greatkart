@@ -72,6 +72,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'greatkart.urls'
+CRISPY_TEMPLATE_PACK = 'uni_form'
 
 TEMPLATES = [
     {

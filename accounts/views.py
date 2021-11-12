@@ -7,7 +7,7 @@ from carts.views import _cart_id
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 from orders.models import Order, OrderProduct
-from .private import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+from .private import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_SERVICE_SID
 from django.core.paginator import Paginator
 
 #verificationemail
@@ -19,6 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 import requests
 from twilio.rest import Client
+import os
 import random
 
 # Create your views here.
@@ -58,6 +59,23 @@ def add_address(request):
             return render(request, 'accounts/add_address.html', context)
     else:
         return redirect('login')
+    
+def edit_address(request,id):
+    instance = get_object_or_404(Address, id=id)
+    form = AddAddressForm(request.POST or None, instance=instance)
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Product has been updated')
+            return redirect('my_addresses')
+    else:  
+        context = {
+            'form'     : form,
+            'address':instance,
+            }
+        return render(request, 'accounts/edit_address.html',context)
+
 
 def register(request):
     if request.method == "POST":
@@ -202,24 +220,35 @@ def dashboard(request):
 
 def verify_otp(request):
     if request.method == "POST":
-        generated_otp = request.POST['generated_otp']
+        # generated_otp = request.POST['generated_otp']
         otp_input = request.POST['otp_input']
-        print(generated_otp,"|",otp_input)
-        if generated_otp == otp_input:
-            messages.success(request,"OTP verified successfully.")
-            user_email = request.session['user_email']
-            
-            print(user_email)
-            
-            user = Account.objects.get(email=user_email)
-            print(user)
-            
+        user_mobile = request.session['user_mobile']
+        
+        print(user_mobile)
+        
+        user_email = request.session['user_email']
+        
+        
+        
+        account_sid = TWILIO_ACCOUNT_SID
+        auth_token = TWILIO_AUTH_TOKEN
+        client = Client(account_sid, auth_token)
 
-            auth.login(request,user)
-            print('signing in')
-            return redirect('home')
-        else:
-            return redirect('login')
+        verification_check = client.verify \
+                                .services(TWILIO_SERVICE_SID) \
+                                .verification_checks \
+                                .create(to= user_mobile, code= otp_input)
+    
+        print(verification_check.status)
+        
+        messages.success(request,"OTP verified successfully.")
+        user = Account.objects.get(email=user_email)
+        print(user)
+        
+
+        auth.login(request,user)
+        print('signing in')
+        return redirect('home')
     else:
         print('request to generate OTP')
         user_email = request.session['user_email']
@@ -227,23 +256,39 @@ def verify_otp(request):
         
         user = Account.objects.filter(email=user_email)
         for i in user:
-            user_mobile = i.mobile_number
+            mobile = i.mobile_number
         
+        user_mobile = '+91'+ mobile
         print(user_mobile)
+        
+        request.session['user_mobile'] = user_mobile
 
-        otp_number = random.randint(100000,999999)
+        # otp_number = random.randint(100000,999999)
         auth_sid = TWILIO_ACCOUNT_SID
         auth_token = TWILIO_AUTH_TOKEN
-        otp_client = Client(auth_sid,auth_token)
-        otp_message = otp_client.messages.create(
-            body = "Your OTP number is "+str(otp_number),
-            from_ = "+13097221372",
-            to = "+91"+user_mobile
-        )
-        context = {
-            'otp_number':otp_number,
-            }
-        return render(request,'accounts/login_otp.html',context)
+        
+        client = Client(auth_sid,auth_token)
+        
+        verification = client.verify \
+                     .services(TWILIO_SERVICE_SID) \
+                     .verifications \
+                     .create(to= user_mobile, channel='sms')
+        
+        print(verification.sid)
+        
+        # otp_message = otp_client.messages.create(
+        #     body = "Your OTP number is "+str(otp_number),
+        #     from_ = "+13097221372",
+        #     to = "+91"+user_mobile
+        # )
+        # context = {
+        #     'otp_number':otp_number,
+        #     }
+        return render(request,'accounts/login_otp.html')
+       
+       
+       
+       
        
 @login_required(login_url='login')
 def my_orders(request):

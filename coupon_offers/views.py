@@ -47,7 +47,7 @@ def verify_coupon(request):
                 order = Order.objects.get(user = request.user, is_ordered = False)
                 order_no = order.order_number
                 order.coupon = coupon
-                order.discount = discount
+                order.discount = round(discount,2)
                 order.save()
                 print(order_no)
                 print('got order')
@@ -60,10 +60,10 @@ def verify_coupon(request):
                 for cart_item in cart_items:
                     total   += (cart_item.product.price * cart_item.quantity)
                     quantity += cart_item.quantity
-                tax = (5 * total)/100
-                grand_total = total + tax
+                tax = round((5 * total)/100,2)
+                grand_total = round(total + tax,2)
             
-                discount_amount = grand_total * discount/100
+                discount_amount = round(grand_total * discount/100,2)
                 print(discount_amount,'discount amount')
                 total_after_coupon = round(float(grand_total - discount_amount),2)
                 print(grand_total,'total')
