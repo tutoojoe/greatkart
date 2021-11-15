@@ -36,7 +36,7 @@ def home(request):
     for product in products:
         p_offer = 0
         c_offer = 0
-        product_id = product.id
+        prod_id = product.id
         try:
             prod_offer = ProductOffer.objects.get(product_id = product, valid_from__lte=now, valid_to__gte=now, is_active = True)
             p_offer = prod_offer.discount
@@ -73,7 +73,7 @@ def home(request):
         else:
             print(product, ' - this one has no offer')
         
-    reviews = ReviewRating.objects.filter(product_id = product_id, status = True)
+    reviews = ReviewRating.objects.filter(product_id = prod_id, status = True)
 
     context     = {
         'products': products,
