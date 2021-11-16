@@ -41,9 +41,9 @@ from reportlab.lib import colors
 def filter_orders(request):
     data = []
     data.append(['Name','Order Number','Phone No','Order Value'])
-    print('received the filter list')
+ 
     if request.method == "POST":
-        print('Post request')
+        
         from_date = request.POST["from_date"]
         to_date = request.POST["to_date"]
         orders = Order.objects.filter(created_at__range=(from_date, to_date))
@@ -103,7 +103,7 @@ def order_report(request):
     textobj.setFont("Helvetica",12)
     lines = []
     if request.method == "POST":
-        print('Post request')
+        
         from_date = request.POST["from_date"]
         to_date = request.POST["to_date"]
         orders = Order.objects.filter(created_at__range=(from_date, to_date))
@@ -111,7 +111,7 @@ def order_report(request):
     for order in orders:
         lines.append([str(order.first_name),str(order.order_number),str(order.phone),str(order.order_total)])
 
-    print(lines)
+
   
     # filename = 'orders.pdf'
 
@@ -145,16 +145,15 @@ def admin_banners(request):
 
 # Create your views here.
 def admin_login(request):
-        print('received a GET request in login')
         if request.user.is_authenticated:
             if request.user.is_superuser:
-                print('authenticated user logging in')
+            
                 return redirect('admin_dashboard')
             else:
                 messages.error(request, "You dont have admin privileges to view this page.")
                 return redirect('home')
         else:
-            print('unauthoried user - diverted to loginpage')
+        
             return render(request,'mycartadmin/login.html')
 
 @login_required(login_url='admin_login')
@@ -177,7 +176,7 @@ def admin_dashboard(request):
             # qty_product = Order.objects.annotate(num_prod=Count('product'))
             # print(qty_product)
             latest_order = Order.objects.all().order_by('-created_at')[:5]
-            print(latest_order)
+          
             # sample = OrderProduct.objects.annotate(Sum('quantity'))
 
             # print(sample)    
@@ -192,7 +191,7 @@ def admin_dashboard(request):
             cat_prod_qty = []
             
             pay_method = Order.objects.annotate(pay_method=Count('payment'))
-            print(pay_method)
+            
             
             prod_in_cat = Category.objects.annotate(prod_count=Count('product'))
             for i in prod_in_cat:
@@ -250,14 +249,14 @@ def admin_page_view(request):
         
 
         if admin_user is not None:
-            print('valid admin found, redirecting to login')
+            
             if admin_user.is_superuser:
-                print('admin user is superuser> Logging in..')
+               
                 login(request,admin_user)
-                print('superuser authenticated and logged in.')
+                
                 return redirect('admin_login')
             else:
-                print('The user is not superuser. No login permission. Sending Error Message')
+               
                 messages.error(request,"Only Admin can access this page.")
                 return redirect('admin_login')
         else:
@@ -271,9 +270,9 @@ def admin_page_view(request):
 @login_required(login_url='admin_login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_logout(request):
-    print('Logout request received')
+
     logout(request)
-    print('User successfully logged out')
+   
     return redirect('admin_login')
 
 
@@ -287,20 +286,20 @@ def usermanage(request):
 
    
     
-    print('Entering User Manage page')
+   
     return render(request,'mycartadmin/usermanage.html',{'users':users})
 
 
 @login_required(login_url='admin_login')
 def admin_category(request):
     category = Category.objects.all().order_by("id")
-    print('Entering Category Manage page')
+    
     return render(request,'mycartadmin/category.html',{'categories':category})
 
 @login_required(login_url='admin_login')
 def admin_product(request):
     product = Product.objects.all().order_by("id")
-    print('Entering Product Manage page')
+   
     return render(request,'mycartadmin/product.html',{'products':product})
 
 @login_required(login_url='admin_login')
@@ -366,10 +365,10 @@ def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST or None, request.FILES or None)
         if form.is_valid():
-            print('form valid')
+            
             product_name = form.cleaned_data['product_name']
             slug = slugify(product_name)
-            print(slug)
+           
             description = form.cleaned_data['description']
             price = form.cleaned_data['price']
             images = form.cleaned_data['images']
@@ -390,7 +389,7 @@ def add_product(request):
             return render(request,'mycartadmin/add_product.html',context)
     else:
         form = ProductForm()
-        print('Entering Product Manage page')
+  
         context = {
             'form':form
         }
@@ -402,14 +401,14 @@ def add_product(request):
 def add_category(request):
     form = CategoryForm(request.POST or None, request.FILES or None)
     if request.method == "POST":
-        print('post request')
+      
         
-        print('got form, going fo validity check')
+       
         if form.is_valid():
-            print('form valid')
+            
             category_name = form.cleaned_data['category_name']
             slug = slugify(category_name)
-            print(slug)
+            
             description = form.cleaned_data['description']
             category_image = form.cleaned_data['category_image']
             
@@ -428,7 +427,7 @@ def add_category(request):
             return render(request,'mycartadmin/add_category.html',context)
     else:
        
-        print('Entering add category page')
+        
         context = {
             'form':form
         }
@@ -479,8 +478,7 @@ def admin_offers(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    print(paginator.count)
-    print(paginator.num_pages)
+
     context = {
         'coupon_offers': page_obj,
         'prod_offers': prod_offers,
@@ -488,7 +486,6 @@ def admin_offers(request):
 
     }
 
-    print('Entering Offer Manage page')
     return render(request,'mycartadmin/offers.html',context)
 
 #functions on userpage - edit, block, delete.
@@ -496,7 +493,7 @@ def admin_offers(request):
 @login_required(login_url='admin_login')
 def admin_user_deactivate(request):
     id = request.GET['id']
-    print(id)
+ 
     user = Account.objects.get(id=id)
     user.is_active = False
     user.save()
@@ -546,7 +543,7 @@ def admin_user_delete(request):
 def update_order_status(request, order_no):
 
     instance = get_object_or_404(Order, order_number = order_no)
-    print(instance)
+
     form = OrderStatusForm(request.POST or None, instance=instance)
 
     if request.method == "POST":
@@ -608,7 +605,7 @@ def add_coupon(request):
 def edit_coupon(request,c_id):
     instance = get_object_or_404(Coupon, id=c_id)
     form = CouponApplyForm(request.POST or None, instance=instance)
-    print('form received')
+
 
     if request.method == "POST":
         if form.is_valid():
@@ -639,7 +636,7 @@ def activate_coupon(request):
     return redirect('admin_offers')
 
 def block_coupon(request):
-    print('request received')
+  
     coupon_id = request.GET['couponId']
     coupon = Coupon.objects.get(id = coupon_id)
     coupon.active = False
@@ -683,7 +680,7 @@ def add_product_offer(request):
 def edit_product_offer(request,prod_id):
     instance = get_object_or_404(ProductOffer, id=prod_id)
     form = ProductOfferForm(request.POST or None, instance=instance)
-    print('form received')
+
 
     if request.method == "POST":
         if form.is_valid():
@@ -707,9 +704,9 @@ def edit_product_offer(request,prod_id):
 
 def activate_product_offer(request):
     offer_id = request.GET['proOffId']
-    print('activate request received. ID is - ', offer_id)
+   
     offer = ProductOffer.objects.get(id = offer_id)
-    print(offer)
+
     offer.is_active = True
     offer.save()
 
@@ -755,7 +752,7 @@ def add_cat_offer(request):
 def edit_cat_offer(request,cat_id):
     instance = get_object_or_404(CategoryOffer, id=cat_id)
     form = CategoryOfferForm(request.POST or None, instance=instance)
-    print('form received')
+  
 
     if request.method == "POST":
         if form.is_valid():
@@ -779,7 +776,7 @@ def activate_cat_offer(request):
     offer_id = request.GET['catOffId']
     
     offer = CategoryOffer.objects.get(id = offer_id)
-    print(offer)
+ 
     offer.is_active = True
     offer.save()
 
