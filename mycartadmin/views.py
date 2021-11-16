@@ -264,7 +264,7 @@ def admin_page_view(request):
             messages.error(request,"The login details given are not of any admin user. Please retry with correct details.")
             return redirect('admin_login')
     else:
-        print('Initial GET request. Not authenticated, redirecting to Login')
+
         return redirect('admin_login')
 
 
