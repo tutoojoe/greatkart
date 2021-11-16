@@ -224,8 +224,10 @@ def admin_dashboard(request):
                 'val_data':val_data,
                 'total_user_no':total_user_no,
                 'total_ord_no':total_ord_no,
-                'total_order_value':format(total_order_value['order_total__sum'],".2f"),
-                'avg_ord_value':format(avg_ord_value['average_order_value'],".2f"),
+                # 'total_order_value':format(total_order_value['order_total__sum'],".2f"),
+                'total_order_value':total_order_value['order_total__sum'],
+                # 'avg_ord_value':format(avg_ord_value['average_order_value'],".2f"),
+                'avg_ord_value':avg_ord_value['average_order_value'],
                 # 'latest_order': latest_order,
                 
                 }
