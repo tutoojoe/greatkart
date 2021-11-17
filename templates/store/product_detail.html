@@ -9,34 +9,34 @@
 	<div class="container">
 	
 	<!-- ============================ COMPONENT 1 ================================= -->
-	<div class="card">
-		<div class="row no-gutters">
-			<aside class="col-md-6">
-				<article class="gallery-wrap"> 
-					<div class="img-big-wrap" id="img-container">
-						<div id="lens"></div>
-						<center><img id="featured"  src="{{single_product.images.url}}"></center>
-					</div> <!-- img-big-wrap.// -->
-					<div class="col-md-6"></div>
-				</article> <!-- gallery-wrap .end// -->
-		<ul class="thumb">
-			<li>
-				<a href="{{single_product.images.url}}" target="mainImage"> <img src="{{single_product.images.url}}" alt="Product Image"> </a>
-				{% for i in product_gallery %}
-				<a href="{{i.image.url}}" target="mainImage"> <img src="{{i.image.url}}" alt="Product Image"> </a>
-				{% endfor %}
-			</li>
-		</ul>
-			</aside>
-			<span id="myhide" style=
-				"float: right;
-				position: absolute;
-				top: -100px;
-				left: 300px;
-				width: auto;
-				height: 100%;">
-				<div id="myresult" class="img-zoom-result"  onmouseleave="hideme(this)" ></div>
-			</span>
+<div class="card img-zoom-container" onmousenter="showme(this)">
+	<div class="row no-gutters">
+		<aside class="col-md-6">
+			<article class="gallery-wrap"> 
+				<div class="img-big-wrap mainImage " id="img-container">
+					<div id="lens"></div>
+					<center><img id="featured"  src="{{single_product.images.url}}"></center>
+				</div> <!-- img-big-wrap.// -->
+				<div class="col-md-6"></div>
+			</article> <!-- gallery-wrap .end// -->
+	<ul class="thumb">
+		<li>
+			<a href="{{single_product.images.url}}" target="mainImage"> <img src="{{single_product.images.url}}" alt="Product Image"> </a>
+			{% for i in product_gallery %}
+			<a href="{{i.image.url}}" target="mainImage"> <img src="{{i.image.url}}" alt="Product Image"> </a>
+			{% endfor %}
+		</li>
+	</ul>
+        </aside>
+		<span id="myhide" style=
+			"float: right;
+			position: absolute;
+			top: -100px;
+			left: 300px;
+			width: auto;
+			height: 100%;">
+			<div id="myresult" class="img-zoom-result"  onmouseleave="hideme(this)" ></div>
+		</span>
 			<main class="col-md-6 border-left detail">
 	
 	
