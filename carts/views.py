@@ -47,7 +47,7 @@ def add_cart(request,product_id):
                 try:
                     variation   = Variation.objects.get(product = product, variation_category__iexact=key, variation_value__iexact=value)
                     product_variation.append(variation)
-                    print(variation)
+                    
                 except:
                     pass
         # Getting a request to add a producct
@@ -68,7 +68,7 @@ def add_cart(request,product_id):
                 id.append(item.id)
             #checke
             if product_variation in ex_var_list:
-                print('product already on list. Incrementing the quantity')
+                
                 # add the new quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
@@ -77,7 +77,7 @@ def add_cart(request,product_id):
                 item.save()
 
             else:
-                print('product NOT in list - Adding new item')
+               
                 # create a new cart item
                 item = CartItem.objects.create(product=product, quantity=1, user=current_user)
                 if len(product_variation) > 0:
@@ -87,7 +87,7 @@ def add_cart(request,product_id):
                 item.save() 
         # If item does not exist, create the 'cart_item'
         else:
-            print('NO CART ITEMS - create a new one')
+            
             cart_item       = CartItem.objects.create(
                 product     = product,
                 quantity    = 1,
@@ -100,7 +100,7 @@ def add_cart(request,product_id):
         
         try:
             wish_product = Wishlist.objects.get(user=request.user,product=product_id)
-            print(wish_product)
+            
             wish_product.delete()
         except:
             pass
@@ -119,7 +119,7 @@ def add_cart(request,product_id):
                 try:
                     variation   = Variation.objects.get(product = product, variation_category__iexact=key, variation_value__iexact=value)
                     product_variation.append(variation)
-                    print(variation)
+                    
                 except:
                     pass
         # Getting a request to add a producct
@@ -153,7 +153,7 @@ def add_cart(request,product_id):
                 id.append(item.id)
             
             if product_variation in ex_var_list:
-                print('product already on list. Incrementing the quantity')
+                
                 # add the new quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
@@ -162,7 +162,7 @@ def add_cart(request,product_id):
                 item.save()
 
             else:
-                print('product NOT in list - Adding new item')
+                
                 # create a new cart item
                 item = CartItem.objects.create(product=product, quantity=1, cart=cart)
                 if len(product_variation) > 0:
@@ -172,7 +172,7 @@ def add_cart(request,product_id):
                 item.save() 
         # If item does not exist, create the 'cart_item'
         else:
-            print('NO CART ITEMS - create a new one')
+            
             cart_item       = CartItem.objects.create(
                 product     = product,
                 quantity    = 1,
@@ -194,7 +194,7 @@ def wishlist(request):
 
 @csrf_exempt
 def add_wishlist(request):
-    print('request received ')
+    
     if request.user.is_authenticated:
         wish_list = Wishlist.objects.filter(user = request.user.id)
         if request.method == 'POST':
@@ -230,7 +230,7 @@ def add_wishlist(request):
         return redirect('login')
 
     wishlist_items = Wishlist.objects.filter(user = request.user)
-    print(wishlist_items)
+    
     context = {
         'wishlist_items': wishlist_items,
     }
@@ -282,14 +282,13 @@ def remove_cart(request,product_id, cart_item_id):
 # Function to delete the cart item directly with 'Remove' button
 
 def remove_cart_item(request):
-    print('hi')
+    
     product_id =request.GET['prod_id']
     cart_item_id = request.GET['cartitem']
 
-    print(product_id,' - product_id and ',cart_item_id,'cart item id')
-    # print(data2)
+    
     # cart_item_id = request.GET['cartitem']
-    # print(product_id,cart_item_id)
+   
     
     product     = get_object_or_404(Product, id=product_id)
     if request.user.is_authenticated:
@@ -339,7 +338,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         if request.user.is_authenticated:
             cart_items  = CartItem.objects.filter(user=request.user, is_active = True)
             address = Address.objects.filter(user = request.user.id).order_by('-id')[:3]
-            print(address)
+         
             for cart_item in cart_items:
                 total   += (cart_item.product.price * cart_item.quantity)
                 quantity += cart_item.quantity
@@ -367,13 +366,13 @@ def add_cart_ajax(request):
     product_id = request.POST['id']
     current_user = request.user
     product     = Product.objects.get(id = product_id)
-    print('getting request here')
+    
     # if the user is authenticated
     if current_user.is_authenticated:
         product_variation = []
         # Getting POST request:
         if request.method == 'POST':
-            print('POST request here')
+            
             
             for item in request.POST:
                 key     = item
@@ -382,7 +381,7 @@ def add_cart_ajax(request):
                 try:
                     variation   = Variation.objects.get(product = product, variation_category__iexact=key, variation_value__iexact=value)
                     product_variation.append(variation)
-                    print(variation)
+                    
                 except:
                     pass
         # Getting a request to add a producct
@@ -403,7 +402,7 @@ def add_cart_ajax(request):
                 id.append(item.id)
             #checke
             if product_variation in ex_var_list:
-                print('product already on list. Incrementing the quantity')
+                
                 # add the new quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
@@ -435,7 +434,7 @@ def add_cart_ajax(request):
         
             success = 'Product added to cart..!'
             cart_count = CartItem.objects.filter(user=current_user).count()
-            print(cart_count)
+            
             return JsonResponse({'success': success,'cart_count':cart_count})
         
 def remove_wish_item(request):
