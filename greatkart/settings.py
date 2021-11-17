@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'bootstrap_modal_forms',
     'crispy_forms',
-   
     'store',
     'category',
     'accounts',
@@ -72,7 +71,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'greatkart.urls'
-CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
     {
