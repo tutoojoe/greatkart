@@ -53,8 +53,6 @@ def add_cart(request,product_id):
         # Getting a request to add a producct
         # Getting the product
         #product     = Product.objects.get(id = product_id)
-
-
         is_cart_item_exists = CartItem.objects.filter(product = product, user=current_user).exists()
         # Adding product at the same time. Checking whether the product is already available in cart.
         # If available, increment the quantity by 1.
@@ -68,7 +66,6 @@ def add_cart(request,product_id):
                 id.append(item.id)
             #checke
             if product_variation in ex_var_list:
-                
                 # add the new quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
@@ -87,7 +84,6 @@ def add_cart(request,product_id):
                 item.save() 
         # If item does not exist, create the 'cart_item'
         else:
-            
             cart_item       = CartItem.objects.create(
                 product     = product,
                 quantity    = 1,
@@ -153,7 +149,6 @@ def add_cart(request,product_id):
                 id.append(item.id)
             
             if product_variation in ex_var_list:
-                
                 # add the new quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id[index]
@@ -162,7 +157,6 @@ def add_cart(request,product_id):
                 item.save()
 
             else:
-                
                 # create a new cart item
                 item = CartItem.objects.create(product=product, quantity=1, cart=cart)
                 if len(product_variation) > 0:
@@ -193,33 +187,23 @@ def wishlist(request):
     return render (request, 'store/wishlist.html',context)
 
 @csrf_exempt
-def add_wishlist(request):
-    
+def add_wishlist(request):    
     if request.user.is_authenticated:
         wish_list = Wishlist.objects.filter(user = request.user.id)
         if request.method == 'POST':
-            if request.user.is_authenticated:
-                
+            if request.user.is_authenticated:                
                 product_id = request.POST['id']
                 user = Account.objects.get(id = request.user.id)
-                product = Product.objects.get(id = product_id)
-                
-                
+                product = Product.objects.get(id = product_id)            
                 wishlist = Wishlist()
                 wishlist.product = product
                 wishlist.user = user
-                
-
                 wish_item = Wishlist.objects.filter(product = product, user = request.user).first()
-               
                 if wish_item:
                     pass                    
                 else:                    
                     wishlist.save()
-                    
-
                 wish_item_count = Wishlist.objects.filter(user = request.user).count()
-            
                 success = 'product added to wishlist!!!'
                 return JsonResponse({'success': success,'wish_items':wish_item_count})
             else:
@@ -228,9 +212,7 @@ def add_wishlist(request):
     else:
         messages.error(request,"please login!!")
         return redirect('login')
-
     wishlist_items = Wishlist.objects.filter(user = request.user)
-    
     context = {
         'wishlist_items': wishlist_items,
     }
@@ -438,11 +420,9 @@ def add_cart_ajax(request):
             return JsonResponse({'success': success,'cart_count':cart_count})
         
 def remove_wish_item(request):
-
     product_id =request.GET['prodId']
     wishlist_item = Wishlist.objects.get(product = product_id)
     wishlist_item.delete()
-    
     return JsonResponse({'success':'Item successfully Removed'})
 
 
