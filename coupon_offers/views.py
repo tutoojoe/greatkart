@@ -18,7 +18,7 @@ from django.http import JsonResponse
 @require_POST
 def coupon_apply(request):
     now = timezone.now()
-    print(now)
+    # print(now)
     form = CouponApplyForm(request.POST)
     if form.is_valid():
         code = form.cleaned_data['code']
@@ -31,26 +31,26 @@ def coupon_apply(request):
 
 @csrf_exempt
 def verify_coupon(request):
-    print('coupon verify request received')
+    # print('coupon verify request received')
     now = datetime.now()
     if request.method == "POST":
         code = request.POST['code']
-        print(code,'this is the offer code')
+        # print(code,'this is the offer code')
         try:
-            print('checking coupon')
+            # print('checking coupon')
             coupon = Coupon.objects.get(code__iexact = code, valid_from__lte=now, valid_to__gte=now, active = True)
-            print('coupon available')
+            # print('coupon available')
             if coupon:
-                print('coupon available',coupon)
+                # print('coupon available',coupon)
                 discount = coupon.discount
-                print(discount)
+                # print(discount)
                 order = Order.objects.get(user = request.user, is_ordered = False)
                 order_no = order.order_number
                 order.coupon = coupon
                 order.discount = round(discount,2)
                 order.save()
-                print(order_no)
-                print('got order')
+                # print(order_no)
+                # print('got order')
                 current_user = request.user
                 cart_items = CartItem.objects.filter(user = current_user)
                 grand_total = 0
@@ -64,10 +64,10 @@ def verify_coupon(request):
                 grand_total = round(total + tax,2)
             
                 discount_amount = round(grand_total * discount/100,2)
-                print(discount_amount,'discount amount')
+                # print(discount_amount,'discount amount')
                 total_after_coupon = round(float(grand_total - discount_amount),2)
-                print(grand_total,'total')
-                print(total_after_coupon,'amount after discount')
+                # print(grand_total,'total')
+                # print(total_after_coupon,'amount after discount')
 
                 context = {
                     "success":"valid",
@@ -76,7 +76,7 @@ def verify_coupon(request):
                 }
                 return JsonResponse(context)
         except Coupon.DoesNotExist:
-            print('no coupon available')
+            # print('no coupon available')
             context = {
                 "success":"no_coupon",
             }

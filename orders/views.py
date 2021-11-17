@@ -36,13 +36,13 @@ def place_order(request, total=0, quantity=0):
     except:
         messages.error(request,"Please select billing address")
         return redirect('checkout')
-    print('Order place request received')
+    # print('Order place request received')
     current_user = request.user
     #if the cart count is <=0, redirect to store
     try:
         order = Order.objects.get(user=current_user, is_ordered=False)
         # order_count = order.count()
-        print('order received')
+        # print('order received')
 
         cart_items = CartItem.objects.filter(user = current_user)
         grand_total = 0
@@ -53,7 +53,7 @@ def place_order(request, total=0, quantity=0):
         tax = round((5 * total)/100,2)
         grand_total = round(total + tax,2)
 
-        print('found one order and rendering')
+        # print('found one order and rendering')
 
 
         context             = {
@@ -81,17 +81,17 @@ def place_order(request, total=0, quantity=0):
             quantity += cart_item.quantity
         tax = round((5 * total)/100,2)
         grand_total = round(total + tax,2)
-        print('going to check the post request')
+        # print('going to check the post request')
         if request.method == "POST":
             # form = OrderForm(request.POST)
-            # print(form)
-            print('POST request - going to validate')
+            # # print(form)
+            # print('POST request - going to validate')
             # if form.is_valid():
-            print('form validated, getting to the fields')
+            # print('form validated, getting to the fields')
             #store all the billing information inside the table
             form = CouponApplyForm()
             address_id = request.POST['ship_address']
-            print(address_id)
+            # print(address_id)
             address = Address.objects.filter(id = address_id, user = request.user.id)
             for i in address:
                 first_name = i.first_name
@@ -103,7 +103,7 @@ def place_order(request, total=0, quantity=0):
                 country = i.country
                 state = i.state
                 city = i.district
-            print('collected details going to assign')
+            # print('collected details going to assign')
             data = Order()
             data.user           = current_user
             data.first_name     = first_name
@@ -119,7 +119,7 @@ def place_order(request, total=0, quantity=0):
             data.order_total    = grand_total
             data.tax            = tax
             data.ip             = request.META.get('REMOTE_ADDR')
-            print('Assigned all the values and going to save')
+            # print('Assigned all the values and going to save')
             data.save()
 
             #generate order no
@@ -130,13 +130,13 @@ def place_order(request, total=0, quantity=0):
             current_date        = d.strftime("%Y%m%d")
 
             order_number        = current_date + str(data.id)
-            print('order number generated')
+            # print('order number generated')
             data.order_number   = order_number
             data.save()
-            print('details verified and directed to checkout')
+            # print('details verified and directed to checkout')
             
             order               = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
-            print('order value selected and passed to context')
+            # print('order value selected and passed to context')
 
             context             = {
                 'order' : order,
@@ -148,7 +148,7 @@ def place_order(request, total=0, quantity=0):
             }
             return render(request,'orders/payments.html',context)
         else:
-            print('entered else case/GET case and redirecting to checkout')
+            # print('entered else case/GET case and redirecting to checkout')
             return redirect('checkout')
 
 
@@ -158,7 +158,7 @@ def payments(request):
     body = json.loads(request.body)
     order = Order.objects.get(user = request.user, is_ordered = False, order_number = body['orderID'])
 
-    print(body)
+    # print(body)
     payment = Payment(
         user = request.user,
         payment_id = body['transID'],
@@ -224,22 +224,22 @@ razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KE
 def proceed_payment(request):
    
     order_id = request.POST['ord_no']
-    print(order_id)
+    # print(order_id)
     now = datetime.now()
     order = Order.objects.get(user = request.user, is_ordered = False, order_number = order_id)
     code = order.coupon
-    print(code,'- this is coupon.')
-    print(order)
+    # print(code,'- this is coupon.')
+    # print(order)
     try:
         coupon = Coupon.objects.get(code__exact = code, valid_from__lte=now, valid_to__gte=now, active = True)
         if coupon:
-            print('coupon available',coupon)
+            # print('coupon available',coupon)
             discount = coupon.discount
-            print(discount)
+            # print(discount)
             order_no = order.order_number
             
-            print(order_no)
-            print('got order')
+            # print(order_no)
+            # print('got order')
             current_user = request.user
             cart_items = CartItem.objects.filter(user = current_user)
             grand_total = 0
@@ -253,10 +253,10 @@ def proceed_payment(request):
             grand_total = round(total + tax,2)
         
             discount_amount = grand_total * discount/100
-            print(discount_amount,'discount amount')
+            # print(discount_amount,'discount amount')
             total_after_coupon = round(float(grand_total - discount_amount),2)
-            print(grand_total,'total')
-            print(total_after_coupon,'amount after discount')
+            # print(grand_total,'total')
+            # print(total_after_coupon,'amount after discount')
             order.discount_amount = discount_amount
             order.nett_paid = total_after_coupon
             
@@ -269,9 +269,9 @@ def proceed_payment(request):
             email = order.email
             total = order.nett_paid * 100
             order_number = order.order_number
-            print(first_name,'first name')
-            print(total,'total')
-            print(order_number,"order number")
+            # print(first_name,'first name')
+            # print(total,'total')
+            # print(order_number,"order number")
 
             
 
@@ -306,9 +306,9 @@ def proceed_payment(request):
         email = order.email
         total = order.order_total * 100
         order_number = order.order_number
-        print(first_name,'first name')
-        print(total,'total')
-        print(order_number,"order number")
+        # print(first_name,'first name')
+        # print(total,'total')
+        # print(order_number,"order number")
 
         
 
@@ -331,7 +331,7 @@ def proceed_payment(request):
             "order_number":order_number,
             
         }
-        print("***********",context)
+        # print("***********",context)
         return JsonResponse({'payment':payment})
 
         # return render(request,'orders/proceed_payment.html',context)
@@ -344,10 +344,10 @@ def proceed_payment(request):
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 def order_complete(request):
-    print("payment completed and saving")
+    # print("payment completed and saving")
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
-    print(order_number,"- order No &", transID, "- Trans ID")
+    # print(order_number,"- order No &", transID, "- Trans ID")
 
     try:
         order = Order.objects.get(order_number = order_number, is_ordered = True)
@@ -373,17 +373,17 @@ def order_complete(request):
 
     except (Payment.DoesNotExist, Order.DoesNotExist):
 
-        print("payment feedback not received. exiting without saving")
+        # print("payment feedback not received. exiting without saving")
         return redirect('home')
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 def rzp_order_complete(request):
-    print("payment completed and saving")
+    # print("payment completed and saving")
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
-    print(order_number,"- order No &", transID, "- Trans ID")
+    # print(order_number,"- order No &", transID, "- Trans ID")
     order = Order.objects.get(user = request.user, is_ordered = False, order_number = order_number)
-    print(order)
+    # print(order)
     payment = Payment(
         user = request.user,
         payment_id = transID,
@@ -435,9 +435,9 @@ def rzp_order_complete(request):
     send_email.send()
     
     try:
-        print("trying order ID")
+        # print("trying order ID")
         order = Order.objects.get(order_number = order_number)
-        print("fetched order ")
+        # print("fetched order ")
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
         subtotal = 0
         for i in ordered_products:
@@ -462,7 +462,7 @@ def rzp_order_complete(request):
 
     except (Payment.DoesNotExist, Order.DoesNotExist):
 
-        print("payment feedback not received. exiting without saving")
+        # print("payment feedback not received. exiting without saving")
         return redirect('home')
 
 
@@ -472,21 +472,21 @@ def cod_order_complete(request,order_number):
     now = datetime.now()
     order = Order.objects.get(user = request.user, is_ordered = False)
     code = order.coupon
-    print(code,'checking coupon')
+    # print(code,'checking coupon')
     
     try:
         order = Order.objects.get(user = request.user, is_ordered = False)
         code = order.coupon
-        print(code,'checking coupon')
+        # print(code,'checking coupon')
         coupon = Coupon.objects.get(code__exact = code, valid_from__lte=now, valid_to__gte=now, active = True)
-        print('coupon available')
+        # print('coupon available')
         if coupon:
-            print('coupon available',coupon)
+            # print('coupon available',coupon)
             discount = coupon.discount
-            print(discount)
+            # print(discount)
             order_no = order.order_number            
-            print(order_no)
-            print('got order')
+            # print(order_no)
+            # print('got order')
             current_user = request.user
             cart_items = CartItem.objects.filter(user = current_user)
             grand_total = 0
@@ -500,10 +500,10 @@ def cod_order_complete(request,order_number):
             grand_total = round(total + tax,2)
         
             discount_amount = round(grand_total * discount/100,2)
-            print(discount_amount,'discount amount')
+            # print(discount_amount,'discount amount')
             total_after_coupon = round(float(grand_total - discount_amount),2)
-            print(grand_total,'total')
-            print(total_after_coupon,'amount after discount')
+            # print(grand_total,'total')
+            # print(total_after_coupon,'amount after discount')
             order.discount_amount = discount_amount
             order.nett_paid = total_after_coupon
             
@@ -562,9 +562,9 @@ def cod_order_complete(request,order_number):
             send_email.send()
             
             try:
-                print("trying order ID")
+                # # print("trying order ID")
                 order = Order.objects.get(order_number = order_number)
-                print("fetched order ")
+                # # print("fetched order ")
                 ordered_products = OrderProduct.objects.filter(order_id=order.id)
                 subtotal = 0
                 for i in ordered_products:
@@ -591,10 +591,10 @@ def cod_order_complete(request,order_number):
             except:
                 pass
     except: 
-        print("COD requet received coupon not valid")
+        # print("COD requet received coupon not valid")
         try:
             order = Order.objects.get(user = request.user, is_ordered = False, order_number = order_number)
-            print(order)
+            # print(order)
             payment = Payment(
                 user = request.user,
                 payment_id = "COD - Payement pending",  
@@ -646,9 +646,9 @@ def cod_order_complete(request,order_number):
             send_email.send()
             
             try:
-                print("trying order ID")
+                # print("trying order ID")
                 order = Order.objects.get(order_number = order_number)
-                print("fetched order ")
+                # print("fetched order ")
                 ordered_products = OrderProduct.objects.filter(order_id=order.id)
                 subtotal = 0
                 for i in ordered_products:
@@ -673,21 +673,21 @@ def cod_order_complete(request,order_number):
 
             except (Payment.DoesNotExist, Order.DoesNotExist):
 
-                print("payment feedback not received. exiting without saving")
+                # print("payment feedback not received. exiting without saving")
                 return redirect('home')
         except:
 
-            print("payment feedback not received. exiting without saving")
+            # print("payment feedback not received. exiting without saving")
             return redirect('home')
 
 
 
 def user_order_cancel(request,order):
     order = Order.objects.get(user = request.user, order_number = order)
-    print(order, 'this is the order')
+    # print(order, 'this is the order')
     if request.method == "POST":
         status = request.POST['user_order_cancel']
-        print(status)
+        # print(status)
     
     order.status = status
     order.save()   
@@ -697,10 +697,10 @@ def user_order_cancel(request,order):
 
 def user_order_return(request,order):
     order = Order.objects.get(user = request.user, order_number = order)
-    print(order, 'this is the order')
+    # print(order, 'this is the order')
     if request.method == "POST":
         status = request.POST['user_order_return']
-        print(status)
+        # print(status)
     
     order.status = status
     order.save()

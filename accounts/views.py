@@ -26,11 +26,11 @@ import random
 def add_address(request):
     if request.user.is_authenticated:            
         if request.method == "POST":
-            print("Got a POST request")
+            # print("Got a POST request")
             form = AddAddressForm(request.POST)
-            print("checking the form validation")
+            # print("checking the form validation")
             if form.is_valid():
-                print("Validation done collectiong, collecting data")
+                # print("Validation done collectiong, collecting data")
                 user = Account.objects.get(id = request.user.id)
                 first_name = form.cleaned_data['first_name']
                 last_name = form.cleaned_data['last_name']
@@ -45,9 +45,9 @@ def add_address(request):
                 pincode = form.cleaned_data['pincode']
                 
                 address = Address.objects.create(user=user,first_name=first_name,last_name=last_name,address_line_1=address_line_1,address_line_2=address_line_2, email=email, mobile=mobile, city=city, state=state, district=district, country=country, pincode=pincode)
-                print("going to save address")
+                # print("going to save address")
                 address.save()
-                print("address saved")       
+                # print("address saved")       
 
                 messages.success(request,"Your address has been registered. ")
                 return redirect ('checkout')
@@ -129,10 +129,10 @@ def login(request):
 
         user =  auth.authenticate(email = email, password = password)
 
-        print("user details are:-", user)
+        # print("user details are:-", user)
         request.session['user_email'] = email
         user_email = request.session['user_email']
-        print('user email is', user_email)
+        # print('user email is', user_email)
 
         if user is not None:
             try:
@@ -224,7 +224,7 @@ def verify_otp(request):
         otp_input = request.POST['otp_input']
         user_mobile = request.session['user_mobile']
         
-        print(user_mobile)
+        # print(user_mobile)
         
         user_email = request.session['user_email']
         
@@ -239,27 +239,27 @@ def verify_otp(request):
                                 .verification_checks \
                                 .create(to= user_mobile, code= otp_input)
     
-        print(verification_check.status)
+        # print(verification_check.status)
         
         messages.success(request,"OTP verified successfully.")
         user = Account.objects.get(email=user_email)
-        print(user)
+        # print(user)
         
 
         auth.login(request,user)
-        print('signing in')
+        # print('signing in')
         return redirect('home')
     else:
-        print('request to generate OTP')
+        # print('request to generate OTP')
         user_email = request.session['user_email']
-        print(user_email)
+        # print(user_email)
         
         user = Account.objects.filter(email=user_email)
         for i in user:
             mobile = i.mobile_number
         
         user_mobile = '+91'+ mobile
-        print(user_mobile)
+        # print(user_mobile)
         
         request.session['user_mobile'] = user_mobile
 
@@ -274,7 +274,7 @@ def verify_otp(request):
                      .verifications \
                      .create(to= user_mobile, channel='sms')
         
-        print(verification.sid)
+        # print(verification.sid)
         
         # otp_message = otp_client.messages.create(
         #     body = "Your OTP number is "+str(otp_number),
@@ -298,8 +298,8 @@ def my_orders(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    print(paginator.count)
-    print(paginator.num_pages)
+    # print(paginator.count)
+    # print(paginator.num_pages)
     context = {
         'orders': page_obj,
         }
@@ -359,10 +359,10 @@ def change_password(request):
 
 @login_required(login_url='login')
 def order_detail(request,order_id):
-    print('order detail req recvd')
+    # print('order detail req recvd')
     order_detail = OrderProduct.objects.filter(order__order_number = order_id)
     order = Order.objects.get(order_number = order_id)
-    print('both details fetced')
+    # print('both details fetced')
     sub_total = 0
     for i in order_detail:
         sub_total += i.product_price * i.quantity
@@ -384,7 +384,7 @@ def my_addresses(request):
     return render(request,'accounts/my_addresses.html',context)
 
 def delete_address(request,add_id):
-    print(add_id)
+    # print(add_id)
     
     del_add = Address.objects.filter(user = request.user.id, id= add_id)
 
