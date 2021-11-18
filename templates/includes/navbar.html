@@ -1,100 +1,83 @@
 {% load static %}
 
-<header class="section-header bg-dark text-white" >
-    <nav class="navbar p-md-0 navbar-expand-sm navbar-light border-bottom">
-    <div class="container">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarTop4">
-        <!-- <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-                 <a href="#" class="nav-link">   English </a>
-                
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link"> USD </a>
-            </li>
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-dark text-white">
+  <a class="navbar-brand col-lg-2 col-md-3 col-6" href="{% url 'home' %}">
+     <img class="logo img-fluid" src="{% static './images/fashion_first_logo.png' %}" alt="Fashion First Kart">
+  </a>
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav my-0">
+      <li class="nav-item my-2 ml-3 mr-3">
+        <a class="nav-link btn btn-outline-warning text-warning my-1" href="{% url 'store' %}">Store</a>
+      </li>
+
+      <li class="nav-item dropdown my-2 ml-3 mr-3">
+        <a class="nav-link dropdown-toggle btn btn-warning text-dark my-1" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-bars"></i> All category
+        </a>
+        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+        {% for category in links %}
+          <a class="dropdown-item text-warning" href="{{category.get_url}}">{{category.category_name}} </a>
+          {% endfor %}
+          </div>
+      </li>
+    </ul>
+
+    <form class="form-inline my-2 mx-auto" action="{% url 'search' %}" method="GET">
+      <div class="input-group-append">
+      <input class="form-control" style="width:300px !important;" type="search" placeholder="Search" aria-label="Search" name="keyword">
+      <button class="btn btn-warning" type="submit"><i class="fa fa-search"></i></button>
+      </div> 
+    </form>
+
+<div class="d-flex flex-wrap">        
+    <div class="input-group-append col ml-auto my-2">
+    <a id="navWishCart" href="{% url 'add_wishlist' %}" class="widget-header pl-1 ml-1">
+        <div class="icon icon-sm rounded-circle border"><i class="fa fa-heart"></i></div>
+        <span id="wishCount" class="badge badge-pill badge-danger notify">{{wish_items}}</span>
+    </a>
+    </div>
+
+    <div class="input-group-append col my-2">
+    <a href="{% url 'cart' %}" class="widget-header pl-1 ml-1">
+        <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
+        <span id="cartCount" class="notify">{{cart_count}}</span>
+    </a>
+    </div>
+ <div>
+    {% if user.id is not None %}
+    <ul class="nav-item dropdown ">
+            <a class="nav-link dropdown-toggle my-2" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <small class="title text-muted">Welcome {{user.first_name}} !</small>
+            </a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+            <a class="text-warning ml-2" href="{% url 'dashboard' %}">Dashboard</a>
+            <div class="dropdown-divider"></div>
+            <a class="text-warning ml-2" href="{% url 'logout' %}" style="color:white"> Logout </a>
+            </div>
         </ul>
-        <ul class="navbar-nav">
-            <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
-            <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li> -->
-        <!-- </ul>  -->
-        <!-- list-inline //  -->
-      <!-- </div>  -->
-      <!-- navbar-collapse .// -->
-    </div> <!-- container //  -->
-    </nav>
-    
-    <section class="header-main border-bottom">
-        <div class="container">
-    <div class="row align-items-center">
-        <div class="col-lg-2 col-md-3 col-6">
-            <a href="{% url 'home' %}" class="brand-wrap" >
-                <img class="logo img-fluid" src="{% static './images/fashion_first_logo.png' %}" alt="Fashion First Kart"> </a>
-            <!-- brand-wrap.// -->
-        </div>
-        <div class="col-lg col-sm col-md col-6 flex-grow-0">
-            <div class="category-wrap dropdown d-inline-block float-right">
-                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown"> 
-                    <i class="fa fa-bars"></i> All category </button>
-                <div class="dropdown-menu">
-                    {% for category in links %}
-                    <a class="dropdown-item" href="{{category.get_url}}">{{category.category_name}} </a>
-                    {% endfor %}
-                </div>
-            </div>  <!-- category-wrap.// -->
-        </div> <!-- col.// -->
-        <a href="{% url 'store' %}" class="btn btn-outline-warning">Store</a>
-        <div class="col-lg  col-md-6 col-sm-12 col">
-            <form action="{% url 'search' %}" class="search" method="GET">
-                <div class="input-group w-100">
-                    <input type="text" class="form-control" style="width:60%;" placeholder="Search" name="keyword">
-                    
-                    <div class="input-group-append">
-                      <button class="btn btn-warning" type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                    </div>
-                </div>
-            </form> <!-- search-wrap .end// -->
-        </div> <!-- col.// -->
-        <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
-                    <div class="d-flex justify-content-end mb-3 mb-lg-0">
-                        {% if user.id is not None %}
-                        <div class="widget-header">
-                            <small class="title text-muted">Welcome {{user.first_name}} !</small>
-                            <div> 
-                                <a href="{% url 'dashboard' %}" style="color:white">Dashboard</a> <span class="dark-transp"> | </span>
-                                <a href="{% url 'logout' %}" style="color:white"> Logout </a>
-                            </div>
-                        </div>
+    {% else %}
 
-                        {% else %}
+    <ul class="nav-item dropdown">
 
-                        <div class="widget-header">
-                            <small class="title text-muted">Welcome Guest !</small>
-                            <div> 
-                                <a style="color:white" href="{% url 'login' %}">Sign in</a> <span class="dark-transp"> | </span>
-                                <a style="color:white" href="{% url 'register' %}"> Register</a>
-                            </div>
-                        </div>
-                        
-                        {% endif %}
-                        <div id="navWishCart">
-                        <a href="{% url 'add_wishlist' %}" class="widget-header pl-1 ml-1">
-                            <div class="icon icon-sm rounded-circle border"><i class="fa fa-heart"></i></div>
-                            <span id="wishCount" class="badge badge-pill badge-danger notify">{{wish_items}}</span>
-                        </a>
-                        <a href="{% url 'cart' %}" class="widget-header pl-1 ml-1">
-                            <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-                            <span id="cartCount" class="notify">{{cart_count}}</span>
-                        </a>
-                        </div>
-                    </div> <!-- widgets-wrap.// -->
-                </div> <!-- col.// -->
-    </div> <!-- row.// -->
-        </div> <!-- container.// -->
-    </section> <!-- header-main .// -->
-    </header> <!-- section-header.// -->
-    
+            <a class="nav-link dropdown-toggle my-2" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <small class="title text-muted">Welcome Guest !</small>
+            </a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+            <a class="text-warning ml-2" href="{% url 'login' %}">Sign in</a> 
+            <div class="dropdown-divider"></div>
+            <a  class="text-warning ml-2" href="{% url 'register' %}"> Register</a>
+            </div>
+        </ul>
+
+    {% endif %}
+</div>
+
+</div>
+</div>
+</nav>
+

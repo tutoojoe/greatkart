@@ -45,9 +45,9 @@
                                 <td>{{order.phone}}</td>
 
                                 {% if order.discount_amount is None %}
-                                <td class="text-right">$ {{order.order_total}}</td>
+                                <td class="text-right">₹ {{order.order_total}}</td>
                                 {% else %}
-                                <td class="text-right">$ {{order.nett_paid}}</td>
+                                <td class="text-right">₹ {{order.nett_paid}}</td>
                                 {% endif %}
                                 <td>{{order.created_at | naturaltime}}</td>
                                 <td>{{order.status}}</td>

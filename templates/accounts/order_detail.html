@@ -76,26 +76,26 @@
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">${{sub_total}}</th>
+                                                <th class="text-center">₹ {{sub_total}}</th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">$ {{order.tax}}</th>
+                                                <th class="text-center">₹ {{order.tax}}</th>
                                             </tr>
                                             
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">$ {{order.order_total}} </th>
+                                                <th class="text-center">₹ {{order.order_total}} </th>
                                             </tr>
                                             {% if order.discount_amount is None %}
                                             {% else %}
                                             <tr>
                                                 <th colspan="2" class="text-right">Discount:</th>
-                                                <th class="text-center">$ {{order.discount_amount}} </th>
+                                                <th class="text-center">₹ {{order.discount_amount}} </th>
                                             </tr>
                                             <tr>
                                                 <th colspan="2" class="text-right">Nett Amount:</th>
-                                                <th class="text-center">$ {{order.nett_paid}} </th>
+                                                <th class="text-center">₹ {{order.nett_paid}} </th>
                                             </tr>
                                             {% endif %}
                                         </tfoot>
