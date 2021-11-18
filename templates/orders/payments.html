@@ -138,7 +138,7 @@
             <span id="couponSuccessAlert" style="color:green;" class="text-center"></span>
             <button onclick="claimCoupon()" class="btn btn-primary btn-block mb-2 mt-2" id="claimButton">Claim Coupons</button>
             <!-- {% for i in form %}{{i}}{% endfor %} -->
-            <a href="{% url 'cod_order_complete' order.order_number %}" selected class="btn btn-primary btn-block mb-2" id="COD_button">Cash on Delivery</a>
+            <form action="{% url 'cod_order_complete' order.order_number %}" method="get"><button type="submit" class="btn btn-primary btn-block mb-2" id="COD_button">Cash on Delivery</button></form>
             <button value={{order.order_number}} class="btn btn-primary btn-block mb-2" hidden="true" id="rzp-button1">Pay with Razorpay</button>
             <div hidden="true" id="paypal-button-container"></div>
           <a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
