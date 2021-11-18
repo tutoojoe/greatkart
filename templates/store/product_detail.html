@@ -7,17 +7,43 @@
 
 <section class="section-content padding-y bg">
 	<div class="container">
+	{% comment %} this is the new zoom testing {% endcomment %}
+	{% comment %} <aside class="col-md-6">
+				<div class="zoom">
+					<div class="original" >
+						<img style="height: 400px;" src="{{single_product.images.url}}" id="target">
+					</div>
+					<div class="viewer" >
+						<img  src="{{single_product.images.url}}">
+					</div>
+					<div class="magnifier"></div>
+				</div>	
+			</aside>
+			<aside>
+				<h2>Look this awesome image</h2>
+				<div class="mgt">
+					<input id="rangeinput" type="range" min="2" max="10" value="2">
+				</div>
+			</aside> {% endcomment %}
+
+	{% comment %} 123 {% endcomment %}
+
+
 	
 	<!-- ============================ COMPONENT 1 ================================= -->
 <div class="card img-zoom-container" onmousenter="showme(this)">
 	<div class="row no-gutters">
 		<aside class="col-md-6">
-			<article class="gallery-wrap"> 
-				<div class="img-big-wrap mainImage " id="img-container">
-					<div id="lens"></div>
-					<center><img id="featured"  src="{{single_product.images.url}}"></center>
-				</div> <!-- img-big-wrap.// -->
-				<div class="col-md-6"></div>
+		<div class="zoom">
+		<article class="gallery-wrap"> 
+					<div class="original img-big-wrap mainImage " >
+						<img style="height: 400px;" src="{{single_product.images.url}}" id="target">
+					</div>
+					<div class="viewer" >
+						<img style="z-index: 1;" src="{{single_product.images.url}}">
+					</div>
+					<div class="magnifier"></div>
+				</div>	
 			</article> <!-- gallery-wrap .end// -->
 	<ul class="thumb">
 		<li>
@@ -209,104 +235,21 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/zoom.js/0.0.1/zoom.min.js" integrity="sha512-OhJxb3F/IiF96I1C2hoqRw8iu54GLjgaw/Bl0SRBuuK2qtPqgpKh5m15dSJxub1GwUgxVGzsBotW742Iva4Y6w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 <script>
 
-	document.getElementById('img-container').addEventListener('mouseover', function(){
-        console.log("mouse over");
-        imageZoom('featured')
-        
-      })
-      
-      function imageZoom(imgID){
-        console.log("njan vannea");
-        let img = document.getElementById(imgID)
-        let lens = document.getElementById('lens')
-      console.log(lens);
-        lens.style.backgroundImage = `url( ${img.src} )`
-      
-        let ratio = 3
-      
-        lens.style.backgroundSize = (img.width * ratio) + 'px ' + (img.height * ratio) + 'px';
-      
-        img.addEventListener("mousemove", moveLens)
-        lens.addEventListener("mousemove", moveLens)
-        img.addEventListener("touchmove", moveLens)
-        console.log("njan mousemove");
-      
-        function moveLens(){
-          /*
-              Function sets sets position of lens over image and background image of lens
-              1 - Get cursor position
-              2 - Set top and left position using cursor position - lens width & height / 2
-              3 - Set lens top/left positions based on cursor results
-              4 - Set lens background position & invert
-              5 - Set lens bounds
-          
-              */
-      
-              //1
-          let pos = getCursor()
-		//console.log('pos:', pos)
-
-		//2
-		let positionLeft = pos.x - (lens.offsetWidth / 2)
-		let positionTop = pos.y - (lens.offsetHeight / 2)
-
-		//5
-		if(positionLeft < 0 ){
-			positionLeft = 0
-		}
-
-		if(positionTop < 0 ){
-			positionTop = 0
-		}
-
-		if(positionLeft > img.width - lens.offsetWidth /3 ){
-			positionLeft = img.width - lens.offsetWidth /3
-		}
-
-		if(positionTop > img.height - lens.offsetHeight /3 ){
-			positionTop = img.height - lens.offsetHeight /3
-		}
+	
 
 
-		//3
-		lens.style.left = positionLeft + 'px';
-		lens.style.top = positionTop + 'px';
 
-		//4
-		lens.style.backgroundPosition = "-" + (pos.x * ratio) + 'px -' +  (pos.y * ratio) + 'px'
-	}
-function getCursor(){
-		/* Function gets position of mouse in dom and bounds
-         of image to know where mouse is over image when moved
-        
-        1 - set "e" to window events
-        2 - Get bounds of image
-        3 - set x to position of mouse on image using pageX/pageY - bounds.left/bounds.top
-        4- Return x and y coordinates for mouse position on image
-        
-         */
-
-        let e = window.event
-        let bounds = img.getBoundingClientRect()
-
-        //console.log('e:', e)
-        //console.log('bounds:', bounds)
-        let x = e.pageX - bounds.left
-		let y = e.pageY - bounds.top
-		x = x - window.pageXOffset;
-		y = y - window.pageYOffset;
-		
-		return {'x':x, 'y':y}
-	}
-
-}
-
-imageZoom('featured')
-
-
-    
 </script>
+<script>
+	var l = $('#target').zoom(2);
+console.log(l,"fdkjl")
+	$('input[type="range"]').on('change', function () {
+console.log("changing range")
+		l.setZoom(this.value);
 
+	});
+	$('#target').setZoom(3)
+</script>
 {% endblock %}
 
 

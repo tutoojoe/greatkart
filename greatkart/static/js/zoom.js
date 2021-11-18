@@ -1,85 +1,81 @@
-// imageZoom("myimage", "myresult");
-// function imageZoom(imgID, resultID) {
-//   var img, lens, result, cx, cy;
-//   img = document.getElementById(imgID);
-//   result = document.getElementById(resultID);
-//   /*create lens:*/
-//   lens = document.createElement("DIV");
-//   lens.setAttribute("class", "img-zoom-lens");
-//   /*insert lens:*/
-//   img.parentElement.insertBefore(lens, img);
-//   /*calculate the ratio between result DIV and lens:*/
-//   console.log("result.offsetWidth  >>>>>", result.offsetWidth ,"lens.offsetWidth>>>>>>>>>>>",lens.offsetWidth);
-//   cx = 300 / lens.offsetWidth;
-//   console.log("result.offsetHeight>>>>>",result.offsetHeight ,"llens.offsetHeighth>>>>>>>>>>>",lens.offsetHeight);
-//   cy = 300 / lens.offsetHeight;
-//   /*set background properties for the result DIV:*/
-//   result.style.backgroundImage = "url('" + img.srcset + "')";
-//   result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
-//   /*execute a function when someone moves the cursor over the image, or the lens:*/
-//   lens.addEventListener("mousemove", moveLens);
-//   img.addEventListener("mousemove", moveLens);
-//   /*and also for touch screens:*/
-//   lens.addEventListener("touchmove", moveLens);
-//   img.addEventListener("touchmove", moveLens);
-//  // img.addEventListener("mouseenter", bigImg);  
- 
-  
-  
-// function bigImg(x) {
-//   console.log("onmouseenter >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-// }
+(function () {
 
-// function normalImg(x) {
-// //result.style.display ="none";
-//      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>onmousLEAVE");
-// }
+	if (typeof $ !== "function")
+		throw Error('JQuery is not present.');
 
+	var times = 2, handler;
 
-  
-// function moveLens(e) {
-//   var pos, x, y;
-//   /*prevent any other actions that may occur when moving over the image:*/
-//   e.preventDefault();
-//   /*get the cursor's x and y positions:*/
-//   pos = getCursorPos(e);
-//   /*calculate the position of the lens:*/
-//   x = pos.x - (lens.offsetWidth / 2);
-//   y = pos.y - (lens.offsetHeight / 2);
-// // console.log("x" , x , "and Y " , y); 
-//   /*prevent the lens from being positioned outside the image:*/
-//   if (x > img.width - lens.offsetWidth) {x = img.width - lens.offsetWidth;  } //else{img.addEventListener("mouseenter", bigImg);  }
-//   if (x < 0) {x = 0;}
-//   if (y > img.height - lens.offsetHeight) {y = img.height - lens.offsetHeight; img.addEventListener("mouseleave",  normalImg);}//else{img.addEventListener("mouseenter", bigImg);  }
-//   if (y < 0) {y = 0;}
-//   /*set the position of the lens:*/
-//   lens.style.left = x + "px";
-//   lens.style.top = y + "px";
-//   /*display what the lens "sees":*/
-//   result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
-// }
-// function getCursorPos(e) {
-//   var a, x = 0, y = 0;
-//   e = e || window.event;
-//   /*get the x and y positions of the image:*/
-//   a = img.getBoundingClientRect();
-//   //console.log("------------------A  left" ,  a ); 
-//   /*calculate the cursor's x and y coordinates, relative to the image:*/
-//   x = e.pageX - a.left;
-//   y = e.pageY - a.top;
-//   /*consider any page scrolling:*/
-//   x = x - window.pageXOffset;
-//   y = y - window.pageYOffset;
-//   return {x : x, y : y};
-// }
+	var init = function () {
 
-// }
+		var t = $(this),
+			p = t.parent(),
+			v = p.next(),
+			cs = v.next(),
+			iw = v.children();
 
-// function hideme(x) {
-//     //x.style.display = "none";
-   
-// }
-// function showme(x) {
-//     //x.style.display = "block";
-   
-// }
+		handler = function (e) {
+
+			var [w, h] = ['width', 'height'].map(x => $.fn[x].call(t)),
+				nw = w * times, nh = h * times, cw = w / times, ch = h / times;
+
+			var eventMap = {
+				mousemove: function (e) {
+
+					e = e.originalEvent;
+
+					var x = e.layerX,
+						 y = e.layerY,
+						 rx = cw / 2,
+						 ry = ch / 2,
+						 cx = x - rx,
+						 cy = y - ry,
+						 canY = cy >= 0 && cy <= h - ch,
+						 canX = cx >= 0 && cx <= w - cw
+
+					cs.css({
+						top: canY ? cy : cy < 0 ? 0 : h - ch,
+						left: canX ? cx : cx < 0 ? 0 : w - cw
+					});
+
+					iw.css({
+						top: canY ? -cy / (h - ch) * (nh - h) : cy < 0 ? 0 : -(nh - h),
+						left: canX ? -cx / (w - cw) * (nw - w) : cx < 0 ? 0 : -(nw - w)
+					});
+				}
+			};
+
+			p.width(w).height(h);
+			cs.width(cw).height(ch);
+			iw.width(nw).height(nh);
+
+			for (let k in eventMap)
+				p.on(k, eventMap[k]);
+		};
+
+		t.on('load', handler);
+	};
+
+	$.fn.extend({
+
+		zoom: function (t) {
+			times = t || times;
+
+			for (let x of this)
+				init.call(x);
+
+			return this;
+		},
+		setZoom: function (t) {
+
+			times = t || times;
+
+			if (handler === void 0)
+				throw Error('Zoom not initialized.');
+
+			handler();
+
+		}
+
+	});
+
+}());
