@@ -468,6 +468,7 @@ def rzp_order_complete(request):
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 def cod_order_complete(request,order_number):
+    order_number = order_number
    
     now = datetime.now()
     order = Order.objects.get(user = request.user, is_ordered = False)
