@@ -3,6 +3,63 @@
 {% load static %}
 
 {% block contents %}
+<style>
+
+	.zoom, .original {
+		position: relative;
+	  }
+	  
+	  .zoom {
+		display: inline-block;
+	  }
+	  
+	  .original {
+		cursor: crosshair;
+	  }
+	  
+	  #target {
+		width: calc(var(--t) / 2);
+	  }
+	  
+	  .zoom .viewer {
+		position: absolute;
+		top: 0;
+		left: 100%;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	  }
+	  
+	  .zoom .viewer img {
+		position: absolute;
+	  }
+	  
+	  .original:hover ~ div {
+		display: block;
+	  }
+	  
+	  .original::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1;
+	  }
+	  /* Customize the magnifier effect. */
+	  .magnifier {
+		position: absolute;
+		background: #000;
+		opacity: 0.7;
+		top: 0;
+		left: 0;
+	  }
+	  
+	  .magnifier, .viewer {
+		display: none;
+	  }
+</style>
 
 
 <section class="section-content padding-y bg">
@@ -40,7 +97,7 @@
 					<div class="original img-big-wrap mainImage " >
 						<img style="height: 400px;" src="{{single_product.images.url}}" id="target">
 					</div>
-					<div class="viewer" >
+					<div class="viewer mainImage" >
 						<img style="z-index: 1;" src="{{single_product.images.url}}">
 					</div>
 					<div class="magnifier"></div>
@@ -327,6 +384,7 @@
 	$('input[type="range"]').on('change', function () {
 		l.setZoom(this.value);
 	});
+	$('#target').setZoom(4);
 	
 </script>
 {% endblock %}
