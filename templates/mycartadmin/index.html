@@ -91,76 +91,47 @@
                 Latest Orders
                     </div>
                     <div class="card-body">
-                    {% for order in latest_order %}
-                    <ul> {{order.order_number}} | {{order.first_name}} | {{order.order_total}}| {{order.status}}</ul>
-
+                   
+                    <table id="datatablesSimple" class="display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                      <th>Customer Name</th>
+                      <th>Order No</th>
+                      <th>Order Value</th>
+                      <th>Status</th>
+                    
+                     
+                </tr>
+            </thead>
+            <tbody>
+                  {% for order in latest_order %}                    
+                      {% csrf_token %}
+                    <tr class="gradeX">
+                      <td>{{order.full_name}}</td>
+                      <td>{{order.order_number}}</td>
+                      <td class="text-right">₹ {{order.order_total}}</td>
+                      <td>{{order.status}}</td>
+                     
+                    </tr>
+                  
                     {% endfor %}
+
+            </tbody>
+            <tfoot>
+                <tr>
+                      <th>Customer Name</th>
+                      <th>Order No</th>
+                      <th>Order Value</th>
+                      <th>Status</th>
+                </tr>
+            </tfoot>
+        </table>
+
+                    
                     </div>
                 </div>
     </div>
 </div>
-
-
-{% comment %} 
-
-
-<div class="row">
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-primary text-white mb-4">
-            <div class="card-body">Total Users</div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <h4 class="text-center"><strong>{{total_user_no}}</strong></h4><br>
-                <a class="small text-white stretched-link" href="{% url 'usermanage' %}">View User Details</a>
-                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-warning text-white mb-4">
-            <div class="card-body">Total Orders </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <h4 class="text-center"><strong>{{total_ord_no}} Orders</strong></h4><br>
-                <a class="small text-white stretched-link" href="{% url 'admin_orders' %}">View Details</a>
-                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-success text-white mb-4">
-            <div class="card-body">Total Sales Value</div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <h4 class="text-center"><strong>Rs. {{total_order_value}}</strong></h4><br>
-                <!-- <a class="small text-white stretched-link" href="#">View Details</a> -->
-                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-danger text-white mb-4">
-            <div class="card-body">Average value per order</div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <h4 class="text-center"><strong>Rs. {{avg_ord_value}}</strong></h4><br>
-                <!-- <a class="small text-white stretched-link" href="#">View Details</a> -->
-                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
-    </div>
-</div>
-
- {% endcomment %}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   {%block scripts%}
@@ -234,7 +205,6 @@
           }
         }
     });
-
 
 
     </script>

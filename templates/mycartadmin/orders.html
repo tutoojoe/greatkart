@@ -44,7 +44,7 @@
                       <!-- <td>{{order.email}}</td> -->
                       <td>{{order.city}}</td>
                       <td>{{order.state}}</td>
-                      <td>{{order.order_total}}</td>
+                      <td class="text-right">₹ {{order.order_total}}</td>
                       <td>{{order.status}}</td>
                        {% if order.status == "Cancelled" %}
                       <td>Order Cancelled</td>
@@ -53,7 +53,7 @@
                       {% else %}
                       <td><a href="{% url 'update_order_status' order.order_number %}" 
                               onclick="return confirm('Are you sure you want to UPDATE this product?')">
-                              <button class="btn btn-primary "> <i class="icon-edit"></i>UPDATE</button></a></td>             
+                              <button class="btn btn-primary btn-sm "> <i class="icon-edit"></i>UPDATE</button></a></td>             
                       {% comment %} <td><input type="submit" onclick="updateStatus()" value="Update"></td> {% endcomment %}
                       <!-- <td class="center">4</td> -->
                       {% endif %}
