@@ -14,7 +14,7 @@ from coupon_offers.forms import CategoryOfferForm, CouponApplyForm, ProductOffer
 from mycartadmin.forms import BannerUpdateForm
 from mycartadmin.models import BannerUpdate
 from orders.forms import OrderForm, OrderStatusForm
-from store.forms import ProductForm
+from store.forms import ProductForm, ProductGalleryForms
 from category.forms import CategoryForm
 from store.models import Product
 from orders.models import Order, OrderProduct, Payment
@@ -225,9 +225,9 @@ def admin_dashboard(request):
                 'total_user_no':total_user_no,
                 'total_ord_no':total_ord_no,
                 # 'total_order_value':format(total_order_value['order_total__sum'],".2f"),
-                'total_order_value':total_order_value['order_total__sum'],
+                'total_order_value':round(total_order_value['order_total__sum'],2),
                 # 'avg_ord_value':format(avg_ord_value['average_order_value'],".2f"),
-                'avg_ord_value':avg_ord_value['average_order_value'],
+                'avg_ord_value':round(avg_ord_value['average_order_value'],2)
                 # 'latest_order': latest_order,
                 
                 }
@@ -799,3 +799,24 @@ def delete_cat_offer(request):
     offer.delete()
 
     return redirect('admin_offers')
+
+
+
+def add_gallery_images(request,id):
+    instance = get_object_or_404(Product, id=id)
+    form = ProductGalleryForms(request.POST or None, request.FILES or None, instance=instance)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Image gallery has been updated')
+            return redirect('admin_product')
+        else:
+             context = {
+            'form'     : form,
+            }
+        return render(request, 'mycartadmin/add_gallery_images.html',context)
+    else:  
+        context = {
+            'form'     : form,
+            }
+        return render(request, 'mycartadmin/add_gallery_images.html',context)

@@ -80,34 +80,6 @@ def home(request):
 
     return render(request, 'home.html',context)
 
-def images(request):
-
-    if request.method == "POST":
-        form = ProductForm(request.POST or None, request.FILES or None)
-
-        if form.is_valid():
-            product_name = form.cleaned_data['product_name']
-            slug = slugify(product_name)
-         
-            description = form.cleaned_data['description']
-            price = form.cleaned_data['price']
-            
-            images = form.cleaned_data['images']
-            stock = form.cleaned_data['stock']
-            is_available = form.cleaned_data['is_available']
-            category = form.cleaned_data['category']
-            
-            product = Product.objects.create(product_name=product_name, slug=slug, description=description,mrp_price=price,price=price,images=images,stock=stock,is_available=is_available,category=category)
-            product.save()
-            
-            return redirect('images')
-    else:
-        
-        form = ProductForm()
-    context     = {
-            'form' : form,
-        }
-    return render(request,'image.html',context)
 
 
 # def add_product(request):

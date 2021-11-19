@@ -23,7 +23,7 @@ urlpatterns = [
     path('django_admin/', admin.site.urls),
     path('', views.home, name = 'home'),
     # path('add_product/',views.add_product,name='add_product'),
-    path('images/', views.images, name = 'images'),
+    
     path('store/',include('store.urls')),
     path('cart/',include('carts.urls')),
     path('accounts/',include('accounts.urls')),

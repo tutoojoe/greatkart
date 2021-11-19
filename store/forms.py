@@ -10,11 +10,11 @@ class Reviewforms(forms.ModelForm):
         fields = ['subject','review','rating']
 
 
-# class ProductGalleryForms(forms.Modelform):
-#     image = forms.ImageField(required=False, error_messages={'invalid':"Image Files Only"}, widget=forms.FileInput)
-#     class Meta:
-#         model = ProductGallery
-#         fields = ['product','image']
+class ProductGalleryForms(forms.ModelForm):
+    image = forms.ImageField(required=False, error_messages={'invalid':"Image Files Only"}, widget=forms.FileInput)
+    class Meta:
+        model = ProductGallery
+        fields = ['product','image']
 
 
 
