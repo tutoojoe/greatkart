@@ -44,6 +44,7 @@
                 </div>
             </form>
             <!-- Navbar-->
+            {% if user.id is not None %}
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
@@ -203,7 +204,8 @@
                             </a>
                         </div>
                     </div> -->
-
+{% else %}
+                {% endif %}
 
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
@@ -211,6 +213,7 @@
                     </div>
                 </nav>
             </div>
+        
 
             <!-- from here we are starting the extension -->
 
@@ -230,7 +233,16 @@
                 </main>
                 
                 <!-- footer part   -->
-                <footer class="py-4 bg-light mt-auto">
+                <footer class="py-4 bg-light mt-auto" style="
+z-index: 1;
+margin-top:30px;
+position: fixed;
+padding: 10px 10px 10px 10px;
+bottom: 0;
+width: 100%;
+/* Height of the footer*/ 
+height: 40px;
+">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; Fashion Kart 2021</div>
@@ -242,6 +254,8 @@
                         </div>
                     </div>
                 </footer>
+
+                
             </div>
         </div>
         
