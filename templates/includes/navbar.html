@@ -51,8 +51,8 @@
  <div>
     {% if user.id is not None %}
     <ul class="nav-item dropdown ">
-            <a class="nav-link dropdown-toggle my-2" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <small class="title text-muted">Welcome {{user.first_name}} !</small>
+            <a class="nav-link dropdown-toggle my-2 text-warning" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <small class="title text-warning">Welcome {{user.first_name}} !</small>
             </a>
             <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
             <a class="text-warning ml-2" href="{% url 'dashboard' %}">Dashboard</a>
@@ -64,8 +64,8 @@
 
     <ul class="nav-item dropdown">
 
-            <a class="nav-link dropdown-toggle my-2" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <small class="title text-muted">Welcome Guest !</small>
+            <a class="nav-link dropdown-toggle my-2 text-warning" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
+            <small class="title text-warning">Sign In/ Register</small>
             </a>
             <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
             <a class="text-warning ml-2" href="{% url 'login' %}">Sign in</a> 

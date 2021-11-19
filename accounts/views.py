@@ -88,6 +88,9 @@ def register(request):
             password = form.cleaned_data['password']
             username = email.split("@")[0]
 
+            request.session['user_email'] = email
+            request.session['user_mobile'] = mobile_number
+            
             user = Account.objects.create_user(first_name=first_name,last_name=last_name,email=email, mobile_number=mobile_number, username = username, password=password)
             user.save()
 
@@ -113,13 +116,20 @@ def register(request):
             # return redirect ('accounts/login/?command=verification&mail='+email)
 
             messages.success(request,"Thank you for registering with us. ")
-            return redirect ('login')
+            return redirect ('verify_otp')
+        else:
+            messages.error(request,"Invalid Credentials")
+            form = RegistrationForm(request.POST)
+            context = {
+                'form':form
+            }
+            return render(request, 'accounts/register.html', context)
     else:
+        
         form = RegistrationForm()    
-    context = {
-            'form':form
-    }
-
+        context = {
+                'form':form
+        }
     return render(request, 'accounts/register.html', context)
 
 def login(request):
@@ -223,13 +233,8 @@ def verify_otp(request):
         # generated_otp = request.POST['generated_otp']
         otp_input = request.POST['otp_input']
         user_mobile = request.session['user_mobile']
-        
-        # print(user_mobile)
-        
-        user_email = request.session['user_email']
-        
-        
-        
+        user_email = request.session['user_email']        
+        # print(user_mobile)   
         account_sid = TWILIO_ACCOUNT_SID
         auth_token = TWILIO_AUTH_TOKEN
         client = Client(account_sid, auth_token)
@@ -239,16 +244,24 @@ def verify_otp(request):
                                 .verification_checks \
                                 .create(to= user_mobile, code= otp_input)
     
-        # print(verification_check.status)
-        
-        messages.success(request,"OTP verified successfully.")
-        user = Account.objects.get(email=user_email)
-        # print(user)
-        
-
-        auth.login(request,user)
-        # print('signing in')
-        return redirect('home')
+        print(verification_check.status)
+        if verification_check.status == "approved":
+            messages.success(request,"OTP verified successfully.")
+            user = Account.objects.get(email=user_email)
+            user.is_active = True           
+            user.save()          
+            auth.login(request,user)          
+            try:
+                del request.session['user_mobile']
+                del request.session['user_email']
+            except:
+                pass              
+            
+            # print('signing in')
+            return redirect('home')
+        else:
+            messages.error(request,"Invalid OTP. Try again with correct OTP")
+            return render(request,'accounts/login_otp.html')
     else:
         # print('request to generate OTP')
         user_email = request.session['user_email']
@@ -259,11 +272,7 @@ def verify_otp(request):
             mobile = i.mobile_number
         
         user_mobile = '+91'+ mobile
-        # print(user_mobile)
-        
         request.session['user_mobile'] = user_mobile
-
-        # otp_number = random.randint(100000,999999)
         auth_sid = TWILIO_ACCOUNT_SID
         auth_token = TWILIO_AUTH_TOKEN
         
@@ -274,16 +283,6 @@ def verify_otp(request):
                      .verifications \
                      .create(to= user_mobile, channel='sms')
         
-        # print(verification.sid)
-        
-        # otp_message = otp_client.messages.create(
-        #     body = "Your OTP number is "+str(otp_number),
-        #     from_ = "+13097221372",
-        #     to = "+91"+user_mobile
-        # )
-        # context = {
-        #     'otp_number':otp_number,
-        #     }
         return render(request,'accounts/login_otp.html')
        
        
@@ -318,7 +317,7 @@ def edit_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(request,'Your profile has been updated')
-            return redirect('edit_profile')
+            return redirect('dashboard')
     else:
         user_form = Userform(instance=request.user)
         profile_form = UserProfileForm(instance=userprofile)

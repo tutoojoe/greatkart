@@ -561,6 +561,7 @@ def cod_order_complete(request,order_number):
             to_email = request.user.email
             send_email = EmailMessage(mail_subject,message,to=[to_email])
             send_email.send()
+            print("email send with offer")
             
             try:
                 # # print("trying order ID")
@@ -645,6 +646,7 @@ def cod_order_complete(request,order_number):
             to_email = request.user.email
             send_email = EmailMessage(mail_subject,message,to=[to_email])
             send_email.send()
+            print('email send')
             
             try:
                 # print("trying order ID")
