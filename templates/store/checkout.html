@@ -17,6 +17,15 @@
                         {% include 'includes/alerts.html' %}
                         <form action="{% url 'place_order' %}" method="POST">
                             {% csrf_token %}
+                            
+                            {% if not address %}
+                            <div class="form-row mb-2">
+                                                                  
+                                <h6> No Addresses found. Please add a shipping address. </h6>
+                            
+                            </div>
+                            
+                            {% else %}
                             {% for add in address %}
                             <div class="form-row mb-2">
                                 <div class="form-check">
@@ -27,7 +36,11 @@
                                     </p>
                                 </div>
                             </div>
-                                {% endfor %}  
+                            {% endfor %} 
+                            {% endif %}
+
+
+                                 
                             <!-- <div class="form-row">
                                 <div class="col form-group">
                                     <label for="">First Name</label>
