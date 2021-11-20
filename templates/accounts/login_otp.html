@@ -18,12 +18,11 @@
           <form action="{% url 'verify_otp' %}" method="POST">
               {% csrf_token %}
               <div class="form-group">
-                <input type="text" class="form-control" name="generated_otp" hidden value="{{otp_number}}">
-                <input type="text" class="form-control" placeholder="Enter the OTP received on your mobile" name="otp_input">
+                <input id="otpInp" type="text" class="form-control" placeholder="Enter the OTP received on your mobile" name="otp_input">
               </div> <!-- form-group// -->
-            
+            <div id="timerDiv" class="mb-2 text-warning ">Time left = <span id="timer"></span></div>
               <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-block"> Submit OTP </button>
+                  <button id="subBtn" type="submit" class="btn btn-primary btn-block"> Submit OTP </button>
               </div> <!-- form-group// -->    
           </form>
           <a href="{% url 'verify_otp' %}">Resend OTP</a>
@@ -34,5 +33,38 @@
     
        </section>
     <!-- ========================= SECTION CONTENT END// ========================= -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+let timerOn = true;
+
+function timer(remaining) {
+  var m = Math.floor(remaining / 60);
+  var s = remaining % 60;
+  
+  m = m < 10 ? '0' + m : m;
+  s = s < 10 ? '0' + s : s;
+  document.getElementById('timerDiv').innerHTML = m + ':' + s;
+  remaining -= 1;
+  
+  if(remaining >= 0 && timerOn) {
+    setTimeout(function() {
+        timer(remaining);
+    }, 1000);
+    return;
+  }
+
+  if(!timerOn) {
+    // Do validate stuff here
+    return;
+  }
+  
+  document.getElementById('otpInp').disabled = true
+  document.getElementById('subBtn').disabled = true
+  document.getElementById('timerDiv').hidden = true
+  Swal.fire('OTP Timed out. Please try again.')
+}
+
+timer(120);
+</script>
 
 {% endblock %}
