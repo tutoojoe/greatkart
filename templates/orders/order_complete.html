@@ -4,7 +4,7 @@
 
 {% block contents %}
 <div class="printPage">
-    <div class="container" style="margin-top: 50px;">
+    <div id="successPart" class="container" style="margin-top: 50px;">
         <center><i class="fas fa-check-circle" style="font-size: 40px;margin-bottom: 20px;color: #28A745;"></i></center>
         <h4 class="text-center">Payment Successful</h4>
         <br>
@@ -133,7 +133,11 @@
 
 <script>
     $('#printInvoice').click(function(){
+        document.getElementById('successPart').hidden = true;
+        document.getElementById('printInvoice').hidden = true;
                window.print();
+               document.getElementById('successPart').hidden = false;
+        document.getElementById('printInvoice').hidden = false;
                return false;
     });
     </script>

@@ -125,7 +125,9 @@
 
     <script>
 $('#printInvoice').click(function(){
-           window.print();
+            document.getElementById('printInvoice').hidden = true;
+            window.print();
+            document.getElementById('printInvoice').hidden = false;
            return false;
 });
 </script>
