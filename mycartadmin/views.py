@@ -436,17 +436,22 @@ def add_category(request):
         return render(request,'mycartadmin/add_category.html',context)
 
 @login_required(login_url='admin_login')
-def sales_report(request):
+def sales_report(request):    
+    if request.method == "POST":        
+        from_date = request.POST["from_date"]
+        to_date = request.POST["to_date"]
+        orders = Order.objects.filter(created_at__range=(from_date, to_date))
+        context = {
+        'orders':orders,          
+        }
+        return render(request,'mycartadmin/sales_report.html',context)
     
-    orders = Order.objects.all().order_by('-order_number')
-   
-
-    context = {
-        'orders':orders,
-          
-    }
-
-    return render(request,'mycartadmin/sales_report.html',context)
+    else:
+        orders = Order.objects.all().order_by('-order_number')
+        context = {
+            'orders':orders,            
+        }
+        return render(request,'mycartadmin/sales_report.html',context)
 
 
 @login_required(login_url='admin_login')

@@ -7,20 +7,30 @@
 <link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" rel="stylesheet" />
 <div class="container">
+<div>
+<form method="POST" action="{% url 'sales_report' %}">
+                {% csrf_token %}
+              <hr > 
+              <label for="from_date" style="float: left; "> From </label> 
+              <input id= "from_date" type="date" name="from_date" placeholder="From Date" class="form-control col-2 m-2" style="float:left" required> 
+              <label for="to_date" style="float: left;"> To </label> 
+              <input type="date" id="to_date" name="to_date" class="form-control col-2 m-2" placeholder="To Date" style="float:left" required> 
+              <button type="submit" class="btn btn-primary m-2">Filter Orders</button> 
+              <!-- <a href="{% url 'order_report' %}" class="btn btn-info mr-2 ml-2">Generate Report </a> --></form>
+  </div>
+ </div>
+
+ {% if not orders %}
+ <div> 
+ <h4 class="text-center mt-5"> No orders found in this range. Please check with some other dates. </h4>
+ </div>
+ {% else %}
 <div class="card mb-4 mt-4">
   <div class="card-header">
       <i class="fas fa-table me-1"></i>
       Orders
       {% include 'includes/alerts.html' %}
-      <form method="POST" action="{% url 'sales_report' %}">
-                {% csrf_token %}
-              <hr > <label for="from_date" style="float: left; "> From </label> 
-              <input id= "from_date" type="date" name="from_date" placeholder="From Date" class="form-control col-2 m-2" style="float:left"> 
-              <label for="to_date" style="float: left;"> To </label> 
-              <input type="date" id="to_date" name="to_date" class="form-control col-2 m-2" placeholder="To Date" style="float:left"> 
-              <button type="submit" class="btn btn-primary m-2">Filter Orders</button> 
-              <!-- <a href="{% url 'order_report' %}" class="btn btn-info mr-2 ml-2">Generate Report </a> --></form>
-  </div>
+      
   <div class="card-body">
     <table id="example" class="display nowrap" style="width:100%">
             <thead>
@@ -78,6 +88,7 @@
         </table>
     </div>
 </div>
+{% endif %}
 
 </div>
 
