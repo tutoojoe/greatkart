@@ -55,20 +55,25 @@ def home(request):
         if p_offer > c_offer:
             disc_price = product.mrp_price - (product.mrp_price * p_offer)/100
             product.price = round(disc_price, 2)
+            product.discount_percentage = p_offer
             product.save()
         elif p_offer < c_offer:
             disc_price = product.mrp_price - (product.mrp_price * c_offer)/100
-            product.price = disc_price
+            product.price = round(disc_price,2)
+            product.discount_percentage = c_offer
             product.save()
             
         elif p_offer == c_offer and p_offer !=0 :
        
             disc_price = product.mrp_price - (product.mrp_price * p_offer)/100
-            product.price = disc_price
+            product.discount_percentage = p_offer
+            product.price = round(disc_price,2)
             product.save()
 
-        else:
-           pass
+        elif p_offer == c_offer == 0:
+            product.price = product.mrp_price
+            product.save()
+        
         
     reviews = ReviewRating.objects.filter(product_id = prod_id, status = True)
 
