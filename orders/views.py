@@ -259,6 +259,7 @@ def proceed_payment(request):
             # print(total_after_coupon,'amount after discount')
             order.discount_amount = discount_amount
             order.nett_paid = total_after_coupon
+            order.coupon_use_status = True
             
             order.save()
             
@@ -507,7 +508,7 @@ def cod_order_complete(request,order_number):
             # print(total_after_coupon,'amount after discount')
             order.discount_amount = discount_amount
             order.nett_paid = total_after_coupon
-            
+            order.coupon_use_status = True
             order.save()
 
             payment = Payment(

@@ -446,6 +446,10 @@ rzpPayment(ord_no);
           document.getElementById('discAmount').innerText = response.discount_amount
          disAmount =  response.total_after_coupon
 
+        }else if (coupon == "coupon already used"){
+          document.getElementById('couponAlert').innerText = "Coupon already used."
+          
+          console.log("coupon already used")
         }else{
           document.getElementById('couponAlert').innerText = "Invalid Coupon..!!"
           

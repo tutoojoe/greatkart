@@ -35,8 +35,8 @@ urlpatterns = [
     
 ]
 
-admin.site.index_title = "GreatKart"
-admin.site.site_header = "GreatKart Admin"
+admin.site.index_title = "FKart"
+admin.site.site_header = "FKart Admin"
 admin.site.site_title = "Admin"
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -311,6 +311,12 @@ def delete_category(request,id):
     return redirect('admin_category')
 
 
+@login_required(login_url='admin_login')
+def admin_prod_delete(request,id):
+    product = Product.objects.get(id=id)
+    product.delete()
+    return redirect('admin_product')
+
 
 
 def edit_product(request,id):

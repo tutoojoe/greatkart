@@ -40,6 +40,7 @@ urlpatterns = [
     path('admin_product',views.admin_product, name = 'admin_product'),
     path('add_product',views.add_product, name = 'add_product'),
     path('edit_product/<int:id>',views.edit_product, name = 'edit_product'),
+    path('admin_prod_delete/<int:id>',views.admin_prod_delete, name = 'admin_prod_delete'),
     path('add_gallery_images/<int:id>',views.add_gallery_images, name = 'add_gallery_images'),
     
     #offers
