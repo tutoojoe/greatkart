@@ -12,12 +12,12 @@
           <article class="card-body">
             {% include 'includes/alerts.html' %}
             <header class="mb-4"><h4 class="card-title">Sign up</h4></header>
-            <form action="{% url 'register' %}" method="POST">
+            <form action="{% url 'register' %}" id="registerForm" method="POST">
                 {% csrf_token %}
 
         
                     <div class="form-row">
-                        <div class="col form-group">
+                        <div class="col form-group" id="firstname">
                             <label>First name</label>
                               {{form.first_name}}
                         </div> <!-- form-group end.// -->
@@ -74,7 +74,86 @@
     
     
     </section>
-    <!-- ========================= SECTION CONTENT END// ========================= -->
+
+<script>
+$('#registerForm').validate({
+rules:{
+    first_name:{
+        required:true,
+        minlength:3,
+        },
+    last_name:{
+        required:true,
+        minlength:1,
+        },
+    email:{
+        required:true,
+        email:true,
+    },
+    mobile_number:{
+        required:true,
+        digits:true,
+        minlength:10,
+        maxlength:10.
+    },
+    password:{
+        required:true,
+        minlength:5,
+    },
+
+    confirm_password:{
+        required:true,
+        
+        minlength:5,
+        equalTo:"#id_password",
+        
+    },
+
+},
+messages:{
+    first_name:{
+        required:"Enter your First name.",
+        minlength:"Minimum 3 characters required.",
+        },
+    last_name:{
+        required:"Enter your Last name",
+        minlength:"Minimum 1 characters required.",
+        },
+    email:{
+        required:"Enter your Email ID",
+        email:"Please enter a valid Email.",
+    },
+    mobile_number:{
+        required:"Enter your Mobile Number",
+        digits:"Only numbers allowed.",
+        minlength:"10 digits needed",
+        maxlength:"Maximum 10 digits allowed.",
+    },
+    password:{
+        required:"Password required.",
+        minlength:"Need at least 5 characters.",
+    },
+
+    confirm_password:{
+        required:"Re-enter password",
+        equalTo:"The passwords must be the same.",
+        minlength:"Must be of same length as of the Password",
+        
+    },
+},
+})
+
+
+$('#id_mobile_number').keyup(validateMaxLength);
+function validateMaxLength(){
+        var text = $(this).val();
+        var maxlength = 10;
+        if(maxlength > 0)  
+        {
+                $(this).val(text.substr(0, maxlength)); 
+        }
+}
+  </script>
     
 
 {% endblock %}

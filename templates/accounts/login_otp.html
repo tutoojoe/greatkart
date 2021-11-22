@@ -3,6 +3,7 @@
 
 {% block contents %}
 
+
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-conten padding-y" style="min-height:84vh">
 
@@ -15,10 +16,10 @@
             <div class="card-body">
           <h4 class="card-title mb-4">Verify OTP </h4>
           {% include 'includes/alerts.html' %}
-          <form action="{% url 'verify_otp' %}" method="POST">
+          <form id="otpForm" action="{% url 'verify_otp' %}" method="POST">
               {% csrf_token %}
               <div class="form-group">
-                <input id="otpInp" type="text" class="form-control" placeholder="Enter the OTP received on your mobile" name="otp_input">
+                <input id="otpInp" type="text" data-maxlength="6" class="form-control" placeholder="Enter the OTP received on your mobile" name="otp_input">
               </div> <!-- form-group// -->
             <div id="timerDiv" class="mb-2 text-warning ">Time left = <span id="timer"></span></div>
               <div class="form-group">
@@ -35,6 +36,40 @@
     <!-- ========================= SECTION CONTENT END// ========================= -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+$('#otpForm').validate({
+    rules:{
+      otp_input:{
+      digits:true,
+      minlength:6,
+      required:true,
+      maxlength:6,
+      
+      },
+    },
+    messages:{
+      otp_input:{
+      required:"Please enter OTP",
+      maxlength:"Maximum 6 digits allowed.",
+      minlength:"Need 6 digit OTP",
+      digits:"Only numbers allowed."
+    },
+    }
+  })
+
+$('#otpInp').keyup(validateMaxLength);
+
+function validateMaxLength()
+{
+        var text = $(this).val();
+        var maxlength = $(this).data('maxlength');
+
+        if(maxlength > 0)  
+        {
+                $(this).val(text.substr(0, maxlength)); 
+        }
+}
+
+
 let timerOn = true;
 
 function timer(remaining) {
@@ -67,4 +102,28 @@ function timer(remaining) {
 timer(120);
 </script>
 
+<script>
+
+{% comment %} OTPFORM validation {% endcomment %}
+  $("#otpForm").validate({
+    rules:{
+      otpInp:{
+      required:true,
+      maxlength:6,
+      minlength:6,
+      digits:true,
+      },
+    },
+    messages:{
+      otpInp:{
+      required:"Please enter OTP",
+      maxlength:"Only 6 digits allowed.",
+      minlength:"Need 6 digit OTP",
+      digits:"Only numbers allowed.",
+    },
+    }
+  })
+
+
+</script>
 {% endblock %}
