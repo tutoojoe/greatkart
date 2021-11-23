@@ -23,7 +23,7 @@
                 <th scope="col">Last Login</th>
                 <th scope="col">Block/Activate</th>
                 <!-- <th>Edit User</th> -->
-                <th scope="col">Delete User</th>
+                <!-- <th scope="col">Delete User</th> -->
               </tr>
           </thead>
           <tfoot>
@@ -37,7 +37,7 @@
                 <th scope="col">Last Login</th>
                 <th scope="col">Block/Activate</th>
                 <!-- <th>Edit User</th> -->
-                <th scope="col">Delete User</th>
+                <!-- <th scope="col">Delete User</th> -->
               </tr>
           </tfoot>
           <tbody>
@@ -59,7 +59,7 @@
               <td><a class="confirm-activate" id="actUser" onclick="actUser('{{user.username}}')"><button class="btn btn-success"> <i class="icon-play"></i> Activate User</button></a></td>
               {% endif %}
               <!-- <td><a href="admin_user_edit/{{user.id}}" onclick="return confirm('Are you sure you want to EDIT this user?')"><button class="btn btn-primary "> <i class="icon-edit"></i> Edit</button></a></td> -->
-              <td><a  class="confirm-delete" id="delUser" onclick="delUser('{{user.id}}')" >  <button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td>
+              <!-- <td><a  class="confirm-delete" id="delUser" onclick="delUser('{{user.id}}')" >  <button class="btn btn-danger"> <i class="icon-trash"></i> Delete </button></a></td> -->
               <!-- <td class="center">4</td> -->
             </tr>
             {% endif %}

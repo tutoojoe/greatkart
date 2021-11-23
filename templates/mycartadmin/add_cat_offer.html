@@ -37,8 +37,9 @@
 <script>
 		var today = new Date().toISOString().split('T')[0];
 		document.getElementsByName("valid_from")[0].setAttribute('min', today);
-    	var today = new Date().toISOString().split('T')[0];
-		document.getElementsByName("valid_to")[0].setAttribute('min', today);
+    
+    
+		document.getElementsByName("valid_to")[0].setAttribute('min', selectDt);
 	</script>
             
             

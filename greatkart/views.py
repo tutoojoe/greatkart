@@ -74,12 +74,12 @@ def home(request):
             product.price = product.mrp_price
             product.save()
         
-        
-    reviews = ReviewRating.objects.filter(product_id = prod_id, status = True)
+    
+    # reviews = ReviewRating.objects.filter(product_id = prod_id, status = True)
 
     context     = {
         'products': products,
-        'reviews' : reviews,
+        # 'reviews' : reviews,
         'banners': banners,
     }
 

@@ -37,7 +37,7 @@ from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 
 
-
+@login_required(login_url='admin_login')
 def filter_orders(request):
     data = []
     data.append(['Name','Order Number','Phone No','Order Value'])
@@ -88,7 +88,7 @@ def filter_orders(request):
     
     
 
-
+@login_required(login_url='admin_login')
 def order_report(request):
     #create bytestream buffer
     buf = io.BytesIO()
@@ -133,7 +133,7 @@ def order_report(request):
 
     return FileResponse(buf, as_attachment=True,filename='filtered_orders.pdf')
 
-
+@login_required(login_url='admin_login')
 def admin_banners(request):
     banners = BannerUpdate.objects.all()
     context = {
@@ -213,6 +213,15 @@ def admin_dashboard(request):
             labels.reverse()
             # val_data.reverse()
             ord_data.reverse()
+            try:
+                total_order_value = round(total_order_value['order_total__sum'],2)
+            except:
+                pass
+            
+            try:
+                avg_ord_value = round(avg_ord_value['average_order_value'],2)
+            except:
+                pass
            
 
             context = {
@@ -225,9 +234,9 @@ def admin_dashboard(request):
                 'total_user_no':total_user_no,
                 'total_ord_no':total_ord_no,
                 # 'total_order_value':format(total_order_value['order_total__sum'],".2f"),
-                'total_order_value':round(total_order_value['order_total__sum'],2),
+                'total_order_value':total_order_value,
                 # 'avg_ord_value':format(avg_ord_value['average_order_value'],".2f"),
-                'avg_ord_value':round(avg_ord_value['average_order_value'],2)
+                'avg_ord_value':avg_ord_value,
                 # 'latest_order': latest_order,
                 
                 }
@@ -318,10 +327,10 @@ def admin_prod_delete(request,id):
     return redirect('admin_product')
 
 
-
+@login_required(login_url='admin_login')
 def edit_product(request,id):
     instance = get_object_or_404(Product, id=id)
-    form = ProductForm(request.POST or None, instance=instance)
+    form = ProductForm(request.POST or None, request.FILES or None, instance=instance)
 
     if request.method == "POST":
         if form.is_valid():
@@ -341,9 +350,10 @@ def edit_product(request,id):
             }
         return render(request, 'mycartadmin/edit_product.html',context)
 
+@login_required(login_url='admin_login')
 def edit_category(request,id):
     instance = get_object_or_404(Category, id=id)
-    form = CategoryForm(request.POST or None, instance=instance)
+    form = CategoryForm(request.POST or None, request.FILES or None, instance=instance)
 
     if request.method == "POST":
         if form.is_valid():
@@ -573,7 +583,7 @@ def update_order_status(request, order_no):
 
 
 
-
+@login_required(login_url='admin_login')
 def add_banner(request):
     form = BannerUpdateForm(request.POST or None, request.FILES or None)
   
@@ -596,6 +606,7 @@ def add_banner(request):
 # OFFERS SECTION
 
 # coupon offers
+@login_required(login_url='admin_login')
 def add_coupon(request):
     form = CouponApplyForm(request.POST or None, request.FILES or None)  
     if request.method == "POST":
@@ -615,6 +626,8 @@ def add_coupon(request):
         return render(request,'mycartadmin/add_coupon.html',context)
     
     
+    
+@login_required(login_url='admin_login')
 def edit_coupon(request,c_id):
     instance = get_object_or_404(Coupon, id=c_id)
     form = CouponApplyForm(request.POST or None, instance=instance)
@@ -639,7 +652,7 @@ def edit_coupon(request,c_id):
         return render(request, 'mycartadmin/edit_coupon_offer.html',context)
     
 
-
+@login_required(login_url='admin_login')
 def activate_coupon(request):
     coupon_id = request.GET['couponId']
     coupon = Coupon.objects.get(id = coupon_id)
@@ -648,6 +661,8 @@ def activate_coupon(request):
 
     return redirect('admin_offers')
 
+
+@login_required(login_url='admin_login')
 def block_coupon(request):
   
     coupon_id = request.GET['couponId']
@@ -657,6 +672,9 @@ def block_coupon(request):
 
     return redirect('admin_offers')
 
+
+
+@login_required(login_url='admin_login')
 def delete_coupon(request):
     coupon_id = request.GET['couponId']
     coupon = Coupon.objects.get(id = coupon_id)
@@ -669,6 +687,7 @@ def delete_coupon(request):
 
 
 # Product offers
+@login_required(login_url='admin_login')
 def add_product_offer(request):
 
     form = ProductOfferForm(request.POST or None, request.FILES or None)  
@@ -689,7 +708,7 @@ def add_product_offer(request):
         return render(request,'mycartadmin/add_product_offer.html',context)
     
     
-    
+@login_required(login_url='admin_login')
 def edit_product_offer(request,prod_id):
     instance = get_object_or_404(ProductOffer, id=prod_id)
     form = ProductOfferForm(request.POST or None, instance=instance)
@@ -714,7 +733,7 @@ def edit_product_offer(request,prod_id):
         return render(request, 'mycartadmin/edit_product_offer.html',context)
 
 
-
+@login_required(login_url='admin_login')
 def activate_product_offer(request):
     offer_id = request.GET['proOffId']
    
@@ -725,6 +744,8 @@ def activate_product_offer(request):
 
     return redirect('admin_offers')
 
+
+@login_required(login_url='admin_login')
 def block_product_offer(request):
     offer_id = request.GET['proOffId']
     offer = ProductOffer.objects.get(id = offer_id)
@@ -733,6 +754,8 @@ def block_product_offer(request):
 
     return redirect('admin_offers')
 
+
+@login_required(login_url='admin_login')
 def delete_product_offer(request):
     offer_id = request.GET['proOffId']
     offer = ProductOffer.objects.get(id = offer_id)
@@ -742,6 +765,9 @@ def delete_product_offer(request):
     return redirect('admin_offers')
 
 # Category offers
+
+
+@login_required(login_url='admin_login')
 def add_cat_offer(request):
 
     form = CategoryOfferForm(request.POST or None, request.FILES or None)  
@@ -761,7 +787,9 @@ def add_cat_offer(request):
         }
         return render(request,'mycartadmin/add_cat_offer.html',context)
     
-    
+
+
+@login_required(login_url='admin_login')
 def edit_cat_offer(request,cat_id):
     instance = get_object_or_404(CategoryOffer, id=cat_id)
     form = CategoryOfferForm(request.POST or None, instance=instance)
@@ -785,6 +813,8 @@ def edit_cat_offer(request,cat_id):
             }
         return render(request, 'mycartadmin/edit_cat_offer.html',context)
 
+
+@login_required(login_url='admin_login')
 def activate_cat_offer(request):
     offer_id = request.GET['catOffId']
     
@@ -795,6 +825,8 @@ def activate_cat_offer(request):
 
     return redirect('admin_offers')
 
+
+@login_required(login_url='admin_login')
 def block_cat_offer(request):
     offer_id = request.GET['catOffId']
     offer = CategoryOffer.objects.get(id = offer_id)
@@ -803,6 +835,8 @@ def block_cat_offer(request):
 
     return redirect('admin_offers')
 
+
+@login_required(login_url='admin_login')
 def delete_cat_offer(request):
     offer_id = request.GET['catOffId']
     offer = CategoryOffer.objects.get(id = offer_id)
@@ -812,7 +846,7 @@ def delete_cat_offer(request):
     return redirect('admin_offers')
 
 
-
+@login_required(login_url='admin_login')
 def add_gallery_images(request,id):
     instance = get_object_or_404(Product, id=id)
     form = ProductGalleryForms(request.POST or None, request.FILES or None, instance=instance)
