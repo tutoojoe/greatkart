@@ -7,6 +7,14 @@
 // Scripts
 // 
 
+$(document).ready(function() {
+    setTimeout(function(){
+    
+        $('#message').fadeOut('slow')
+        },4000)
+    })
+
+
 window.addEventListener('DOMContentLoaded', event => {
 
     // Toggle the side navigation
@@ -23,4 +31,6 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
+
 });
+

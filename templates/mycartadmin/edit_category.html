@@ -16,7 +16,7 @@
         <div class="row">
     <div class="col-md-6" style="height: 50%; margin: auto; margin-top:10px; margin-bottom:50px">
         
-            <form action="" method="POST" enctype="multipart/form-data" id="post-form" >
+            <form action="" method="POST" enctype="multipart/form-data" id="editCategoryForm" >
                 {% csrf_token %}
                 <fieldset class="form-group">
                   
@@ -45,6 +45,41 @@
     
     
     </section>
+
+    
+<script>
+  $('#editCategoryForm').validate({
+  rules:{
+    category_name:{
+      required:true,
+      minlength:3,
+    },
+    description:{
+      required:true,
+      minlength:3,
+    },
+    category_image:{
+      required:true,
+    }, 
+  },
+  messages:{
+    category_name:{
+      required:"Enter a valid category name.",
+      minlength:"Minimum 3 characters needed.",
+    },
+    description:{
+      required:"Please add some description.",
+      minlength:"Minimum 3 characters needed.",
+    },  
+    category_image:{
+      required:"Select and upload image to represent category.",
+    },
+   
+  }
+  })
+  
+  </script>
+  
     
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

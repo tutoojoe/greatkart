@@ -15,6 +15,7 @@
              <!-- <span class="icon"><i class="icon-th"></i></span>  -->
             <h5>Category Details</h5>
           </div>
+          {% include 'includes/alerts.html' %}
           <div class="widget-content nopadding">
             <table class="table table-bordered data-table table-hover" id="table">
               <thead>
@@ -55,6 +56,14 @@
 
 </section>
 
+<script>
+  $(document).ready(function() {
+    setTimeout(function(){
+    
+        $('#message').fadeOut('slow')
+        },4000)
+    })
+</script>
 
 
 {% endblock %}
