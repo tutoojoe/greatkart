@@ -317,6 +317,7 @@ def admin_product(request):
 def delete_category(request,id):
     category = Category.objects.get(id=id)
     category.delete()
+    messages.success(request,"Category deleted successfully.")
     return redirect('admin_category')
 
 
@@ -324,6 +325,7 @@ def delete_category(request,id):
 def admin_prod_delete(request,id):
     product = Product.objects.get(id=id)
     product.delete()
+    messages.success(request,"Product deleted successfully.")
     return redirect('admin_product')
 
 
