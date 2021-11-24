@@ -15,7 +15,7 @@
                 
   <div class="row mt-3">
     <div class="col-md-6" style="height: 50%; margin: auto;">
-        <form action="{% url 'add_coupon' %}" method="POST" enctype="multipart/form-data" id="post-form" style="margin-bottom: 20px;">
+        <form  action="{% url 'add_coupon' %}" method="POST" enctype="multipart/form-data" id="addCouponForm" style="margin-bottom: 20px;">
           {% csrf_token %}
           <fieldset class="">
             <legend class="border-bottom mb-4">Add Coupon</legend>
@@ -33,6 +33,53 @@
 
     </div>
 </div>
+
+
+
+
+<script>
+
+$('#addCouponForm').validate({
+  rules:{
+    code:{
+      required:true,
+      minlength:5,
+      },
+    valid_from:{
+      required:true,
+      
+  },
+  valid_to:{  
+      required:true,
+          },
+          
+  discount:{  
+    required:true,
+    min:1,
+    max:75,
+  },       
+},
+messages:{
+  code:{
+    required:"Enter a offer name.",
+    minlength:"Minimum 5 characters required.",
+    },
+  valid_from:{
+    required:"Select a start date.",  
+    },
+  valid_to:{  
+    required:"Select a end date.",
+    },
+  discount:{  
+    required:"Please add a discount percentage between 1 to 75.",
+    min:"Minimum discount is 1%.",
+    max:"Maximum of 75% is allowed.",
+  },
+},
+})
+
+</script>
+
 
 <script>
   var today = new Date();

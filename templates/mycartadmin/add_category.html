@@ -10,29 +10,29 @@
     <!-- ============================ COMPONENT LOGIN   ================================= -->
        
  
-    <div class="card mx-auto" style=" margin-top:10px; margin-bottom:50px ">
+  <div class="card mx-auto" style=" margin-top:10px; margin-bottom:50px ">
             
                 
-              <div class="row mt-3">
-                <div class="col-md-6" style="height: 50%; margin: auto;">
-                    <form id="addCategoryForm" action="{% url 'add_category' %}" method="POST" enctype="multipart/form-data" id="post-form" >
-                      {% csrf_token %}
-                      <fieldset class="form-group">
-                        <legend class="border-bottom mb-4">Add Category</legend>
-                        {% include 'includes/alerts.html' %}
-                        {{ form | crispy }}
-                      </fieldset>
-            
-                      <div class="form-group">
-                        <div id="image-box" class="image-container"></div>
-                        <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
-                        <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Category</button>            
-                      </div>
-                        </form>
-            
-            
-                </div>
+    <div class="row mt-3">
+      <div class="col-md-6" style="height: 50%; margin: auto;">
+          <form id="addCategoryForm" action="{% url 'add_category' %}" method="POST" enctype="multipart/form-data" id="post-form" >
+            {% csrf_token %}
+            <fieldset class="form-group">
+              <legend class="border-bottom mb-4">Add Category</legend>
+              {% include 'includes/alerts.html' %}
+              {{ form | crispy }}
+            </fieldset>
+
+            <div class="form-group">
+              <div id="image-box" class="image-container"></div>
+              <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
+              <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Category</button>            
             </div>
+              </form>
+
+
+      </div>
+    </div>
 
 
 
