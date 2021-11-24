@@ -16,7 +16,7 @@
 
             {% include 'includes/dashboard_sidebar.html' %}
         <main class="col-md-9">
-            <article class="card">
+            <article class="card mb-4">
             <header class="card-header">
                 <strong class="d-inline-block mr-3">Edit Your Profile</strong>
                 
@@ -27,7 +27,7 @@
                 </div>
                 <div class="row">   
                     <div class="col-md-12">
-                        <form action="" method="POST" enctype="multipart/form-data">
+                        <form action="" id="editProfileForm" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -103,7 +103,110 @@
     
     </section>
     <!-- ========================= SECTION CONTENT END// ========================= -->
-    
+    <script>
+
+
+$('#editProfileForm').validate({
+rules:{
+    first_name:{
+        required:true,
+        minlength:3,
+        },
+    last_name:{
+        required:true,
+        minlength:1,
+        },
+    email:{
+        required:true,
+        email:true,
+    },
+    mobile:{
+        required:true,
+        digits:true,
+        minlength:10,
+        maxlength:10.
+    },
+    address_line_1:{
+        required:true,
+        minlength:5,
+    },
+    address_line_2:{
+        required:true,
+        
+    },
+    city:{
+        required:true,        
+    },
+    district:{
+        required:true,        
+    },
+    state:{
+        required:true,        
+    },
+    country:{
+        required:true,        
+    },
+    pincode:{
+        required:true,        
+    },
+
+},
+messages:{
+    first_name:{
+        required:"Enter your First name.",
+        minlength:"Minimum 3 characters required.",
+        },
+    last_name:{
+        required:"Enter your Last name",
+        minlength:"Minimum 1 characters required.",
+        },
+    email:{
+        required:"Enter your Email ID",
+        email:"Please enter a valid Email.",
+    },
+    mobile_number:{
+        required:"Enter your Mobile Number",
+        digits:"Only numbers allowed.",
+        minlength:"10 digits needed",
+        maxlength:"Maximum 10 digits allowed.",
+    },
+    address_line_1:{
+        required:"Address required.",
+        minlength:"Need at least 5 characters.",
+    },
+    address_line_2:{
+        required:"Address required.",
+        
+    },city:{
+        required:"Enter City name",        
+    },
+    district:{
+        required:"Enter District name",        
+    },
+    state:{
+        required:"Enter State name",        
+    },
+    country:{
+        required:"Enter Country name",        
+    },
+    pincode:{
+        required:"Enter Pincode",        
+    },
+
+},
+})
+
+$('#id_mobile_number').keyup(validateMaxLength);
+function validateMaxLength(){
+        var text = $(this).val();
+        var maxlength = 10;
+        if(maxlength > 0)  
+        {
+                $(this).val(text.substr(0, maxlength)); 
+        }
+}
+
+    </script>
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

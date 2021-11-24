@@ -273,6 +273,7 @@ def verify_otp(request):
         
         user_mobile = '+91'+ mobile
         request.session['user_mobile'] = user_mobile
+        
         auth_sid = TWILIO_ACCOUNT_SID
         auth_token = TWILIO_AUTH_TOKEN
         
