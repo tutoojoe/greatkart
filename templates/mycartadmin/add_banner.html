@@ -15,7 +15,7 @@
                 
               <div class="row mt-3">
                 <div class="col-md-6" style="height: 50%; margin: auto;">
-                    <form action="{% url 'add_banner' %}" method="POST" enctype="multipart/form-data" id="post-form">
+                    <form id="addBanner" action="{% url 'add_banner' %}" method="POST" enctype="multipart/form-data" id="post-form">
                       {% csrf_token %}
                       <fieldset >
                         <legend class=" mb-4">Add Banner</legend>
@@ -36,7 +36,44 @@
 
 
 
+<script>
 
+  $('#addBanner').validate({
+    rules:{
+      banner_image:{
+        required:true,
+        
+        },
+      banner_name:{
+        required:true,
+        minlength:5,
+        },
+      valid_from:{
+        required:true,
+        
+    },
+},
+messages:{
+  banner_image:{
+      required:"Image not selected. Select to crop and upload image.",        
+        },
+  banner_name:{
+        required:"Enter a name for banner.",
+        minlength:"Minimum 5 characters required.",
+        },
+      valid_from:{
+        required:"Select a start date.",
+        
+    },
+    valid_to:{  
+        required:"Select a end date.",
+            }
+},
+
+
+  })
+
+</script>
 
 
 
