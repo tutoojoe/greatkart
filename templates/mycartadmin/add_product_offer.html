@@ -34,14 +34,6 @@
     </div>
 </div>
 
-<script>
-  $(document).ready(function() {
-    setTimeout(function(){
-    
-        $('#message').fadeOut('slow')
-        },4000)
-    })
-</script>
 
 <script>
   $('#addProdOffer').validate({
@@ -70,7 +62,7 @@
       required:"Enter an offer name.",
       minlength:"Minimum 5 characters needed.",
     },
-    category_id:{
+    product_id:{
       required:"Please select Product from the list.",
     },  
     valid_from:{
