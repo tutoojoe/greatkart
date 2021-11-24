@@ -44,8 +44,14 @@
                       <!-- <td>{{order.email}}</td> -->
                       <td>{{order.city}}</td>
                       <td>{{order.state}}</td>
+                      {% if order.discount_amount is None %}
                       <td class="text-right">₹ {{order.order_total}}</td>
-                      <td>{{order.status}}</td>
+                      {% else %}
+                      <td class="text-right">₹ {{order.nett_paid}}</td>
+                      {% endif %}
+
+
+                       <td>{{order.status}}</td>
                        {% if order.status == "Cancelled" %}
                       <td>Order Cancelled</td>
                       {% elif order.status == "Order Delivered" %}
