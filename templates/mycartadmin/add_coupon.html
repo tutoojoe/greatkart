@@ -34,12 +34,21 @@
     </div>
 </div>
 
-   <script>
-		var today = new Date().toISOString().split('T')[0];
-		document.getElementsByName("valid_from")[0].setAttribute('min', today);
+<script>
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var yyyy = today.getFullYear();
 
-    var today = new Date().toISOString().split('T')[0];
-		document.getElementsByName("valid_to")[0].setAttribute('min', today);
-	</script>
+  today = yyyy + '-' + mm + '-' + dd;
+  $('#id_valid_from').attr('min', today);
+  $('#id_valid_to').attr('min', today);
+  document.getElementById('id_valid_from').onchange = e => {
+      value = e.target.value
+      $('#id_valid_to').attr('min', value);
+  }
+
+
+</script>
             
 {% endblock %}
