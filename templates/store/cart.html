@@ -40,7 +40,7 @@
 				<a href="{{ cart_item.product.get_url }}">  <img src="{{cart_item.product.images.url}}" class="img-sm"></a></div>
 			<figcaption class="info">
 				<a href="{{ cart_item.product.get_url }}" class="title text-dark">{{cart_item.product.product_name}}</a>
-				<small class="text-muted">Price: ₹ {{cart_item.product.mrp_price}}</small> 
+				<small class="text-muted">MRP Price: ₹ {{cart_item.product.mrp_price}}</small> 
 				<p class="text-muted small">
 					{% if cart_item.variations.all %}
 						{% for item in cart_item.variations.all %}
