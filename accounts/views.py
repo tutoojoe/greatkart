@@ -217,8 +217,10 @@ def dashboard(request):
 
     orders = Order.objects.order_by('-created_at').filter(user_id = request.user.id, is_ordered = True)
     orders_count = orders.count()
-
-    userprofile = UserProfile.objects.get(user_id = request.user.id)
+    try:
+        userprofile = UserProfile.objects.get(user_id = request.user.id)
+    except:
+        pass
     context = {
         'orders_count':orders_count,
         'userprofile':userprofile,
@@ -273,7 +275,7 @@ def verify_otp(request):
         
         user_mobile = '+91'+ mobile
         request.session['user_mobile'] = user_mobile
-        
+
         auth_sid = TWILIO_ACCOUNT_SID
         auth_token = TWILIO_AUTH_TOKEN
         
