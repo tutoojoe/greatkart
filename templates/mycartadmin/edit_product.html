@@ -16,7 +16,7 @@
 
           <div class="col-md-6" style="height: 50%; margin: auto;">
            
-            <form action="" method="POST" enctype="multipart/form-data" id="post-form" style="margin-bottom: 20px; padding: 30px 20px;">
+            <form action="" method="POST" enctype="multipart/form-data" id="editProductForm" style="margin-bottom: 20px; padding: 30px 20px;">
                 {% csrf_token %}
                 <div class="text-center">
                   <img src="{{product.images.url}}" width="100" style="border-radius: 50%;" alt="Product Picture">
@@ -47,6 +47,68 @@
     </section>
     <!-- ========================= SECTION CONTENT END// ========================= -->
     
+
+
+    <script>
+      $('#editProductForm').validate({
+      rules:{
+        product_name:{
+          required:true,
+          minlength:3,
+        },
+        description:{
+          required:true,
+          minlength:3,
+        },
+        price:{
+          required:true,
+          min:0,
+        },
+        images:{
+          required:true,
+        },     
+        stock:{
+          required:true,
+          min:0,
+        }, 
+            
+        category:{
+          required:true,
+        }, 
+      
+      },
+      messages:{
+        product_name:{
+          required:"Enter a unique Product name.",
+          minlength:"Minimum 3 characters needed.",
+        },
+        description:{
+          required:"Please add some description.",
+          minlength:"Minimum 3 characters needed.",
+        },  
+        price:{
+          required:"You need to enter MRP of this product.",
+          min:"Price must be more than Zero.",
+        },
+        images:{
+          required:"Select and upload image of the product.",
+        },
+    
+        stock:{
+          required:"You need to enter the Stock quantity.",
+          min:"Stock quantity must be greater than Zero.",
+        },
+        category:{
+          required:"Please select the product category.",
+        }, 
+       
+      }
+      })
+      
+      </script>
+    
+
+
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
