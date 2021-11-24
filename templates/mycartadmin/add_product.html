@@ -8,31 +8,94 @@
 <section class="section-content padding-y" style="min-height:84vh">
 
     <!-- ============================ COMPONENT LOGIN   ================================= -->
-       
- 
-    <div class="card mx-auto" style=" margin-top:10px; margin-bottom:50px">
-            
-                
-              <div class="row mt-3">
-                <div class="col-md-6" style="height: 50%; margin: auto;">
-                    <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data" id="post-form" >
-                      {% csrf_token %}
-                      <fieldset class="form-group">
-                        <legend class="border-bottom mb-4">Add Product</legend>
-                        {% include 'includes/alerts.html' %}
-                        {{ form | crispy }}
-                      </fieldset>
-            
-                      <div class="form-group">
-                        <div id="image-box" class="image-container"></div>
-                        <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
-                        <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Product</button>            
-                      </div>
-                        </form>
-            
-            
-                </div>
-            </div>
+
+
+<div class="card mx-auto" style=" margin-top:10px; margin-bottom:50px">
+
+    
+  <div class="row mt-3">
+    <div class="col-md-6" style="height: 50%; margin: auto;">
+    <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data" id="addProductForm" >
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Add Product</legend>
+        {% include 'includes/alerts.html' %}
+        {{ form | crispy }}
+      </fieldset>
+
+      <div class="form-group">
+        <div id="image-box" class="image-container"></div>
+        <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
+        <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Product</button>            
+      </div>
+        </form>
+
+
+    </div>
+</div>
+
+
+
+<script>
+  $('#addProductForm').validate({
+  rules:{
+    product_name:{
+      required:true,
+      minlength:3,
+    },
+    description:{
+      required:true,
+      minlength:3,
+    },
+    price:{
+      required:true,
+      min:0,
+    },
+    images:{
+      required:true,
+    },     
+    stock:{
+      required:true,
+      min:0,
+    }, 
+        
+    category:{
+      required:true,
+    }, 
+  
+  },
+  messages:{
+    product_name:{
+      required:"Enter a unique Product name.",
+      minlength:"Minimum 3 characters needed.",
+    },
+    description:{
+      required:"Please add some description.",
+      minlength:"Minimum 3 characters needed.",
+    },  
+    price:{
+      required:"You need to enter MRP of this product.",
+      min:"Price must be more than Zero.",
+    },
+    images:{
+      required:"Select and upload image of the product.",
+    },
+
+    stock:{
+      required:"You need to enter the Stock quantity.",
+      min:"Stock quantity must be greater than Zero.",
+    },
+    category:{
+      required:"Please select the product category.",
+    }, 
+   
+  }
+  })
+  
+  </script>
+
+
+
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
