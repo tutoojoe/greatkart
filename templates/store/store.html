@@ -66,13 +66,30 @@
 			<div class="img-wrap"> 
 				
 				<a href="{{product.get_url}}"> <img src="{{product.images.url}}"> </a>
+				{% if product.price < product.mrp_price %}
+                    <div class="card-img-overlay" id="product_image_overlay">
+                        <div class="text-left">
+                        <img class="img-fluid" style="width:3rem;" src="{% static 'images/icons/special_offer1.png' %}" alt="offer">
+                        </div>     
+                      </div>
+                      {% else %}
+                      <div class="card-img-overlay" id="product_image_overlay">
+                        
+                      </div>
+
+                      {% endif %}
 				
 			</div> <!-- img-wrap.// -->
 			<figcaption class="info-wrap">
 				<div class="fix-height">
 					<a href="{{product.get_url}}" class="title">{{product.product_name}}</a>
 					<div class="price-wrap mt-2">
-						<span class="price">₹ {{product.price}}</span>
+						{% if product.price < product.mrp_price %}
+                    
+						<div class="price mt-1"><small><s> ₹ {{product.mrp_price}}</s></small> <small><i> {{product.discount_percentage}}% off ! </i></small><span style="font-size: large; color:dark" class="ml-2"> ₹ {{product.price}} </span></div> <!-- price-wrap.// -->
+						{% else %}
+						<div class="price mt-1" style="font-size: large; color:dark">₹ {{product.price}}</div> <!-- price-wrap.// -->
+						{% endif %}
 						<!-- <del class="price-old">$1980</del> -->
 					</div> <!-- price-wrap.// -->
 				</div>
