@@ -15,7 +15,7 @@
                 
   <div class="row mt-3">
     <div class="col-md-6" style="height: 50%; margin: auto;">
-        <form action="{% url 'add_product_offer' %}" method="POST" enctype="multipart/form-data" id="post-form" >
+        <form action="{% url 'add_product_offer' %}" method="POST" enctype="multipart/form-data" id="addProdOffer" >
           {% csrf_token %}
           <fieldset class="form-group">
             <legend class="border-bottom mb-4">Add Product Offer</legend>
@@ -35,94 +35,69 @@
 </div>
 
 <script>
-		var today = new Date().toISOString().split('T')[0];
-		document.getElementsByName("from_date")[0].setAttribute('min', today);
-	</script>
+  $('#addProdOffer').validate({
+  rules:{
+    code:{
+      required:true,
+      minlength:5,
+    },
+    product_id:{
+      required:true,
+    },
+    valid_from:{
+      required:true,
+    },
+    valid_to:{  
+      required:true,
+    },
+    discount:{  
+      required:true,
+      min:1,
+      max:75,
+    },       
+  },
+  messages:{
+    code:{
+      required:"Enter an offer name.",
+      minlength:"Minimum 5 characters needed.",
+    },
+    category_id:{
+      required:"Please select Product from the list.",
+    },  
+    valid_from:{
+      required:"Select a start date.",
+    },
+    valid_to:{  
+      required:"Select a end date.",
+    },
+    discount:{  
+      required:"Please add a discount percentage between 1 to 75.",
+      min:"Minimum discount is 1%.",
+      max:"Maximum of 75% is allowed.",
+    },
+  }
+  })
+  
+  </script>
+  
 
-
-
-
-
-
-            {% comment %} <script>
-              // image-box is the id of the div element that will store our cropping image preview
-              const imagebox = document.getElementById('image-box')
-                    // crop-btn is the id of button that will trigger the event of change original file with cropped file.
-              const crop_btn = document.getElementById('crop-btn')
-              // id_image is the id of the input tag where we will upload the image
-              const input = document.getElementById('id_banner_image')
-              const postForm = document.getElementById('post-form')
-                console.log(postForm)
-            
-              // When user uploads the image this event will get triggered
-              input.addEventListener('change', ()=>{
-                    
-                // Getting image file object from the input variable
-                const img_data = input.files[0]
-                // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
-                // The new object URL represents the specified File object or Blob object.
-                const url = URL.createObjectURL(img_data)
-                
-                // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
-                imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%;">`
-            
-                // Storing that cropping view image in a variable
-                const image = document.getElementById('image')
-            
-                // Displaying the image box
-                document.getElementById('image-box').style.display = 'block'
-                // Displaying the Crop buttton
-                document.getElementById('crop-btn').style.display = 'block'
-                // Hiding the Post button
-                document.getElementById('confirm-btn').style.display = 'none'
-            
-                // Creating a croper object with the cropping view image
-                // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
-                // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
-                const cropper = new Cropper(image, {
-                aspectRatio: 10 / 3,
-                autoCropArea: 1,
-                viewMode: 1,  
-                scalable: false,
-                zoomable: false,
-                movable: false,
-                minCropBoxWidth: 200,
-                minCropBoxHeight: 200,
-                })
-            
-                // When crop button is clicked this event will get triggered
-                crop_btn.addEventListener('click', ()=>{
-                  // This method coverts the selected cropped image on the cropper canvas into a blob object
-                  cropper.getCroppedCanvas().toBlob((blob)=>{
-                    
-                    // Gets the original image data
-                    let fileInputElement = document.getElementById('id_banner_image');
-                    // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
-                    let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
-                    // Create a new container
-                    let container = new DataTransfer();
-                    // Add the cropped image file to the container
-                    container.items.add(file);
-                    // Replace the original image file with the new cropped image file
-                    fileInputElement.files = container.files;
-            
-                    // Hide the cropper box
-                    document.getElementById('image-box').style.display = 'none'
-                    // Hide the crop button
-                    document.getElementById('crop-btn').style.display = 'none'
-                    // Display the Post button
-                    document.getElementById('confirm-btn').style.display = 'block'
-            
-                    });
-                  });
-              });	
-            </script> {% endcomment %}
+<!-- date validation part -->
   <script>
-		var today = new Date().toISOString().split('T')[0];
-		document.getElementsByName("valid_from")[0].setAttribute('min', today);
-
-    var today = new Date().toISOString().split('T')[0];
-		document.getElementsByName("valid_to")[0].setAttribute('min', today);
-	</script>
-            
+    
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var yyyy = today.getFullYear();
+  
+      today = yyyy + '-' + mm + '-' + dd;
+      $('#id_valid_from').attr('min', today);
+      $('#id_valid_to').attr('min', today);
+      document.getElementById('id_valid_from').onchange = e => {
+          value = e.target.value
+          $('#id_valid_to').attr('min', value);
+      }
+  
+  
+    </script>
+           
 {% endblock %}
