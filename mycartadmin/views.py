@@ -16,7 +16,7 @@ from mycartadmin.models import BannerUpdate
 from orders.forms import OrderForm, OrderStatusForm
 from store.forms import ProductForm, ProductGalleryForms, VariationForm
 from category.forms import CategoryForm
-from store.models import Product
+from store.models import Product, ProductGallery
 from orders.models import Order, OrderProduct, Payment
 from accounts.models import Account
 from coupon_offers.models import Coupon,ProductOffer,CategoryOffer
@@ -915,3 +915,41 @@ def add_prod_variation(request):
             'form'     : form,
             }
         return render(request, 'mycartadmin/add_prod_variation.html',context)
+
+
+@login_required(login_url='admin_login')
+def view_product_images(request):
+
+    if request.method == "POST":
+        prod_id = request.POST['product']
+        print(prod_id)
+        gallery_images = ProductGallery.objects.filter(product=prod_id)
+        product = Product.objects.all()
+        context = {
+            'product':product,
+            'gallery_images': gallery_images,
+            }
+        return render(request, 'mycartadmin/view_prod_gallery.html',context)
+           
+    else: 
+        gallery_images = ProductGallery.objects.all().order_by('-product')
+        product = Product.objects.all()
+
+        context = {
+            # 'form'     : form,
+            'product':product,
+            'gallery_images': gallery_images,
+            }
+        return render(request, 'mycartadmin/view_prod_gallery.html',context)
+
+@login_required(login_url='admin_login')
+def del_gal_image(request,id):
+
+    if request.method == "POST":
+        
+        print(id)
+        sel_image = ProductGallery.objects.filter(id=id)
+        sel_image.delete()
+        messages.success(request,"Product image deleted successfully.")
+        
+        return redirect(view_product_images)

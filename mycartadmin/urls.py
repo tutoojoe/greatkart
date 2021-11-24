@@ -44,6 +44,10 @@ urlpatterns = [
     path('add_gallery_images/',views.add_gallery_images, name = 'add_gallery_images'),
     path('add_prod_variation/',views.add_prod_variation, name = 'add_prod_variation'),
     path('edit_gallery_images/<int:id>',views.edit_gallery_images, name = 'edit_gallery_images'),
+    path('view_product_images/',views.view_product_images, name = 'view_product_images'),
+    path('del_gal_image/<int:id>',views.del_gal_image, name = 'del_gal_image'),
+    
+
     
     #offers
     path('admin_offers',views.admin_offers, name = 'admin_offers'),
