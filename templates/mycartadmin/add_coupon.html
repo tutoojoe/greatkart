@@ -38,10 +38,17 @@
 
 
 <script>
+$(document).ready(function(){
+
+jQuery.validator.addMethod("noSpace", function(value, element) { 
+  return value.indexOf(" ") < 0 && value != ""; 
+}, "No space please and don't leave it empty");
+})
 
 $('#addCouponForm').validate({
   rules:{
     code:{
+      noSpace:true,
       required:true,
       minlength:5,
       },
