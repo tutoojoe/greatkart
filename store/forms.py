@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models import fields
-from .models import ReviewRating, Product,ProductGallery
+from .models import ReviewRating, Product,ProductGallery, Variation
 
 
 class Reviewforms(forms.ModelForm):
@@ -16,6 +16,11 @@ class ProductGalleryForms(forms.ModelForm):
         model = ProductGallery
         fields = ['product','image']
 
+class VariationForm(forms.ModelForm):
+
+    class Meta:
+        model = Variation
+        fields = ['product','variation_category','variation_value','is_active']
 
 
 class ProductForm(forms.ModelForm):

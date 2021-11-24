@@ -14,7 +14,7 @@ from coupon_offers.forms import CategoryOfferForm, CouponApplyForm, ProductOffer
 from mycartadmin.forms import BannerUpdateForm
 from mycartadmin.models import BannerUpdate
 from orders.forms import OrderForm, OrderStatusForm
-from store.forms import ProductForm, ProductGalleryForms
+from store.forms import ProductForm, ProductGalleryForms, VariationForm
 from category.forms import CategoryForm
 from store.models import Product
 from orders.models import Order, OrderProduct, Payment
@@ -849,8 +849,9 @@ def delete_cat_offer(request):
 
 
 @login_required(login_url='admin_login')
-def add_gallery_images(request,id):
+def edit_gallery_images(request,id):
     instance = get_object_or_404(Product, id=id)
+    prod_form = ProductForm(request.POST or None, request.FILES or None, instance=instance)
     form = ProductGalleryForms(request.POST or None, request.FILES or None, instance=instance)
     if request.method == "POST":
         if form.is_valid():
@@ -860,10 +861,57 @@ def add_gallery_images(request,id):
         else:
              context = {
             'form'     : form,
+            'prod_form':prod_form,
             }
         return render(request, 'mycartadmin/add_gallery_images.html',context)
     else:  
         context = {
             'form'     : form,
+            'prod_form':prod_form,
             }
         return render(request, 'mycartadmin/add_gallery_images.html',context)
+
+
+@login_required(login_url='admin_login')
+def add_gallery_images(request):
+    
+    form = ProductGalleryForms(request.POST or None, request.FILES or None)
+    varform = VariationForm()
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Image gallery has been updated')
+            return redirect('add_gallery_images')
+        else:
+             context = {
+            'form'     : form,
+            }
+        return render(request, 'mycartadmin/add_gallery_images.html',context)
+    else:  
+        context = {
+            'form'     : form,
+            'varform':varform,
+            }
+        return render(request, 'mycartadmin/add_gallery_images.html',context)
+
+
+
+@login_required(login_url='admin_login')
+def add_prod_variation(request):
+    form = VariationForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Product variation updated.')
+            return redirect('add_prod_variation')
+        else:
+            context = {
+            'form'     : form,
+            }
+        return render(request, 'mycartadmin/add_prod_variation.html',context)
+    else:  
+        context = {
+            'form'     : form,
+            }
+        return render(request, 'mycartadmin/add_prod_variation.html',context)

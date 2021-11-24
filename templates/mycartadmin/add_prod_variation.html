@@ -15,21 +15,21 @@
                 
   <div class="row mt-3">
     <div class="col-md-6" style="height: 50%; margin: auto;">
-        <form action="" method="POST" enctype="multipart/form-data" id="prodImage" style="margin-bottom: 20px;">
+        <form action="" method="POST" enctype="multipart/form-data" id="prodVariation" style="margin-bottom: 20px;">
           {% csrf_token %}
           <fieldset class="">
-            <legend class="border-bottom mb-4">Add Images</legend>
+            <legend class="border-bottom mb-4">Add Variation</legend>
             {% include 'includes/alerts.html' %}
             
             {{ form | crispy }}
-           
+            
             
           </fieldset>
 
           <div class="">
             <div id="image-box" class="image-container"></div>
             <button class="btn btn-outline-info" id="crop-btn" style="width: 100%; margin-top: 10px; display: none;" type="button">Crop</button>
-            <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Image</button>            
+            <button class="btn btn-outline-info" id="confirm-btn" style="width: 100%; margin-top: 10px;" type="submit">Add Variation</button>            
           </div>
           </form>
 
@@ -39,13 +39,17 @@
 
 
 <script>
-  $('#prodImage').validate({
+  $('#prodVariation').validate({
   rules:{
     product:{
       required:true,
     
     },
-    image:{
+    variation_category:{
+      required:true,
+     
+    },
+    variation_value:{
       required:true,
      
     },
@@ -55,8 +59,12 @@
     product:{
       required:"Select product from the list.",
       },
-    image:{
-      required:"Select and upload image of the product to the gallery.",
+    variation_category:{
+      required:"Select a variation.",
+      
+    },
+    variation_value:{
+      required:"Enter a variation value",
       
     },
    
@@ -64,7 +72,6 @@
   })
   
   </script>
-
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
