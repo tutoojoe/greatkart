@@ -38,6 +38,7 @@ from reportlab.lib import colors
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def filter_orders(request):
     data = []
     data.append(['Name','Order Number','Phone No','Order Value'])
@@ -89,6 +90,7 @@ def filter_orders(request):
     
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def order_report(request):
     #create bytestream buffer
     buf = io.BytesIO()
@@ -134,6 +136,7 @@ def order_report(request):
     return FileResponse(buf, as_attachment=True,filename='filtered_orders.pdf')
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_banners(request):
     banners = BannerUpdate.objects.all()
     context = {
@@ -144,6 +147,7 @@ def admin_banners(request):
 
 
 # Create your views here.
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
         if request.user.is_authenticated:
             if request.user.is_superuser:
@@ -157,6 +161,7 @@ def admin_login(request):
             return render(request,'mycartadmin/login.html')
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_dashboard(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -250,7 +255,7 @@ def admin_dashboard(request):
     
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_page_view(request):
     if request.method == "POST":
         
@@ -289,6 +294,7 @@ def admin_logout(request):
 
 #rendering various pages on the admin panel
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def usermanage(request):
     users = Account.objects.all().order_by('-date_joined')
     # paginator = Paginator(users, 5) # Show 25 contacts per page.
@@ -302,18 +308,21 @@ def usermanage(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_category(request):
     category = Category.objects.all().order_by("id")
     
     return render(request,'mycartadmin/category.html',{'categories':category})
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_product(request):
     product = Product.objects.all().order_by("id")
    
     return render(request,'mycartadmin/product.html',{'products':product})
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_category(request,id):
     category = Category.objects.get(id=id)
     category.delete()
@@ -322,6 +331,7 @@ def delete_category(request,id):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_prod_delete(request,id):
     product = Product.objects.get(id=id)
     product.delete()
@@ -330,6 +340,7 @@ def admin_prod_delete(request,id):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_product(request,id):
     instance = get_object_or_404(Product, id=id)
     form = ProductForm(request.POST or None, request.FILES or None, instance=instance)
@@ -353,6 +364,7 @@ def edit_product(request,id):
         return render(request, 'mycartadmin/edit_product.html',context)
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_category(request,id):
     instance = get_object_or_404(Category, id=id)
     form = CategoryForm(request.POST or None, request.FILES or None, instance=instance)
@@ -381,6 +393,7 @@ def edit_category(request,id):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST or None, request.FILES or None)
@@ -418,6 +431,7 @@ def add_product(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_category(request):
     form = CategoryForm(request.POST or None, request.FILES or None)
     if request.method == "POST":
@@ -454,6 +468,7 @@ def add_category(request):
         return render(request,'mycartadmin/add_category.html',context)
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def sales_report(request):    
     if request.method == "POST":        
         from_date = request.POST["from_date"]
@@ -473,6 +488,7 @@ def sales_report(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_orders(request):
     
     orders = Order.objects.all().order_by('-order_number')
@@ -493,6 +509,7 @@ def admin_orders(request):
     return render(request,'mycartadmin/orders.html',context)
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_offers(request):
     coupon_offers = Coupon.objects.all().order_by('-valid_to')
     prod_offers = ProductOffer.objects.all().order_by('-valid_to')
@@ -516,6 +533,7 @@ def admin_offers(request):
 #functions on userpage - edit, block, delete.
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_user_deactivate(request):
     id = request.GET['id']
  
@@ -527,6 +545,7 @@ def admin_user_deactivate(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_user_activate(request):
     username = request.GET['username']
     user = Account.objects.get(username = username)
@@ -535,6 +554,7 @@ def admin_user_activate(request):
     return JsonResponse({'success':'user activated'})
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_user_edit(request,id):
     user = Account.objects.get(id=id)
     # user.is_active = True
@@ -542,6 +562,7 @@ def admin_user_edit(request,id):
     return render('login_view')
     
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_user_delete(request):
     id = request.GET['id']
     user = Account.objects.get(id=id)
@@ -565,6 +586,7 @@ def admin_user_delete(request):
 #     return redirect ('admin_orders')
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_order_status(request, order_no):
 
     instance = get_object_or_404(Order, order_number = order_no)
@@ -586,6 +608,7 @@ def update_order_status(request, order_no):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_banner(request):
     form = BannerUpdateForm(request.POST or None, request.FILES or None)
   
@@ -609,6 +632,7 @@ def add_banner(request):
 
 # coupon offers
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_coupon(request):
     form = CouponApplyForm(request.POST or None, request.FILES or None)  
     if request.method == "POST":
@@ -630,6 +654,7 @@ def add_coupon(request):
     
     
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_coupon(request,c_id):
     instance = get_object_or_404(Coupon, id=c_id)
     form = CouponApplyForm(request.POST or None, instance=instance)
@@ -655,6 +680,7 @@ def edit_coupon(request,c_id):
     
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def activate_coupon(request):
     coupon_id = request.GET['couponId']
     coupon = Coupon.objects.get(id = coupon_id)
@@ -665,6 +691,7 @@ def activate_coupon(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def block_coupon(request):
   
     coupon_id = request.GET['couponId']
@@ -677,6 +704,7 @@ def block_coupon(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_coupon(request):
     coupon_id = request.GET['couponId']
     coupon = Coupon.objects.get(id = coupon_id)
@@ -690,6 +718,7 @@ def delete_coupon(request):
 
 # Product offers
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_product_offer(request):
 
     form = ProductOfferForm(request.POST or None, request.FILES or None)  
@@ -711,6 +740,7 @@ def add_product_offer(request):
     
     
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_product_offer(request,prod_id):
     instance = get_object_or_404(ProductOffer, id=prod_id)
     form = ProductOfferForm(request.POST or None, instance=instance)
@@ -736,6 +766,7 @@ def edit_product_offer(request,prod_id):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def activate_product_offer(request):
     offer_id = request.GET['proOffId']
    
@@ -748,6 +779,7 @@ def activate_product_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def block_product_offer(request):
     offer_id = request.GET['proOffId']
     offer = ProductOffer.objects.get(id = offer_id)
@@ -758,6 +790,7 @@ def block_product_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_product_offer(request):
     offer_id = request.GET['proOffId']
     offer = ProductOffer.objects.get(id = offer_id)
@@ -770,6 +803,7 @@ def delete_product_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_cat_offer(request):
 
     form = CategoryOfferForm(request.POST or None, request.FILES or None)  
@@ -792,6 +826,7 @@ def add_cat_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_cat_offer(request,cat_id):
     instance = get_object_or_404(CategoryOffer, id=cat_id)
     form = CategoryOfferForm(request.POST or None, instance=instance)
@@ -817,6 +852,7 @@ def edit_cat_offer(request,cat_id):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def activate_cat_offer(request):
     offer_id = request.GET['catOffId']
     
@@ -829,6 +865,7 @@ def activate_cat_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def block_cat_offer(request):
     offer_id = request.GET['catOffId']
     offer = CategoryOffer.objects.get(id = offer_id)
@@ -839,6 +876,7 @@ def block_cat_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def delete_cat_offer(request):
     offer_id = request.GET['catOffId']
     offer = CategoryOffer.objects.get(id = offer_id)
@@ -849,6 +887,7 @@ def delete_cat_offer(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def edit_gallery_images(request,id):
     instance = get_object_or_404(Product, id=id)
     prod_form = ProductForm(request.POST or None, request.FILES or None, instance=instance)
@@ -873,6 +912,7 @@ def edit_gallery_images(request,id):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_gallery_images(request):
     
     form = ProductGalleryForms(request.POST or None, request.FILES or None)
@@ -898,6 +938,7 @@ def add_gallery_images(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_prod_variation(request):
     form = VariationForm(request.POST or None)
     if request.method == "POST":
@@ -918,6 +959,7 @@ def add_prod_variation(request):
 
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_product_images(request):
 
     if request.method == "POST":
@@ -943,6 +985,7 @@ def view_product_images(request):
         return render(request, 'mycartadmin/view_prod_gallery.html',context)
 
 @login_required(login_url='admin_login')
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def del_gal_image(request,id):
 
     if request.method == "POST":
